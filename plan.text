@@ -1,0 +1,149 @@
+Act as a senior Python backend engineer, distributed systems architect, and AI platform engineer.
+
+Build a production-grade, enterprise-level system called Inference Control Plane — a highly concurrent, scalable LLM gateway and control layer for model routing, cost optimization, caching, observability, and multi-tenant usage.
+
+The system must reflect real-world backend architecture used in modern AI platforms (e.g., OpenAI proxy layers, internal GenAI platforms).
+
+🧠 Core Responsibilities
+
+The system must:
+
+Serve as a central gateway for LLM inference
+Dynamically route requests across models
+Optimize cost and latency
+Enforce rate limits and API key security
+Provide deep observability and telemetry
+Support multi-tenant usage with per-user tracking
+⚙️ Tech Stack
+FastAPI (fully async, production-ready)
+PostgreSQL (SQLAlchemy + async engine)
+Redis (caching + rate limiting)
+Pydantic v2 (request/response validation)
+Prometheus client (metrics)
+OpenTelemetry (tracing + instrumentation)
+Docker + Docker Compose (multi-service deployment)
+Optional: httpx for async LLM calls
+🏗️ System Architecture
+
+Design a modular architecture with:
+
+API Layer (FastAPI routers)
+Service Layer (routing, caching, rate limiting, cost tracking)
+Infrastructure Layer (Redis, DB, external LLM clients)
+Observability Layer (metrics, tracing, logging)
+
+Use clean separation of concerns and dependency injection patterns.
+
+🔥 Core Features
+1. API Gateway
+/generate endpoint
+Accepts prompt, user_id, priority, and optional model override
+Fully async request handling
+2. Authentication + Rate Limiting
+API key validation (stored in Redis or DB)
+Per-user and per-key rate limits (requests per minute)
+Sliding window or token bucket logic (Redis-based)
+3. Caching Layer
+Redis-based caching
+Key: hash(prompt + model)
+TTL-based expiration
+Cache hit/miss tracking
+4. Intelligent Model Routing
+Route requests based on:
+priority (low/high)
+estimated token size
+Support:
+cheap model
+premium model
+Implement fallback logic on failure
+5. LLM Client Layer
+Async HTTP calls (httpx)
+Simulated or real OpenAI/local models
+Retry logic + timeout handling
+6. Observability + Telemetry
+Logging (PostgreSQL)
+
+Store per request:
+
+user_id
+prompt
+response
+model_used
+latency
+tokens
+cost
+cache_hit (boolean)
+timestamp
+Prometheus Metrics
+request_count
+latency histogram
+cache hit ratio
+model usage count
+OpenTelemetry
+Trace request lifecycle
+Instrument FastAPI endpoints
+7. Cost Tracking
+Estimate tokens per request
+Calculate cost per model
+Store in DB
+Aggregate cost per user
+8. Multi-Tenant Support
+user_id-based tracking
+per-user metrics and limits
+📦 Project Structure
+
+Generate a clean structure like:
+
+app/
+  main.py
+  api/
+  services/
+  core/
+  models/
+  db/
+  observability/
+
+Include:
+
+config management
+dependency injection
+modular services
+🔌 API Design
+
+Implement /generate:
+
+Validate request
+Check rate limit
+Check cache
+Route model
+Call LLM
+Apply fallback if needed
+Log request
+Return structured response
+🐳 Deployment
+
+Provide:
+
+Dockerfile
+docker-compose.yml including:
+app
+Redis
+PostgreSQL
+Prometheus
+📄 Requirements
+
+Generate:
+
+requirements.txt
+all dependencies listed correctly
+🚨 Constraints
+No placeholder code
+Fully working implementation
+Clean, readable, production-style code
+Use async everywhere possible
+Avoid unnecessary complexity but allow realistic system design
+🎯 Output Instructions
+Generate complete code for all files
+Split across multiple responses if needed
+Ensure each file is fully implemented
+No TODOs or stubs

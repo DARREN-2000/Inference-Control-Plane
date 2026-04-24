@@ -1,1 +1,110 @@
-# Inference-Control-Plane
+# Inference Control Plane
+
+Inference Control Plane is a fully async FastAPI gateway for LLM inference with model routing, Redis caching, Redis-based rate limiting, request logging, and observability.
+
+## Capabilities
+
+- API key authentication with DB lookup and Redis auth cache
+- Per-key and per-user rate limiting
+- Prompt and model response caching with TTL
+- Routing by priority, token estimate, or explicit model override
+- Fallback model path on upstream failure
+- Request log persistence in PostgreSQL
+- Usage summary by tenant and user
+- Prometheus metrics and OpenTelemetry tracing
+- Liveness and readiness health checks
+
+## Project Structure
+
+```text
+app/
+	main.py
+	api/
+	core/
+	db/
+	models/
+	observability/
+	schemas/
+	services/
+prometheus/
+	prometheus.yml
+Dockerfile
+docker-compose.yml
+```
+
+## Local Development
+
+1. Create and activate a virtual environment.
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Copy environment defaults:
+
+```bash
+cp .env.example .env
+```
+
+4. Start PostgreSQL and Redis locally.
+5. Run the API:
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+## Docker Compose
+
+Start all services (API, PostgreSQL, Redis, Prometheus):
+
+```bash
+docker compose up --build
+```
+
+Stop all services:
+
+```bash
+docker compose down
+```
+
+Service URLs:
+
+- API: http://localhost:8000
+- Prometheus: http://localhost:9090
+
+## API Endpoints
+
+- POST /generate
+	- Header: x-api-key
+	- Body:
+		- prompt: string
+		- user_id: string
+		- priority: low | high (optional, default low)
+		- model_override: string (optional)
+
+- GET /usage/summary?user_id=<user_id>
+	- Header: x-api-key
+
+- GET /health/live
+- GET /health/ready
+- GET /metrics
+
+## Quick Request Example
+
+```bash
+curl -X POST "http://localhost:8000/generate" \
+	-H "Content-Type: application/json" \
+	-H "x-api-key: dev-inference-key" \
+	-d '{
+		"prompt": "Explain token bucket rate limiting.",
+		"user_id": "user-123",
+		"priority": "low"
+	}'
+```
+
+## Notes
+
+- On startup, database tables are created automatically.
+- A default API key is seeded from DEFAULT_API_KEY.
+- In production, override DEFAULT_API_KEY and store secrets securely.

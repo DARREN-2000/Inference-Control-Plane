@@ -1,0 +1,19 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment files
+.env
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+
+# IDE and editor
+.idea/
+.vscode/
