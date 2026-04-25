@@ -109,6 +109,9 @@ npm run dev
 - GET /api/v1/usage/summary?user_id=<user_id>
 	- Header: x-api-key
 
+- GET /api/v1/usage/logs?user_id=<user_id>&limit=<1-100>
+	- Header: x-api-key
+
 Legacy unversioned paths continue to work for backward compatibility.
 
 - GET /health/live

@@ -7,10 +7,15 @@ from app.core.config import Settings, get_settings
 from app.core.security import get_auth_context
 from app.db.redis import get_redis_optional, ping_redis
 from app.db.session import get_db_session
-from app.schemas.generate import GenerateRequest, GenerateResponse, UsageSummaryResponse
+from app.schemas.generate import (
+    GenerateRequest,
+    GenerateResponse,
+    UsageLogsResponse,
+    UsageSummaryResponse,
+)
 from app.services.auth import AuthContext
 from app.services.inference import handle_generate_request
-from app.services.usage import get_usage_summary
+from app.services.usage import get_usage_logs, get_usage_summary
 
 router = APIRouter()
 
@@ -42,6 +47,21 @@ async def usage_summary(
         session,
         tenant_id=auth_context.tenant_id,
         user_id=user_id,
+    )
+
+
+@router.get("/usage/logs", response_model=UsageLogsResponse)
+async def usage_logs(
+    user_id: str = Query(..., min_length=1, max_length=128),
+    limit: int = Query(10, ge=1, le=100),
+    auth_context: AuthContext = Depends(get_auth_context),
+    session: AsyncSession = Depends(get_db_session),
+) -> UsageLogsResponse:
+    return await get_usage_logs(
+        session,
+        tenant_id=auth_context.tenant_id,
+        user_id=user_id,
+        limit=limit,
     )
 
 

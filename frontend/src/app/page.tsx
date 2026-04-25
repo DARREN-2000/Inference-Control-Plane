@@ -2,7 +2,12 @@
 
 import { FormEvent, useMemo, useState } from "react";
 
-import { generateInference, GenerateResponse } from "@/lib/api";
+import {
+  fetchUsageLogs,
+  generateInference,
+  GenerateResponse,
+  UsageLogEntry,
+} from "@/lib/api";
 
 const metrics = [
   { label: "P95 Latency", value: "218ms", delta: "-11%" },
@@ -24,12 +29,31 @@ export default function Home() {
   const [userId, setUserId] = useState("product-analyst-1");
   const [priority, setPriority] = useState<"low" | "high">("low");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLogsLoading, setIsLogsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<GenerateResponse | null>(null);
+  const [logsError, setLogsError] = useState<string | null>(null);
+  const [recentLogs, setRecentLogs] = useState<UsageLogEntry[]>([]);
 
   const derivedModel = useMemo(() => {
     return priority === "high" ? "premium-model" : "smart-router";
   }, [priority]);
+
+  async function loadRecentLogs() {
+    setLogsError(null);
+    setIsLogsLoading(true);
+
+    try {
+      const response = await fetchUsageLogs(userId, apiKey, 8);
+      setRecentLogs(response.entries);
+    } catch (loadError) {
+      const message =
+        loadError instanceof Error ? loadError.message : "Failed to load request logs.";
+      setLogsError(message);
+    } finally {
+      setIsLogsLoading(false);
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,6 +70,7 @@ export default function Home() {
         apiKey,
       );
       setResult(response);
+      await loadRecentLogs();
     } catch (submitError) {
       const message =
         submitError instanceof Error
@@ -204,6 +229,57 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+          </article>
+
+          <article className="cp-card p-5">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <p className="cp-label text-neutral-600">Request Logs</p>
+                <h3 className="text-lg font-semibold">Recent Requests</h3>
+              </div>
+              <button
+                className="cp-button px-3 py-2 text-sm"
+                disabled={isLogsLoading}
+                onClick={loadRecentLogs}
+                type="button"
+              >
+                {isLogsLoading ? "Loading..." : "Refresh"}
+              </button>
+            </div>
+
+            {logsError && (
+              <p className="mt-3 rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-[var(--danger)]">
+                {logsError}
+              </p>
+            )}
+
+            <div className="mt-3 space-y-2 text-sm">
+              {recentLogs.length === 0 && !isLogsLoading && (
+                <p className="rounded-lg border border-[var(--border)] bg-[#fffdf8] p-3 text-neutral-600">
+                  No request logs yet for this user.
+                </p>
+              )}
+
+              {recentLogs.map((entry) => (
+                <div
+                  key={entry.request_id}
+                  className="rounded-lg border border-[var(--border)] bg-[#fffdf8] p-3"
+                >
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-600">
+                    <span>{entry.model_used}</span>
+                    <span>{entry.latency_ms.toFixed(1)} ms</span>
+                    <span>{entry.tokens} tokens</span>
+                    <span>${entry.cost.toFixed(4)}</span>
+                    <span>{entry.cache_hit ? "cache hit" : "cache miss"}</span>
+                    <span>{new Date(entry.created_at).toLocaleString()}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-neutral-500">Status: {entry.status}</p>
+                  {entry.error_message && (
+                    <p className="mt-1 text-xs text-[var(--danger)]">{entry.error_message}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </article>
         </div>
       </section>

@@ -27,3 +27,21 @@ class UsageSummaryResponse(BaseModel):
     requests: int
     total_tokens: int
     total_cost: float
+
+
+class UsageLogEntry(BaseModel):
+    request_id: str
+    model_used: str
+    latency_ms: float
+    tokens: int
+    cost: float
+    cache_hit: bool
+    status: str
+    created_at: datetime
+    error_message: str | None
+
+
+class UsageLogsResponse(BaseModel):
+    user_id: str
+    limit: int
+    entries: list[UsageLogEntry]
