@@ -58,6 +58,32 @@ cp .env.example .env
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+## Testing and Quality
+
+Backend tests:
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+pytest
+```
+
+Frontend checks:
+
+```bash
+cd frontend
+npm run lint
+npm run build
+```
+
+Optional shortcuts:
+
+```bash
+make install-dev
+make test
+make lint-frontend
+make build-frontend
+```
+
 ## Docker Compose
 
 Start all services (API, PostgreSQL, Redis, Prometheus):
