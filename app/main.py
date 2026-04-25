@@ -12,7 +12,7 @@ from app.core.errors import (
 )
 from app.db.redis import close_redis, init_redis
 from app.db.seed import seed_default_api_key
-from app.db.session import dispose_engine, get_engine, get_session_factory, init_db, init_engine
+from app.db.session import dispose_engine, get_engine, get_session_factory, init_engine
 from app.observability.logging import configure_logging
 from app.observability.tracing import configure_tracing, shutdown_tracing
 
@@ -23,7 +23,6 @@ async def lifespan(app: FastAPI):
 
     configure_logging(settings.log_level)
     init_engine(settings)
-    await init_db()
     await seed_default_api_key(get_session_factory(), settings)
 
     init_redis(settings)

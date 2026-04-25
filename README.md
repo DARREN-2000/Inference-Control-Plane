@@ -52,7 +52,13 @@ cp .env.example .env
 ```
 
 4. Start PostgreSQL and Redis locally.
-5. Run the API:
+5. Apply database migrations:
+
+```bash
+alembic upgrade head
+```
+
+6. Run the API:
 
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -82,6 +88,8 @@ make install-dev
 make test
 make lint-frontend
 make build-frontend
+make migrate
+make migration m="describe change"
 ```
 
 ## Docker Compose
@@ -91,6 +99,8 @@ Start all services (API, PostgreSQL, Redis, Prometheus):
 ```bash
 docker compose up --build
 ```
+
+The app container applies migrations with `alembic upgrade head` before starting the API process.
 
 Stop all services:
 
@@ -159,6 +169,6 @@ curl -X POST "http://localhost:8000/generate" \
 
 ## Notes
 
-- On startup, database tables are created automatically.
+- Database schema is managed with Alembic migrations.
 - A default API key is seeded from DEFAULT_API_KEY.
 - In production, override DEFAULT_API_KEY and store secrets securely.

@@ -43,15 +43,6 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-async def init_db() -> None:
-    from app.db.base import Base
-    from app.models import api_key, request_log  # noqa: F401
-
-    engine = get_engine()
-    async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
-
-
 async def dispose_engine() -> None:
     global _engine, _session_factory
     if _engine is not None:

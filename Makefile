@@ -1,4 +1,4 @@
-.PHONY: install install-dev test lint-frontend build-frontend
+.PHONY: install install-dev test lint-frontend build-frontend migrate migration
 
 install:
 	pip install -r requirements.txt
@@ -14,3 +14,9 @@ lint-frontend:
 
 build-frontend:
 	cd frontend && npm run build
+
+migrate:
+	alembic upgrade head
+
+migration:
+	alembic revision --autogenerate -m "$(m)"
