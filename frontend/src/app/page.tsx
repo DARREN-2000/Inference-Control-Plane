@@ -1,0 +1,212 @@
+"use client";
+
+import { FormEvent, useMemo, useState } from "react";
+
+import { generateInference, GenerateResponse } from "@/lib/api";
+
+const metrics = [
+  { label: "P95 Latency", value: "218ms", delta: "-11%" },
+  { label: "Cache Hit Ratio", value: "67.4%", delta: "+9%" },
+  { label: "Requests (24h)", value: "1.4M", delta: "+23%" },
+  { label: "Cost / 1K req", value: "$4.82", delta: "-6%" },
+];
+
+const activity = [
+  "API key rotation policy enabled",
+  "Rate limiting bumped for tenant enterprise-a",
+  "Fallback route triggered 12 times in the last hour",
+  "Prometheus scrape health is stable",
+];
+
+export default function Home() {
+  const [apiKey, setApiKey] = useState("dev-inference-key");
+  const [prompt, setPrompt] = useState("Summarize our top latency drivers this week.");
+  const [userId, setUserId] = useState("product-analyst-1");
+  const [priority, setPriority] = useState<"low" | "high">("low");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<GenerateResponse | null>(null);
+
+  const derivedModel = useMemo(() => {
+    return priority === "high" ? "premium-model" : "smart-router";
+  }, [priority]);
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const response = await generateInference(
+        {
+          prompt,
+          user_id: userId,
+          priority,
+        },
+        apiKey,
+      );
+      setResult(response);
+    } catch (submitError) {
+      const message =
+        submitError instanceof Error
+          ? submitError.message
+          : "Request failed unexpectedly.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <main className="cp-shell">
+      <header className="cp-card cp-card-strong mb-4 p-5 md:p-7">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="cp-label text-[var(--accent-strong)]">Inference Platform</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Control Plane Dashboard
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm/6 text-neutral-700 md:text-base/7">
+              Production operator view for routing, usage, cache efficiency, and rapid
+              prompt validation.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <span className="cp-pill">
+              <span className="cp-dot bg-emerald-500" /> API healthy
+            </span>
+            <span className="cp-pill">
+              <span className="cp-dot bg-cyan-600" /> Redis online
+            </span>
+            <span className="cp-pill">
+              <span className="cp-dot bg-amber-500" /> Routing: {derivedModel}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <section className="cp-grid mb-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+        {metrics.map((metric) => (
+          <article key={metric.label} className="cp-card p-4">
+            <p className="cp-label text-neutral-600">{metric.label}</p>
+            <p className="mt-1 text-2xl font-bold">{metric.value}</p>
+            <p className="mt-1 text-sm text-emerald-700">{metric.delta} vs baseline</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="cp-grid grid-cols-1 xl:grid-cols-[1.4fr_1fr]">
+        <article className="cp-card p-5 md:p-6">
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <p className="cp-label text-neutral-600">Live Playground</p>
+              <h2 className="text-xl font-semibold">Generate With Backend API</h2>
+            </div>
+            <p className="cp-label text-neutral-500">POST /api/v1/generate</p>
+          </div>
+
+          <form className="space-y-3" onSubmit={onSubmit}>
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="space-y-1">
+                <span className="cp-label text-neutral-600">User ID</span>
+                <input
+                  className="cp-input"
+                  value={userId}
+                  onChange={(event) => setUserId(event.target.value)}
+                  required
+                />
+              </label>
+              <label className="space-y-1">
+                <span className="cp-label text-neutral-600">API Key</span>
+                <input
+                  className="cp-input"
+                  value={apiKey}
+                  onChange={(event) => setApiKey(event.target.value)}
+                  required
+                />
+              </label>
+            </div>
+
+            <label className="space-y-1 block">
+              <span className="cp-label text-neutral-600">Prompt</span>
+              <textarea
+                className="cp-input min-h-32"
+                value={prompt}
+                onChange={(event) => setPrompt(event.target.value)}
+                required
+              />
+            </label>
+
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <label className="space-y-1">
+                <span className="cp-label text-neutral-600">Priority</span>
+                <select
+                  className="cp-input"
+                  value={priority}
+                  onChange={(event) => setPriority(event.target.value as "low" | "high")}
+                >
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
+                </select>
+              </label>
+
+              <button className="cp-button md:min-w-56" disabled={isLoading} type="submit">
+                {isLoading ? "Generating..." : "Run Inference"}
+              </button>
+            </div>
+          </form>
+
+          {error && (
+            <p className="mt-4 rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-[var(--danger)]">
+              {error}
+            </p>
+          )}
+
+          {result && (
+            <div className="mt-5 space-y-3 rounded-2xl border border-[var(--border)] bg-[#fffdf8] p-4">
+              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                <span>
+                  <strong>Model:</strong> {result.model_used}
+                </span>
+                <span>
+                  <strong>Latency:</strong> {result.latency_ms.toFixed(1)} ms
+                </span>
+                <span>
+                  <strong>Tokens:</strong> {result.tokens}
+                </span>
+                <span>
+                  <strong>Cost:</strong> ${result.cost.toFixed(4)}
+                </span>
+                <span>
+                  <strong>Cache:</strong> {result.cached ? "hit" : "miss"}
+                </span>
+              </div>
+              <p className="whitespace-pre-wrap text-sm leading-7 text-neutral-800">
+                {result.response}
+              </p>
+            </div>
+          )}
+        </article>
+
+        <div className="cp-grid grid-cols-1 gap-4">
+          <article className="cp-card p-5">
+            <p className="cp-label text-neutral-600">Usage Trend</p>
+            <h3 className="text-lg font-semibold">24h Request Volume</h3>
+            <div className="cp-chart mt-3" />
+          </article>
+
+          <article className="cp-card p-5">
+            <p className="cp-label text-neutral-600">Operational Activity</p>
+            <ul className="mt-3 space-y-2 text-sm text-neutral-700">
+              {activity.map((item) => (
+                <li key={item} className="rounded-lg border border-[var(--border)] bg-[#fffdf8] p-2">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+  );
+}

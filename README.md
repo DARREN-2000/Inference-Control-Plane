@@ -2,6 +2,8 @@
 
 Inference Control Plane is a fully async FastAPI gateway for LLM inference with model routing, Redis caching, Redis-based rate limiting, request logging, and observability.
 
+This repository now includes a production-oriented Next.js frontend in `frontend/` for dashboarding, playground requests, and operator workflows.
+
 ## Capabilities
 
 - API key authentication with DB lookup and Redis auth cache
@@ -26,6 +28,8 @@ app/
 	observability/
 	schemas/
 	services/
+frontend/
+ 	src/
 prometheus/
 	prometheus.yml
 Dockerfile
@@ -73,9 +77,28 @@ Service URLs:
 - API: http://localhost:8000
 - Prometheus: http://localhost:9090
 
+## Frontend (Next.js + Tailwind)
+
+1. Open a second terminal.
+2. Prepare frontend environment:
+
+```bash
+cd frontend
+cp .env.example .env.local
+```
+
+3. Run the UI:
+
+```bash
+npm install
+npm run dev
+```
+
+4. Open http://localhost:3000
+
 ## API Endpoints
 
-- POST /generate
+- POST /api/v1/generate
 	- Header: x-api-key
 	- Body:
 		- prompt: string
@@ -83,8 +106,10 @@ Service URLs:
 		- priority: low | high (optional, default low)
 		- model_override: string (optional)
 
-- GET /usage/summary?user_id=<user_id>
+- GET /api/v1/usage/summary?user_id=<user_id>
 	- Header: x-api-key
+
+Legacy unversioned paths continue to work for backward compatibility.
 
 - GET /health/live
 - GET /health/ready

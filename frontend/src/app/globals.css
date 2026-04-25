@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f3eb;
+  --foreground: #1f1c17;
+  --surface: #fff8ef;
+  --surface-strong: #f2e7d8;
+  --border: #d7c2aa;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --accent-soft: #dcfce7;
+  --danger: #b91c1c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sora);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sora), sans-serif;
+  background-image:
+    radial-gradient(circle at 20% 0%, #ffedd5 0%, transparent 45%),
+    radial-gradient(circle at 80% 10%, #dbeafe 0%, transparent 40%);
+}
+
+* {
+  border-color: var(--border);
+}
+
+.cp-shell {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+.cp-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.cp-card {
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 84%, white 16%);
+  border-radius: 1rem;
+  box-shadow: 0 10px 32px rgb(31 28 23 / 0.06);
+}
+
+.cp-card-strong {
+  background: color-mix(in oklab, var(--surface-strong) 75%, white 25%);
+}
+
+.cp-label {
+  font-family: var(--font-plex-mono), monospace;
+  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.cp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-family: var(--font-plex-mono), monospace;
+}
+
+.cp-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.cp-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: #fffcf7;
+  padding: 0.7rem 0.85rem;
+  outline: none;
+}
+
+.cp-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 0.2);
+}
+
+.cp-button {
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #ecfeff;
+  font-weight: 600;
+  padding: 0.7rem 1rem;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.cp-button:hover {
+  background: var(--accent-strong);
+  transform: translateY(-1px);
+}
+
+.cp-button:disabled {
+  opacity: 0.45;
+  transform: none;
+}
+
+.cp-chart {
+  height: 170px;
+  border-radius: 0.75rem;
+  border: 1px dashed var(--border);
+  background-image: linear-gradient(
+    to top,
+    rgb(15 118 110 / 0.18) 0%,
+    rgb(15 118 110 / 0.02) 100%
+  );
+}
+
+@media (max-width: 780px) {
+  .cp-shell {
+    padding-top: 1.25rem;
+  }
+}

@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     host: str = "0.0.0.0"
     port: int = 8000
+    cors_allowed_origins: list[str] = ["http://localhost:3000"]
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@postgres:5432/inference_cp"
     redis_url: str = "redis://redis:6379/0"
