@@ -30,6 +30,11 @@ app/
 	services/
 frontend/
  	src/
+docs/
+	ARCHITECTURE.md
+	OPERATIONS.md
+scripts/
+	quality-check.sh
 prometheus/
 	prometheus.yml
 Dockerfile
@@ -90,6 +95,7 @@ make lint-frontend
 make build-frontend
 make migrate
 make migration m="describe change"
+make quality
 ```
 
 ## Docker Compose

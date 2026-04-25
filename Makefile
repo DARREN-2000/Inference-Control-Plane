@@ -1,4 +1,4 @@
-.PHONY: install install-dev test lint-frontend build-frontend migrate migration
+.PHONY: install install-dev test lint-frontend build-frontend migrate migration quality
 
 install:
 	pip install -r requirements.txt
@@ -20,3 +20,6 @@ migrate:
 
 migration:
 	alembic revision --autogenerate -m "$(m)"
+
+quality:
+	./scripts/quality-check.sh
