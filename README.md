@@ -71,10 +71,11 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## Testing and Quality
 
-Backend tests:
+Backend checks:
 
 ```bash
 pip install -r requirements.txt -r requirements-dev.txt
+ruff check app tests
 pytest
 ```
 
@@ -91,6 +92,7 @@ Optional shortcuts:
 ```bash
 make install-dev
 make test
+make lint-backend
 make lint-frontend
 make build-frontend
 make migrate

@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -46,6 +46,19 @@ class Settings(BaseSettings):
 
     otlp_endpoint: str | None = None
     prometheus_namespace: str = "inference_control_plane"
+
+    @model_validator(mode="after")
+    def validate_runtime_security(self) -> "Settings":
+        if self.llm_mode == "openai-compatible" and not self.llm_api_key:
+            raise ValueError("LLM_API_KEY is required when llm_mode is openai-compatible")
+
+        if self.environment.lower() == "production":
+            if self.default_api_key == "dev-inference-key":
+                raise ValueError("DEFAULT_API_KEY must be overridden in production")
+            if "*" in self.cors_allowed_origins:
+                raise ValueError("CORS_ALLOWED_ORIGINS cannot include '*' in production")
+
+        return self
 
 
 @lru_cache

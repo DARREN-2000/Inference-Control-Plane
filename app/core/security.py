@@ -7,7 +7,6 @@ from app.db.redis import get_redis_optional
 from app.db.session import get_db_session
 from app.services.auth import AuthContext, validate_api_key
 
-
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 
 

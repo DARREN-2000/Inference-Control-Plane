@@ -1,6 +1,6 @@
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from time import perf_counter
 
@@ -168,7 +168,7 @@ async def handle_generate_request(
         )
         if cached is not None:
             latency_ms = (perf_counter() - started) * 1000.0
-            timestamp = datetime.now(timezone.utc)
+            timestamp = datetime.now(UTC)
 
             record_cache_result(hit=True)
             record_request(
@@ -215,7 +215,7 @@ async def handle_generate_request(
         total_tokens = estimate_tokens(f"{payload.prompt} {generated_text}")
         total_cost = _estimate_cost(model_used, total_tokens, settings)
         latency_ms = (perf_counter() - started) * 1000.0
-        timestamp = datetime.now(timezone.utc)
+        timestamp = datetime.now(UTC)
 
         await set_cached_response(
             redis_client,

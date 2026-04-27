@@ -20,7 +20,10 @@ def choose_model(request: GenerateRequest, settings: Settings) -> RouteDecision:
     estimated_tokens = estimate_tokens(request.prompt)
 
     if request.model_override:
-        return RouteDecision(model=request.model_override.strip(), estimated_tokens=estimated_tokens)
+        return RouteDecision(
+            model=request.model_override.strip(),
+            estimated_tokens=estimated_tokens,
+        )
 
     if request.priority == "high":
         return RouteDecision(model=settings.premium_model_name, estimated_tokens=estimated_tokens)

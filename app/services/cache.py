@@ -14,7 +14,7 @@ class CachedResponse:
 
 
 def _cache_key(prompt: str, model: str) -> str:
-    digest = hashlib.sha256(f"{model}:{prompt}".encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(f"{model}:{prompt}".encode()).hexdigest()
     return f"cache:inference:{digest}"
 
 

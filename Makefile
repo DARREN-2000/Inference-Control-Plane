@@ -1,4 +1,4 @@
-.PHONY: install install-dev test lint-frontend build-frontend migrate migration quality
+.PHONY: install install-dev test lint-backend lint-frontend build-frontend migrate migration quality
 
 install:
 	pip install -r requirements.txt
@@ -8,6 +8,9 @@ install-dev:
 
 test:
 	pytest
+
+lint-backend:
+	ruff check app tests
 
 lint-frontend:
 	cd frontend && npm run lint
