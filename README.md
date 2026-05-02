@@ -1,22 +1,38 @@
 <p align="center">
-	<picture>
-		<source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-hero-dark.svg">
-		<source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-hero-light.svg">
-		<img src="docs/assets/readme-hero-light.svg" alt="Live flow of LLM traffic through auth, routing, cache, limits, logs, and metrics." width="100%" draggable="false"/>
-	</picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-hero-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-hero-light.svg">
+    <img src="docs/assets/readme-hero-light.svg" alt="Live flow of LLM traffic through auth, routing, cache, limits, logs, and metrics." width="100%" draggable="false"/>
+  </picture>
 </p>
 
 <h1 align="center">Inference Control Plane</h1>
 
 <p align="center">
-	<strong>Always-on LLM gateway with live routing, cache, limits, and observability.</strong>
+  <strong>Control LLM traffic in real time.</strong>
 </p>
 
 <p align="center">
-	<a href="#quickstart"><img src="https://img.shields.io/badge/Quickstart-Run%20locally-0A7C5A?style=for-the-badge" alt="Quickstart"/></a>
-	<a href="#api"><img src="https://img.shields.io/badge/API-Endpoints-2563EB?style=for-the-badge" alt="API Endpoints"/></a>
-	<a href="docs/ARCHITECTURE.md"><img src="https://img.shields.io/badge/Architecture-Read-334155?style=for-the-badge" alt="Architecture"/></a>
-	<a href="frontend/README.md"><img src="https://img.shields.io/badge/Frontend-Next.js-111827?style=for-the-badge" alt="Frontend"/></a>
+  <strong>Star us</strong> -> <a href="https://github.com/DARREN-2000/Inference-Control-Plane">GitHub</a> |
+  <a href="docs/ARCHITECTURE.md">Architecture</a> |
+  <a href="docs/OPERATIONS.md">Operations</a> |
+  <a href="frontend/README.md">Frontend</a>
+</p>
+
+<p align="center">
+  Production-ready FastAPI gateway for LLM inference: routing, caching, limits, and observability.
+  Every request is logged, metered, and traced for operator-grade visibility.
+</p>
+
+<p align="center">
+  <b>Routing</b> | <b>Cache</b> | <b>Rate limits</b> | <b>Logs</b> | <b>Metrics</b>
+</p>
+
+<p align="center">
+  <a href="#get-started">Get started</a> |
+  <a href="#request-flow">Request flow</a> |
+  <a href="#api">API</a> |
+  <a href="#observability">Observability</a>
 </p>
 
 <div align="center">
@@ -29,29 +45,10 @@
 
 </div>
 
-<p align="center">
-	Inference Control Plane is a fully async FastAPI gateway for LLM inference with model routing,
-	Redis caching, Redis-based rate limiting, request logging, and observability.
-	A production-focused Next.js frontend in the <a href="frontend/README.md">frontend</a> folder
-	supports dashboarding, playground requests, and operator workflows.
-</p>
+<br/>
 
-## Why it feels live
-- Redis-backed caching and limits keep the hot path fast for every request.
-- Routing decisions can change per request based on priority, token estimates, or overrides.
-- Logs, metrics, and traces are emitted for each request and shared across services.
-- PostgreSQL stores request logs and usage summaries for operators.
-
-## Request flow
-1. `POST /api/v1/generate` receives a request and validates the API key.
-2. Rate limits are enforced per key and per user.
-3. A cache lookup is attempted for prompt and model responses.
-4. The router selects the target model or fallback path.
-5. The response is returned and the request log is persisted.
-6. Metrics and traces are emitted for observability.
-
-## Quickstart
-Start the full stack with Docker Compose:
+## Get started
+Run the full stack with Docker Compose:
 
 ```bash
 docker compose up --build
@@ -60,6 +57,35 @@ docker compose up --build
 Service URLs:
 - API: http://localhost:8000
 - Prometheus: http://localhost:9090
+- Frontend: http://localhost:3000
+
+Send a request:
+
+```bash
+curl -X POST "http://localhost:8000/generate" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: dev-inference-key" \
+  -d '{
+    "prompt": "Explain token bucket rate limiting.",
+    "user_id": "user-123",
+    "priority": "low"
+  }'
+```
+
+## Why this control plane
+- Fast hot path backed by Redis for caching and rate limits.
+- Per-request routing with priority and model overrides.
+- PostgreSQL request logs with usage summaries for operators.
+- OpenTelemetry traces and Prometheus metrics on every request.
+- A Next.js dashboard for live workflows and playground requests.
+
+## Request flow
+1. `POST /api/v1/generate` validates the API key.
+2. Per-key and per-user rate limits are enforced.
+3. Cache lookup checks for a matching response.
+4. Router selects the target model or fallback path.
+5. The response is returned and a request log is written.
+6. Metrics and traces are emitted.
 
 ## Local development
 ### Backend
@@ -97,7 +123,7 @@ cd frontend
 cp .env.example .env.local
 ```
 
-2. Run the UI:
+2. Install dependencies and run the UI:
 
 ```bash
 npm install
@@ -107,42 +133,34 @@ npm run dev
 3. Open http://localhost:3000
 
 ## API
-- `POST /api/v1/generate`
-	- Header: `x-api-key`
-	- Body:
-		- `prompt`: string
-		- `user_id`: string
-		- `priority`: low | high (optional, default low)
-		- `model_override`: string (optional)
+| Method | Path | Description |
+| --- | --- | --- |
+| POST | /api/v1/generate | Generate an LLM response |
+| GET | /api/v1/usage/summary?user_id=... | Usage summary for a user |
+| GET | /api/v1/usage/logs?user_id=...&limit=1-100 | Request log entries |
 
-- `GET /api/v1/usage/summary?user_id=<user_id>`
-	- Header: `x-api-key`
+Headers:
+- `x-api-key`
 
-- `GET /api/v1/usage/logs?user_id=<user_id>&limit=<1-100>`
-	- Header: `x-api-key`
-
-Legacy unversioned paths continue to work for backward compatibility:
+Legacy unversioned paths remain available:
 - `GET /health/live`
 - `GET /health/ready`
 - `GET /metrics`
 
-## Quick request example
-```bash
-curl -X POST "http://localhost:8000/generate" \
-	-H "Content-Type: application/json" \
-	-H "x-api-key: dev-inference-key" \
-	-d '{
-		"prompt": "Explain token bucket rate limiting.",
-		"user_id": "user-123",
-		"priority": "low"
-	}'
-```
-
 ## Configuration
-See the default settings in `.env.example`. Highlights:
+See the default settings in [.env.example](.env.example). Highlights:
 - `DATABASE_URL` and `REDIS_URL` configure data stores.
-- `CACHE_TTL_SECONDS` and `RATE_LIMIT_WINDOW_SECONDS` control hot-path behavior.
+- `CACHE_TTL_SECONDS` and `RATE_LIMIT_WINDOW_SECONDS` tune hot-path behavior.
 - `LLM_MODE` can be set to `simulated` for local testing.
+
+## Observability
+- Prometheus metrics: `GET /metrics`
+- OpenTelemetry traces: configured via `OTLP_ENDPOINT`
+- Structured logs include request id, user id, model selection, and latency.
+
+## Deployment
+- Docker Compose for local and demo environments.
+- Kubernetes manifests in `deploy/kubernetes`.
 
 ## Testing and quality
 Backend checks:
@@ -177,6 +195,11 @@ make quality
 ## Docs
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/OPERATIONS.md](docs/OPERATIONS.md)
+- [deploy/kubernetes/README.md](deploy/kubernetes/README.md)
+- [frontend/README.md](frontend/README.md)
+
+## Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 Apache-2.0. See [LICENSE](LICENSE).

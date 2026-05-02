@@ -4,36 +4,96 @@
       <stop offset="0%" stop-color="#0B1020"/>
       <stop offset="100%" stop-color="#0F2A38"/>
     </linearGradient>
+    <radialGradient id="glowA" cx="0.2" cy="0.2" r="0.6">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#0B1020" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0.85" cy="0.7" r="0.6">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.35"/>
+      <stop offset="70%" stop-color="#0B1020" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#38BDF8"/>
       <stop offset="50%" stop-color="#22D3EE"/>
       <stop offset="100%" stop-color="#A78BFA"/>
     </linearGradient>
+    <pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M120 0H0V120" fill="none" stroke="#1F2937" stroke-width="1"/>
+    </pattern>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="1" fill="#64748B"/>
+    </pattern>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="panelShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#020617" flood-opacity="0.55"/>
+    </filter>
+    <style>
+      .flow { stroke-dasharray: 18 12; animation: dash 2.6s linear infinite; }
+      .flow.fast { animation-duration: 1.9s; }
+      .flow.slow { animation-duration: 4.4s; opacity: 0.7; }
+      .pulse { animation: pulse 2.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+      .spark { animation: spark 3.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+      .float { animation: float 8s ease-in-out infinite; }
+      .scan { animation: scan 8s linear infinite; }
+      @keyframes dash { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -70; } }
+      @keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.75; } 50% { transform: scale(1.4); opacity: 1; } }
+      @keyframes spark { 0% { transform: translateX(-18px); opacity: 0; } 40% { opacity: 1; } 60% { opacity: 1; } 100% { transform: translateX(18px); opacity: 0; } }
+      @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+      @keyframes scan { from { transform: translateY(0); } to { transform: translateY(-32px); } }
+    </style>
   </defs>
   <rect width="1600" height="520" rx="36" fill="url(#bg)"/>
-  <g opacity="0.18">
-    <circle cx="150" cy="100" r="70" fill="#334155"/>
-    <circle cx="1460" cy="420" r="120" fill="#1E293B"/>
-    <circle cx="1290" cy="110" r="60" fill="#0F766E"/>
+  <rect width="1600" height="520" rx="36" fill="url(#glowA)" opacity="0.8"/>
+  <rect width="1600" height="520" rx="36" fill="url(#glowB)" opacity="0.7"/>
+  <rect width="1600" height="520" rx="36" fill="url(#grid)" opacity="0.08"/>
+  <rect class="scan" width="1600" height="520" rx="36" fill="url(#scan)" opacity="0.08"/>
+  <g opacity="0.22">
+    <circle class="float" cx="150" cy="100" r="70" fill="#334155"/>
+    <circle class="float" cx="1460" cy="420" r="120" fill="#1E293B" style="animation-delay:0.6s"/>
+    <circle class="float" cx="1290" cy="110" r="60" fill="#0F766E" style="animation-delay:1.2s"/>
   </g>
-  <g stroke="url(#flow)" stroke-width="4" fill="none" opacity="0.85">
-    <path d="M150 140 C 380 60, 540 90, 760 140"/>
-    <path d="M120 260 C 360 240, 520 240, 760 260"/>
-    <path d="M150 380 C 380 460, 540 430, 760 380"/>
-    <path d="M840 140 C 1080 90, 1240 60, 1460 140"/>
-    <path d="M840 260 C 1080 260, 1240 260, 1460 260"/>
-    <path d="M840 380 C 1080 430, 1240 460, 1460 380"/>
+  <g stroke="url(#flow)" stroke-width="8" fill="none" opacity="0.35" filter="url(#softGlow)">
+    <path class="flow slow" d="M150 140 C 380 60, 540 90, 760 140"/>
+    <path class="flow" d="M120 260 C 360 240, 520 240, 760 260"/>
+    <path class="flow slow" d="M150 380 C 380 460, 540 430, 760 380"/>
+    <path class="flow" d="M840 140 C 1080 90, 1240 60, 1460 140"/>
+    <path class="flow slow" d="M840 260 C 1080 260, 1240 260, 1460 260"/>
+    <path class="flow" d="M840 380 C 1080 430, 1240 460, 1460 380"/>
+  </g>
+  <g stroke="url(#flow)" stroke-width="3.5" fill="none" opacity="0.95">
+    <path class="flow" d="M150 140 C 380 60, 540 90, 760 140"/>
+    <path class="flow slow" d="M120 260 C 360 240, 520 240, 760 260"/>
+    <path class="flow fast" d="M150 380 C 380 460, 540 430, 760 380"/>
+    <path class="flow slow" d="M840 140 C 1080 90, 1240 60, 1460 140"/>
+    <path class="flow" d="M840 260 C 1080 260, 1240 260, 1460 260"/>
+    <path class="flow fast" d="M840 380 C 1080 430, 1240 460, 1460 380"/>
   </g>
   <g>
-    <circle cx="120" cy="260" r="20" fill="#38BDF8"/>
-    <circle cx="1480" cy="260" r="20" fill="#4ADE80"/>
+    <circle class="pulse" cx="120" cy="260" r="20" fill="#38BDF8"/>
+    <circle class="pulse" cx="1480" cy="260" r="20" fill="#4ADE80" style="animation-delay:0.6s"/>
+    <circle class="pulse" cx="760" cy="140" r="8" fill="#22D3EE" style="animation-delay:1s"/>
+    <circle class="pulse" cx="760" cy="380" r="8" fill="#A78BFA" style="animation-delay:1.4s"/>
+  </g>
+  <g>
+    <circle class="spark" cx="260" cy="150" r="4" fill="#38BDF8" style="animation-delay:0.2s"/>
+    <circle class="spark" cx="320" cy="260" r="4" fill="#22D3EE" style="animation-delay:0.9s"/>
+    <circle class="spark" cx="290" cy="370" r="4" fill="#A78BFA" style="animation-delay:1.6s"/>
+    <circle class="spark" cx="1120" cy="150" r="4" fill="#38BDF8" style="animation-delay:0.4s"/>
+    <circle class="spark" cx="1080" cy="260" r="4" fill="#4ADE80" style="animation-delay:1.1s"/>
+    <circle class="spark" cx="1140" cy="370" r="4" fill="#A78BFA" style="animation-delay:1.8s"/>
   </g>
   <g font-family="Arial, sans-serif" font-size="16" fill="#94A3B8" text-anchor="middle">
     <text x="120" y="220">Ingress</text>
     <text x="1480" y="220">Egress</text>
   </g>
   <g>
-    <rect x="420" y="130" width="760" height="260" rx="28" fill="#0F172A" stroke="#1E293B"/>
+    <rect x="420" y="130" width="760" height="260" rx="28" fill="#0F172A" stroke="#1E293B" filter="url(#panelShadow)"/>
     <text x="800" y="180" font-size="28" font-family="Arial, sans-serif" fill="#E2E8F0" text-anchor="middle">Control Plane</text>
     <text x="800" y="212" font-size="16" font-family="Arial, sans-serif" fill="#94A3B8" text-anchor="middle">Auth, routing, cache, limits, logs, metrics</text>
   </g>
