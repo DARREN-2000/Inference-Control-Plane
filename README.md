@@ -58,7 +58,7 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-routing-light.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-routing-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-routing-light.svg">
     <img src="docs/assets/readme-routing-light.svg" alt="Request routing flow: incoming request with priority → API key validation → rate limit check → cache lookup → policy engine → model router → response → log & metrics" width="100%"/>
   </picture>
