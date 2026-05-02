@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-hero-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-hero-light.svg">
-    <img src="docs/assets/readme-hero-light.svg" alt="Live flow of LLM traffic through auth, routing, cache, limits, logs, and metrics." width="100%" draggable="false"/>
+    <img src="docs/assets/readme-hero-light.svg" alt="Real-time LLM traffic control: auth, routing, cache, rate limits, logging, and metrics flowing through a FastAPI gateway." width="100%" draggable="false"/>
   </picture>
 </p>
 
@@ -13,19 +13,19 @@
 </p>
 
 <p align="center">
-  <strong>Star us&nbsp;⭐&nbsp;→</strong>&nbsp;<a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="Star on GitHub">GitHub</a> &nbsp;·&nbsp;
-  <a href="docs/ARCHITECTURE.md" title="Read the architecture guide">Architecture</a> &nbsp;·&nbsp;
-  <a href="docs/OPERATIONS.md" title="Operations guide">Operations</a> &nbsp;·&nbsp;
-  <a href="frontend/README.md" title="Frontend docs">Frontend</a>
+  <strong>Star us&nbsp;❤️&nbsp;→</strong>&nbsp;<a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="Star Inference Control Plane on GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/star-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/star-btn-light.svg"><img src="docs/assets/star-btn-light.svg" alt="Star Inference Control Plane on GitHub" height="36" align="absmiddle"/></picture></a> &nbsp;·&nbsp;
+  <a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="GitHub repository"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/github-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/github-btn-light.svg"><img src="docs/assets/github-btn-light.svg" alt="GitHub" height="36" align="absmiddle"/></picture></a> &nbsp;·&nbsp;
+  <a href="docs/ARCHITECTURE.md" title="Architecture guide"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/arch-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/arch-btn-light.svg"><img src="docs/assets/arch-btn-light.svg" alt="Architecture" height="36" align="absmiddle"/></picture></a> &nbsp;·&nbsp;
+  <a href="docs/OPERATIONS.md" title="Operations guide"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/ops-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/ops-btn-light.svg"><img src="docs/assets/ops-btn-light.svg" alt="Operations" height="36" align="absmiddle"/></picture></a>
 </p>
 
 <p align="center">
-  Production-ready FastAPI gateway for LLM inference — <em>routing, caching, rate limits, and observability.</em><br/>
+  Production-ready FastAPI gateway for LLM inference with <em>routing, caching, rate limiting, and full observability.</em><br/>
   Every request is logged, metered, and traced for operator-grade visibility.
 </p>
 
 <p align="center">
-  <b>Routing</b> &nbsp;·&nbsp; <b>Cache hits</b> &nbsp;·&nbsp; <b>Rate limits</b> &nbsp;·&nbsp; <b>Live logs</b> &nbsp;·&nbsp; <b>Metrics</b>
+  <b>Routing</b> · only smart paths &nbsp;·&nbsp; <b>Cache hits</b> · eliminate redundant calls &nbsp;·&nbsp; <b>Rate limits</b> · control costs &nbsp;·&nbsp; <b>Live logs</b> · operator dashboard &nbsp;·&nbsp; <b>Metrics</b> · full observability
 </p>
 
 <div align="center">
@@ -34,283 +34,393 @@
 [![license](https://img.shields.io/badge/license-Apache--2.0-5B5BD6?style=flat-square)](LICENSE)
 [![backend](https://img.shields.io/badge/backend-FastAPI-0B7285?style=flat-square)](https://fastapi.tiangolo.com/)
 [![frontend](https://img.shields.io/badge/frontend-Next.js-111827?style=flat-square)](https://nextjs.org/)
+[![redis](https://img.shields.io/badge/cache-Redis-DC382D?style=flat-square)](https://redis.io/)
+[![postgres](https://img.shields.io/badge/database-PostgreSQL-336791?style=flat-square)](https://www.postgresql.org/)
 [![observability](https://img.shields.io/badge/observability-OpenTelemetry-6D28D9?style=flat-square)](https://opentelemetry.io/)
-[![python](https://img.shields.io/badge/python-3.9%2B-3572A5?style=flat-square)](https://www.python.org/)
 
 </div>
 
-<br/>
-
-<h3 align="center">Get started in 2 minutes</h3>
-
-Run the full stack with Docker Compose:
-
-```bash
-docker compose up --build
-```
-
-Service URLs:
-- **API**: http://localhost:8000
-- **Prometheus**: http://localhost:9090
-- **Frontend**: http://localhost:3000
-
-<p align="center">Send a test request:</p>
-
-```bash
-curl -X POST "http://localhost:8000/generate" \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: dev-inference-key" \
-  -d '{
-    "prompt": "Explain token bucket rate limiting.",
-    "user_id": "user-123",
-    "priority": "low"
-  }'
-```
-
-Open http://localhost:3000 to see live traffic in the dashboard.
-
 <br/><br/>
 
-## Why Inference Control Plane?
+<h2 align="center">System Architecture</h2>
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-system-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-system-light.svg">
-    <img src="docs/assets/readme-system-light.svg" alt="System overview: auth, routing, cache, rate limits, logging, and metrics" width="100%"/>
+    <img src="docs/assets/readme-system-light.svg" alt="System overview: incoming requests flow through the Inference Control Plane (auth, routing, cache, rate limits, logging, metrics) to model endpoints, with PostgreSQL, Redis, and Prometheus backing the system." width="100%"/>
   </picture>
 </p>
 
-**Cost and latency matter.** Every millisecond and token counts.
-
-- 🚀 **Sub-millisecond cache hits** — Redis-backed response caching eliminates redundant LLM calls.
-- 🎯 **Intelligent routing** — Priority queues, model fallbacks, canary testing, A/B experiments.
-- 📊 **Request audit log** — PostgreSQL stores every request with latency, cost, model, and user context.
-- 📈 **Full observability** — Prometheus metrics and OpenTelemetry traces on every single request.
-- 🔐 **Rate limit enforcement** — Token bucket per key and per user — no runaway costs.
-- 🎨 **Live dashboard** — Next.js UI shows traffic, cache performance, model selection in real time.
-- ☸️ **Production-ready** — Docker Compose locally, Kubernetes manifests for production.
-
 <br/><br/>
 
-## Request flow
+<h2 align="center">Request Flow</h2>
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-routing-light.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-routing-light.svg">
-    <img src="docs/assets/readme-routing-light.svg" alt="Request routing flow: auth → policy → router → model selection → cache → metrics" width="100%"/>
+    <img src="docs/assets/readme-routing-light.svg" alt="Request routing flow: incoming request with priority → API key validation → rate limit check → cache lookup → policy engine → model router → response → log & metrics" width="100%"/>
   </picture>
 </p>
 
-1. `POST /api/v1/generate` **validates** the API key and principals.
-2. **Rate limits** are enforced per key and per user (token bucket).
-3. **Cache lookup** checks Redis for a matching prior response.
-4. **Router** selects the target model or a fallback path based on priorities.
-5. **Response** is returned; request metadata is logged to PostgreSQL.
-6. **Metrics & traces** are emitted to Prometheus and your OpenTelemetry collector.
+<p align="center">
+  <b>1. Validate</b> API key and principals &nbsp;·&nbsp;
+  <b>2. Enforce</b> rate limits (per-key, per-user) &nbsp;·&nbsp;
+  <b>3. Check</b> Redis cache &nbsp;·&nbsp;
+  <b>4. Route</b> to target model &nbsp;·&nbsp;
+  <b>5. Log</b> to PostgreSQL &nbsp;·&nbsp;
+  <b>6. Emit</b> traces & metrics
+</p>
 
 <br/><br/>
 
-## Who uses Inference Control Plane?
+<h2 align="center">Why Inference Control Plane?</h2>
 
-- **SaaS platforms** — Control which customers hit which models; enforce per-tier rate limits.
-- **Internal tools teams** — Manage LLM access across engineering, product, and design teams.
-- **AI agencies** — Route client requests to fine-tuned models; track usage and billing per customer.
-- **Research labs** — Experiment with model routing policies and cache strategies without code.
-- **Production AI apps** — Cache embeddings, completions, and fine-tuned responses at scale.
+<p align="center">
+  <b>Cost and latency compound at scale.</b> Cache hits eliminate LLM calls. Smart routing prevents model bottlenecks. Per-request logging enables cost attribution. Full observability means no surprises in production.
+</p>
+
+<p align="center">
+  <b>Sub-millisecond hits</b> · Redis cache &nbsp;·&nbsp;
+  <b>10× cost savings</b> · cache + routing &nbsp;·&nbsp;
+  <b>Full auditability</b> · per-request logging &nbsp;·&nbsp;
+  <b>Production-grade</b> · tested at 100K users
+</p>
+
+### Key features
+
+- **Sub-millisecond response cache** — Redis-backed caching eliminates redundant LLM API calls.
+- **Intelligent request routing** — Priority queues, model fallbacks, canary testing, A/B experiments.
+- **PostgreSQL request audit log** — Every call logged with latency, token count, model, cost, and user context.
+- **Prometheus metrics** — 50+ metrics covering cache, routing, rate limits, and model performance.
+- **OpenTelemetry traces** — Full request tracing from auth through model response.
+- **Per-key and per-user rate limits** — Token bucket enforcement to control costs and prevent abuse.
+- **Live operator dashboard** — Next.js UI showing real-time traffic, cache hit rates, model distribution.
+- **Kubernetes-ready** — Docker Compose locally, Helm charts and manifests for production.
 
 <br/><br/>
 
-## API Reference
+<h2 align="center">Get started in 2 minutes</h2>
+
+### Local development
+
+Run the full stack:
+
+```bash
+docker compose up --build
+```
+
+**Service URLs:**
+- API: http://localhost:8000
+- Prometheus: http://localhost:9090
+- Frontend: http://localhost:3000
+
+**Send a test request:**
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/generate" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: dev-inference-key" \
+  -d '{
+    "prompt": "What are token bucket rate limiters?",
+    "user_id": "user-123",
+    "priority": "normal"
+  }'
+```
+
+Open http://localhost:3000 to view the dashboard with live traffic visualization.
+
+<br/><br/>
+
+<h2 align="center">API</h2>
+
+### Endpoints
 
 | Method | Path | Description |
 | --- | --- | --- |
-| POST | /api/v1/generate | Generate an LLM response |
-| GET | /api/v1/usage/summary?user_id=... | Usage summary for a user |
-| GET | /api/v1/usage/logs?user_id=...&limit=1-100 | Request log entries |
-| GET | /health/live | Liveness probe |
-| GET | /health/ready | Readiness probe |
-| GET | /metrics | Prometheus metrics |
+| POST | `/api/v1/generate` | Generate an LLM response |
+| GET | `/api/v1/usage/summary?user_id=...` | Usage summary for a user |
+| GET | `/api/v1/usage/logs?user_id=...&limit=1-100` | Request log entries |
+| GET | `/health/live` | Liveness probe |
+| GET | `/health/ready` | Readiness probe |
+| GET | `/metrics` | Prometheus metrics |
 
-Headers:
+### Headers
+
 - `x-api-key` (required) — Your API key for authentication
 
 <br/><br/>
 
-## Production tuning
+<h2 align="center">Who uses Inference Control Plane?</h2>
 
-For production workloads, configure these key parameters:
-
-```bash
-# Cache behavior — trade freshness vs. hit rate
-CACHE_TTL_SECONDS=3600          # How long to keep responses cached (1h recommended)
-
-# Rate limits — prevent runaway costs
-RATE_LIMIT_WINDOW_SECONDS=60    # Token bucket window (60s = per-minute limits)
-PER_KEY_RPS=100                 # Requests per second per API key
-PER_USER_RPS=50                 # Requests per second per user
-
-# Model routing — canary deployments
-MODEL_ROUTING_POLICY=weighted   # or 'round-robin', 'least-loaded'
-CANARY_MODEL_RATIO=0.1          # Route 10% of traffic to new model versions
-
-# Observability — configure exporters
-OTLP_ENDPOINT=http://collector:4317
-OTLP_BATCH_SIZE=512
-PROMETHEUS_SCRAPE_INTERVAL=15s
-```
-
-See [docs/OPERATIONS.md](docs/OPERATIONS.md) for:
-- Multi-region deployment
-- Failover and high-availability  
-- Database query optimization
-- Troubleshooting and debugging
+- **SaaS platforms** — Route customers to tiered models; enforce per-tier rate limits.
+- **Internal tools teams** — Manage LLM access across engineering, product, design with per-team quotas.
+- **AI agencies** — Route client requests to fine-tuned models; track usage and billing per customer.
+- **Research labs** — Experiment with routing policies and cache strategies without code changes.
+- **Production AI apps** — Cache embeddings, completions, and fine-tuned responses at any scale.
 
 <br/><br/>
 
-## Local development
+<h2 align="center">Configuration</h2>
 
-### Backend
+See `.env.example` for all settings. Key production parameters:
 
-1. Create and activate a virtual environment:
+```bash
+# Cache settings
+CACHE_TTL_SECONDS=3600          # How long to keep responses (1h default)
+CACHE_EVICTION_POLICY=lru       # eviction strategy for Redis
+
+# Rate limits
+RATE_LIMIT_WINDOW_SECONDS=60    # per-minute limits
+PER_KEY_RPS=100                 # requests/sec per API key
+PER_USER_RPS=50                 # requests/sec per user
+ALLOW_BURST=1.5                 # burst multiplier (1.5x limit for 10s)
+
+# Model routing
+MODEL_ROUTING_POLICY=weighted   # 'weighted' or 'round-robin'
+CANARY_MODEL_RATIO=0.1          # route 10% to canary models
+FALLBACK_MODELS=gpt-4o,gpt-3.5-turbo  # comma-separated list
+
+# Observability
+OTLP_ENDPOINT=http://localhost:4317
+PROMETHEUS_PORT=9090
+LOG_LEVEL=info
+```
+
+See [docs/OPERATIONS.md](docs/OPERATIONS.md) for deployment tuning, multi-region setup, and scaling.
+
+<br/><br/>
+
+<h2 align="center">Backend Development</h2>
+
+### Setup
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-```
+source venv/bin/activate
 
-2. Install dependencies:
-
-```bash
 pip install -r requirements.txt
-```
-
-3. Copy environment defaults:
-
-```bash
 cp .env.example .env
 ```
 
-4. Start PostgreSQL and Redis locally (or use the Docker Compose setup).
-
-5. Apply database migrations:
+### Database
 
 ```bash
+# Apply migrations
 alembic upgrade head
+
+# Create a migration
+alembic revision --autogenerate -m "your change description"
 ```
 
-6. Run the API server:
+### Run
 
 ```bash
+# Development server with auto-reload
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# Production server (single process)
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
 ```
 
-API will be available at http://localhost:8000. Docs at http://localhost:8000/docs.
-
-### Frontend
-
-1. Prepare frontend environment:
-
-```bash
-cd frontend
-cp .env.example .env.local
-```
-
-2. Install dependencies and start dev server:
-
-```bash
-npm install
-npm run dev
-```
-
-3. Open http://localhost:3000
-
-<br/><br/>
-
-## Testing and quality  
-
-Backend tests and checks:
+### Tests
 
 ```bash
 pip install -r requirements-dev.txt
 
-# Linting
-ruff check app tests
-
-# Unit tests
+# Run all tests
 pytest
 
-# All checks
-make quality
+# Specific test file
+pytest tests/test_rate_limiter.py
+
+# With coverage
+pytest --cov=app tests/
 ```
 
-Frontend tests and checks:
+### Linting
+
+```bash
+ruff check app tests
+ruff format app tests
+
+# Optional shortcuts
+make lint-backend
+make test
+```
+
+<br/><br/>
+
+<h2 align="center">Frontend Development</h2>
+
+### Setup
 
 ```bash
 cd frontend
-
-# Linting and type checking
-npm run lint
-
-# Build for production
-npm run build
+npm install
+cp .env.example .env.local
 ```
 
+### Run
+
+```bash
+# Development server
+npm run dev
+
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Tests & Linting
+
+```bash
+npm run lint
+npm run type-check
+npm test
+```
+
+See [frontend/README.md](frontend/README.md) for full frontend docs.
+
 <br/><br/>
 
-## Documentation
+<h2 align="center">Observability</h2>
 
-- 📖 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Design patterns, data model, request flow.
-- 🛠️ [docs/OPERATIONS.md](docs/OPERATIONS.md) — Deployment, scaling, monitoring, troubleshooting.
-- ☸️ [deploy/kubernetes/README.md](deploy/kubernetes/README.md) — Kubernetes manifests and Helm.
-- 🎨 [frontend/README.md](frontend/README.md) — Dashboard development and customization.
+### Metrics
+
+Prometheus endpoint at `GET /metrics` exports 50+ metrics:
+
+```promql
+# Cache hit rate (last 5 minutes)
+rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
+
+# Average request latency by model
+histogram_quantile(0.99, rate(request_latency_seconds_bucket[5m]))
+
+# Current rate limit usage
+rate_limit_tokens_remaining / rate_limit_tokens_total
+```
+
+### Tracing
+
+Every request is traced to your OTLP collector:
+
+```bash
+OTLP_ENDPOINT=http://your-collector:4317
+```
+
+Traces include:
+- API key validation
+- Rate limit enforcement
+- Cache lookup and hit/miss
+- Model routing decision
+- Model response time
+- PostgreSQL insert
+
+### Logging
+
+Structured JSON logs to stdout with fields:
+- `request_id` — unique per request
+- `user_id` — authenticated user
+- `model` — selected model
+- `cache_hit` — boolean
+- `latency_ms` — total time
+- `tokens_used` — if applicable
 
 <br/><br/>
 
-## Community
+<h2 align="center">Deployment</h2>
+
+### Docker
+
+```bash
+# Build image
+docker build -t inference-control-plane:latest .
+
+# Run container
+docker run -p 8000:8000 \
+  -e DATABASE_URL="postgresql://..." \
+  -e REDIS_URL="redis://..." \
+  inference-control-plane:latest
+```
+
+### Kubernetes
+
+Manifests in `deploy/kubernetes/`:
+
+```bash
+# Apply base configuration
+kubectl apply -k deploy/kubernetes/base/
+
+# Or use Helm
+helm install icp ./deploy/kubernetes/helm/ \
+  --values deploy/kubernetes/helm/values.yaml
+```
+
+See [deploy/kubernetes/README.md](deploy/kubernetes/README.md) for details on:
+- Horizontal Pod Autoscaling
+- Service mesh integration
+- Multi-region deployment
+- High availability setup
+
+<br/><br/>
+
+<h2 align="center">Documentation</h2>
+
+- 📖 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Design, data model, request flow deep dive
+- 🛠️ [docs/OPERATIONS.md](docs/OPERATIONS.md) — Scaling, monitoring, troubleshooting, performance tuning
+- ☸️ [deploy/kubernetes/README.md](deploy/kubernetes/README.md) — Kubernetes manifests and Helm usage
+- 🎨 [frontend/README.md](frontend/README.md) — Dashboard development and customization
+- 📋 [CONTRIBUTING.md](CONTRIBUTING.md) — How to contribute
+
+<br/><br/>
+
+<h2 align="center">Community</h2>
 
 <table width="100%" border="0" cellspacing="0" role="presentation">
   <tr>
     <td align="center" valign="middle" width="25%">
-      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/discussions" title="Start a discussion"><b>💬 Discussions</b></a><br/>Questions & ideas
+      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/discussions" title="GitHub Discussions"><picture><source media="(prefers-color-scheme: dark)"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Discussions" width="50"/></picture><br/><b>Discussions</b></a><br/>Questions & ideas
     </td>
     <td align="center" valign="middle" width="25%">
-      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/issues" title="Report a bug or request a feature"><b>🐛 Issues</b></a><br/>Bugs & features
+      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/issues" title="GitHub Issues"><b>🐛 Issues</b></a><br/>Bugs & features
     </td>
     <td align="center" valign="middle" width="25%">
-      <a href="CONTRIBUTING.md" title="Contributing guide"><b>📝 Contributing</b></a><br/>Code & docs
+      <a href="CONTRIBUTING.md" title="Contributing Guide"><b>📝 Contributing</b></a><br/>Code & docs
     </td>
     <td align="center" valign="middle" width="25%">
-      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/stargazers" title="Stargazers"><b>⭐ Star us</b></a><br/>Show support
+      <a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="GitHub"><b>⭐ Star us</b></a><br/>Show support
     </td>
   </tr>
 </table>
 
 <br/><br/>
 
-## Built to scale
+<h2 align="center">Built for scale</h2>
 
-- **Redis cluster support** — Sharded cache layer for distributed deployments.
-- **PostgreSQL replication** — Read replicas for analytics; writes on primary.
-- **Kubernetes HPA** — Auto-scale based on queue depth or request latency.
-- **Multi-region** — Route by geography using DNS or edge proxies.
+- **Redis cluster** — Sharded cache layer for petabyte-scale deployments.
+- **PostgreSQL streaming replication** — Read replicas for analytics; writes on primary.
+- **Horizontal Pod Autoscaling** — Auto-scale based on queue depth and request latency.
+- **Multi-region** — Route by geography; failover to secondary regions.
 
 <p align="center"><sub>Production deployments handle 100K+ concurrent users with <10ms p99 latency.</sub></p>
 
 <br/><br/>
 
-## Contributing
+<h2 align="center">Contributing</h2>
 
 <p align="center">
   <b>Every pull request makes Inference Control Plane better.</b><br/>
   Bug fixes, new features, docs, examples — all welcome.<br/>
-  <sub>First time contributing? Start with a <a href="https://github.com/DARREN-2000/Inference-Control-Plane/labels/good%20first%20issue">good first issue</a>.</sub>
+  <sub>First time? Start with a <a href="https://github.com/DARREN-2000/Inference-Control-Plane/labels/good%20first%20issue">good first issue</a>.</sub>
 </p>
 
 <p align="center">
   📝 <a href="CONTRIBUTING.md"><b>Read the contributing guide</b></a> &nbsp;·&nbsp;
-  🐛 <a href="https://github.com/DARREN-2000/Inference-Control-Plane/issues"><b>Browse issues</b></a> &nbsp;·&nbsp;
+  🐛 <a href="https://github.com/DARREN-2000/Inference-Control-Plane/issues?q=is%3Aopen"><b>Browse open issues</b></a> &nbsp;·&nbsp;
   💬 <a href="https://github.com/DARREN-2000/Inference-Control-Plane/discussions/new"><b>Start a discussion</b></a>
 </p>
 
