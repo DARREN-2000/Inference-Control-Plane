@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="520" viewBox="0 0 1600 520" role="img" aria-label="Live flow of LLM traffic through auth, routing, cache, limits, logs, and metrics.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5F7FB"/>
+      <stop offset="100%" stop-color="#E8F1F8"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="520" rx="36" fill="url(#bg)"/>
+  <g opacity="0.15">
+    <circle cx="150" cy="100" r="70" fill="#A5B4FC"/>
+    <circle cx="1460" cy="420" r="120" fill="#93C5FD"/>
+    <circle cx="1290" cy="110" r="60" fill="#99F6E4"/>
+  </g>
+  <g stroke="url(#flow)" stroke-width="4" fill="none" opacity="0.85">
+    <path d="M150 140 C 380 60, 540 90, 760 140"/>
+    <path d="M120 260 C 360 240, 520 240, 760 260"/>
+    <path d="M150 380 C 380 460, 540 430, 760 380"/>
+    <path d="M840 140 C 1080 90, 1240 60, 1460 140"/>
+    <path d="M840 260 C 1080 260, 1240 260, 1460 260"/>
+    <path d="M840 380 C 1080 430, 1240 460, 1460 380"/>
+  </g>
+  <g>
+    <circle cx="120" cy="260" r="20" fill="#0EA5E9"/>
+    <circle cx="1480" cy="260" r="20" fill="#22C55E"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="16" fill="#475569" text-anchor="middle">
+    <text x="120" y="220">Ingress</text>
+    <text x="1480" y="220">Egress</text>
+  </g>
+  <g>
+    <rect x="420" y="130" width="760" height="260" rx="28" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="800" y="180" font-size="28" font-family="Arial, sans-serif" fill="#0F172A" text-anchor="middle">Control Plane</text>
+    <text x="800" y="212" font-size="16" font-family="Arial, sans-serif" fill="#475569" text-anchor="middle">Auth, routing, cache, limits, logs, metrics</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#334155">
+    <rect x="500" y="230" width="170" height="44" rx="12" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="585" y="258">Auth</text>
+    <rect x="715" y="230" width="170" height="44" rx="12" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="800" y="258">Route</text>
+    <rect x="930" y="230" width="170" height="44" rx="12" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="1015" y="258">Cache</text>
+    <rect x="500" y="290" width="170" height="44" rx="12" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="585" y="318">Limits</text>
+    <rect x="715" y="290" width="170" height="44" rx="12" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="800" y="318">Logs</text>
+    <rect x="930" y="290" width="170" height="44" rx="12" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="1015" y="318">Metrics</text>
+  </g>
+</svg>
