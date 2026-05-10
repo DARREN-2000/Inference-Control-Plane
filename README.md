@@ -101,6 +101,19 @@
 
 <br/><br/>
 
+<h2 align="center">Live Demo</h2>
+
+<p align="center">
+  https://darren-2000.github.io/Inference-Control-Plane/
+</p>
+
+<p align="center">
+  Demo mode runs with simulated API responses. For a full-stack demo, deploy the
+  API and set <code>NEXT_PUBLIC_API_BASE_URL</code> to your API base URL.
+</p>
+
+<br/><br/>
+
 <h2 align="center">Get started in 2 minutes</h2>
 
 ### Local development

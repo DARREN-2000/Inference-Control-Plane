@@ -84,7 +84,7 @@ export default function Home() {
 
   return (
     <main className="cp-shell">
-      <header className="cp-card cp-card-strong mb-4 p-5 md:p-7">
+      <header className="cp-card cp-card-strong mb-4 p-5 md:p-7 cp-animate cp-animate-delay-1">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="cp-label text-[var(--accent-strong)]">Inference Platform</p>
@@ -111,17 +111,23 @@ export default function Home() {
       </header>
 
       <section className="cp-grid mb-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
-        {metrics.map((metric) => (
-          <article key={metric.label} className="cp-card p-4">
+        {metrics.map((metric, index) => {
+          const delayClass = `cp-animate-delay-${index + 2}`;
+          return (
+            <article
+              key={metric.label}
+              className={`cp-card p-4 cp-animate ${delayClass}`}
+            >
             <p className="cp-label text-neutral-600">{metric.label}</p>
             <p className="mt-1 text-2xl font-bold">{metric.value}</p>
             <p className="mt-1 text-sm text-emerald-700">{metric.delta} vs baseline</p>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </section>
 
       <section className="cp-grid grid-cols-1 xl:grid-cols-[1.4fr_1fr]">
-        <article className="cp-card p-5 md:p-6">
+        <article className="cp-card p-5 md:p-6 cp-animate cp-animate-delay-2">
           <div className="mb-4 flex items-end justify-between">
             <div>
               <p className="cp-label text-neutral-600">Live Playground</p>
@@ -214,13 +220,13 @@ export default function Home() {
         </article>
 
         <div className="cp-grid grid-cols-1 gap-4">
-          <article className="cp-card p-5">
+          <article className="cp-card p-5 cp-animate cp-animate-delay-3">
             <p className="cp-label text-neutral-600">Usage Trend</p>
             <h3 className="text-lg font-semibold">24h Request Volume</h3>
             <div className="cp-chart mt-3" />
           </article>
 
-          <article className="cp-card p-5">
+          <article className="cp-card p-5 cp-animate cp-animate-delay-4">
             <p className="cp-label text-neutral-600">Operational Activity</p>
             <ul className="mt-3 space-y-2 text-sm text-neutral-700">
               {activity.map((item) => (
@@ -231,7 +237,7 @@ export default function Home() {
             </ul>
           </article>
 
-          <article className="cp-card p-5">
+          <article className="cp-card p-5 cp-animate cp-animate-delay-5">
             <div className="flex items-center justify-between gap-2">
               <div>
                 <p className="cp-label text-neutral-600">Request Logs</p>

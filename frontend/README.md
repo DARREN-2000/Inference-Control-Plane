@@ -29,6 +29,7 @@ npm run dev
 ## Environment Variables
 
 - `NEXT_PUBLIC_API_BASE_URL`: Backend base URL. Default value in `.env.example` is `http://localhost:8000/api/v1`.
+- `NEXT_PUBLIC_DEMO_MODE`: When `true`, uses simulated responses for a live demo without a backend.
 
 ## Quality Checks
 
@@ -36,6 +37,13 @@ npm run dev
 npm run lint
 npm run build
 ```
+
+## Live Demo Deployment
+
+The GitHub Pages workflow builds a static demo using simulated responses. The
+expected link is:
+
+https://darren-2000.github.io/Inference-Control-Plane/
 
 ## Current UI Scope
 

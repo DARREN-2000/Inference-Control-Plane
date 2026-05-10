@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
+const isGithubPages = process.env.DEPLOY_TARGET === "github-pages";
+const basePath = isGithubPages ? "/Inference-Control-Plane" : "";
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: isGithubPages ? "export" : undefined,
+  basePath: isGithubPages ? basePath : undefined,
+  assetPrefix: isGithubPages ? `${basePath}/` : undefined,
+  trailingSlash: isGithubPages,
+  images: {
+    unoptimized: isGithubPages,
+  },
 };
 
 export default nextConfig;

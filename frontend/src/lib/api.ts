@@ -44,11 +44,109 @@ type ErrorResponse = {
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const DEMO_COSTS = {
+  low: 0.0008,
+  high: 0.01,
+} as const;
+
+type DemoLogEntry = UsageLogEntry & { user_id: string };
+const demoLogs: DemoLogEntry[] = [];
+
+function demoDelay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function demoRequestId(): string {
+  return `demo-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function demoTokens(prompt: string): number {
+  return Math.max(1, Math.ceil(prompt.trim().length / 4));
+}
+
+function demoCost(tokens: number, priority: "low" | "high"): number {
+  const cost = (tokens / 1000) * DEMO_COSTS[priority];
+  return Number(cost.toFixed(4));
+}
+
+function demoSummary(prompt: string): string {
+  const cleaned = prompt.trim().replace(/\s+/g, " ");
+  return cleaned.length > 160 ? `${cleaned.slice(0, 160)}...` : cleaned;
+}
+
+function seedDemoLogs(userId: string): void {
+  if (demoLogs.length > 0) {
+    return;
+  }
+
+  const now = Date.now();
+  const samplePrompts = [
+    "Summarize cache hit trends for the last 24 hours.",
+    "Explain top model latency drivers.",
+    "Generate a weekly usage summary for enterprise tenants.",
+  ];
+
+  samplePrompts.forEach((prompt, index) => {
+    const priority = index % 2 === 0 ? "low" : "high";
+    const tokens = demoTokens(prompt);
+    const modelUsed = priority === "high" ? "premium-model" : "cheap-model";
+    const createdAt = new Date(now - index * 900_000).toISOString();
+    demoLogs.push({
+      user_id: userId,
+      request_id: demoRequestId(),
+      model_used: modelUsed,
+      latency_ms: 180 + index * 40,
+      tokens,
+      cost: demoCost(tokens, priority),
+      cache_hit: index % 3 === 0,
+      status: "success",
+      created_at: createdAt,
+      error_message: null,
+    });
+  });
+}
 
 export async function generateInference(
   payload: GenerateRequest,
   apiKey: string,
 ): Promise<GenerateResponse> {
+  if (DEMO_MODE) {
+    const latency = 160 + Math.round(Math.random() * 320);
+    const tokens = demoTokens(payload.prompt);
+    const modelUsed = payload.priority === "high" ? "premium-model" : "cheap-model";
+    const cached = Math.random() > 0.55;
+    const response: GenerateResponse = {
+      request_id: demoRequestId(),
+      model_used: modelUsed,
+      response: `Demo response: ${demoSummary(payload.prompt)}`,
+      cached,
+      latency_ms: latency,
+      tokens,
+      cost: demoCost(tokens, payload.priority),
+      timestamp: new Date().toISOString(),
+    };
+
+    demoLogs.unshift({
+      user_id: payload.user_id,
+      request_id: response.request_id,
+      model_used: response.model_used,
+      latency_ms: response.latency_ms,
+      tokens: response.tokens,
+      cost: response.cost,
+      cache_hit: response.cached,
+      status: "success",
+      created_at: response.timestamp,
+      error_message: null,
+    });
+    demoLogs.splice(25);
+
+    await demoDelay(latency);
+    return response;
+  }
+
   const response = await fetch(`${BASE_URL}/generate`, {
     method: "POST",
     headers: {
@@ -81,6 +179,23 @@ export async function fetchUsageLogs(
   apiKey: string,
   limit = 8,
 ): Promise<UsageLogsResponse> {
+  if (DEMO_MODE) {
+    seedDemoLogs(userId);
+    const entries = demoLogs
+      .filter((entry) => entry.user_id === userId)
+      .slice(0, limit)
+      .map((entry) => {
+        const { user_id: ignoredUserId, ...rest } = entry;
+        void ignoredUserId;
+        return rest;
+      });
+    return {
+      user_id: userId,
+      limit,
+      entries,
+    };
+  }
+
   const query = new URLSearchParams({
     user_id: userId,
     limit: String(limit),

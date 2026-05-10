@@ -27,6 +27,31 @@ body {
   background-image:
     radial-gradient(circle at 20% 0%, #ffedd5 0%, transparent 45%),
     radial-gradient(circle at 80% 10%, #dbeafe 0%, transparent 40%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20% -10%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::before {
+  background: radial-gradient(circle at 10% 20%, #fcd34d40 0%, transparent 55%),
+    radial-gradient(circle at 90% 10%, #93c5fd40 0%, transparent 50%);
+  opacity: 0.55;
+  animation: cp-drift 18s ease-in-out infinite alternate;
+}
+
+body::after {
+  background: radial-gradient(circle at 30% 80%, #22c55e26 0%, transparent 45%),
+    radial-gradient(circle at 70% 70%, #fda4af2e 0%, transparent 55%);
+  opacity: 0.6;
+  animation: cp-drift 22s ease-in-out infinite alternate-reverse;
 }
 
 * {
@@ -50,6 +75,14 @@ body {
   background: color-mix(in oklab, var(--surface) 84%, white 16%);
   border-radius: 1rem;
   box-shadow: 0 10px 32px rgb(31 28 23 / 0.06);
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.cp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgb(31 28 23 / 0.1);
 }
 
 .cp-card-strong {
@@ -72,12 +105,14 @@ body {
   padding: 0.35rem 0.75rem;
   font-size: 0.75rem;
   font-family: var(--font-plex-mono), monospace;
+  animation: cp-fade-up 700ms ease both;
 }
 
 .cp-dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 9999px;
+  animation: cp-pulse 1.8s ease-in-out infinite;
 }
 
 .cp-input {
@@ -123,6 +158,101 @@ body {
     rgb(15 118 110 / 0.18) 0%,
     rgb(15 118 110 / 0.02) 100%
   );
+  position: relative;
+  overflow: hidden;
+}
+
+.cp-chart::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #0f766e, transparent);
+  animation: cp-scan 3.8s ease-in-out infinite;
+}
+
+.cp-animate {
+  animation: cp-fade-up 700ms ease both;
+  will-change: transform, opacity;
+}
+
+.cp-animate-delay-1 {
+  animation-delay: 80ms;
+}
+
+.cp-animate-delay-2 {
+  animation-delay: 160ms;
+}
+
+.cp-animate-delay-3 {
+  animation-delay: 240ms;
+}
+
+.cp-animate-delay-4 {
+  animation-delay: 320ms;
+}
+
+.cp-animate-delay-5 {
+  animation-delay: 400ms;
+}
+
+.cp-animate-delay-6 {
+  animation-delay: 480ms;
+}
+
+@keyframes cp-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cp-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+
+@keyframes cp-scan {
+  0% {
+    transform: translateY(180%);
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-140%);
+    opacity: 0;
+  }
+}
+
+@keyframes cp-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(4%, -3%, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @media (max-width: 780px) {
