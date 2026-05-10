@@ -82,39 +82,64 @@
 </p>
 
 <p align="center">
-  <b>Sub-millisecond hits</b> · Redis cache &nbsp;·&nbsp;
-  <b>10× cost savings</b> · cache + routing &nbsp;·&nbsp;
+  <b>Low-latency hits</b> · Redis cache &nbsp;·&nbsp;
+  <b>Cost control</b> · cache + routing &nbsp;·&nbsp;
   <b>Full auditability</b> · per-request logging &nbsp;·&nbsp;
-  <b>Production-grade</b> · tested at 100K users
+  <b>Production-ready</b> · FastAPI + Postgres + Redis
 </p>
 
 ### Key features
 
-- **Sub-millisecond response cache** — Redis-backed caching eliminates redundant LLM API calls.
-- **Intelligent request routing** — Priority queues, model fallbacks, canary testing, A/B experiments.
+- **Low-latency response cache** — Redis-backed caching eliminates redundant LLM API calls.
+- **Priority-based routing** — Token-threshold routing with model overrides and fallback.
 - **PostgreSQL request audit log** — Every call logged with latency, token count, model, cost, and user context.
-- **Prometheus metrics** — 50+ metrics covering cache, routing, rate limits, and model performance.
+- **Prometheus metrics** — Cache, routing, rate limits, and model performance metrics.
 - **OpenTelemetry traces** — Full request tracing from auth through model response.
-- **Per-key and per-user rate limits** — Token bucket enforcement to control costs and prevent abuse.
+- **Per-key and per-user rate limits** — Redis-backed fixed-window enforcement to control costs.
 - **Live operator dashboard** — Next.js UI showing real-time traffic, cache hit rates, model distribution.
-- **Kubernetes-ready** — Docker Compose locally, Helm charts and manifests for production.
+- **Kubernetes-ready** — Docker Compose locally, Kustomize manifests for production.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-telemetry-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-telemetry-light.svg">
+    <img src="docs/assets/readme-telemetry-light.svg" alt="Telemetry strip showing routing, caching, limits, logs, and metrics." width="100%"/>
+  </picture>
+</p>
 
 <br/><br/>
 
 <h2 align="center">Live Demo</h2>
 
 <p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-live-demo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-live-demo-light.svg">
+    <img src="docs/assets/readme-live-demo-light.svg" alt="Live demo preview with animated request pulses." width="100%"/>
+  </picture>
+</p>
+
+<p align="center">
   https://darren-2000.github.io/Inference-Control-Plane/
 </p>
 
 <p align="center">
-  Demo mode runs with simulated API responses. For a full-stack demo, deploy the
-  API and set <code>NEXT_PUBLIC_API_BASE_URL</code> to your API base URL.
+  Demo mode runs with simulated API responses and live UI motion. For a full-stack
+  demo, deploy the API and set <code>NEXT_PUBLIC_API_BASE_URL</code> to your API
+  base URL. Set <code>NEXT_PUBLIC_DEMO_MODE=true</code> to keep demo mode on.
 </p>
 
 <br/><br/>
 
 <h2 align="center">Get started in 2 minutes</h2>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-devx-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-devx-light.svg">
+    <img src="docs/assets/readme-devx-light.svg" alt="Developer quick start commands for local stack and test request." width="100%"/>
+  </picture>
+</p>
 
 ### Local development
 
@@ -138,7 +163,7 @@ curl -X POST "http://localhost:8000/api/v1/generate" \
   -d '{
     "prompt": "What are token bucket rate limiters?",
     "user_id": "user-123",
-    "priority": "normal"
+    "priority": "low"
   }'
 ```
 
@@ -246,7 +271,7 @@ pip install -r requirements-dev.txt
 pytest
 
 # Specific test file
-pytest tests/test_rate_limiter.py
+pytest tests/test_router.py
 
 # With coverage
 pytest --cov=app tests/
@@ -352,6 +377,14 @@ frontend package to GitHub Packages, and pushes the Docker image to GHCR.
 
 <h2 align="center">Observability</h2>
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-observability-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-observability-light.svg">
+    <img src="docs/assets/readme-observability-light.svg" alt="Observability overview with traces, metrics, and logs." width="100%"/>
+  </picture>
+</p>
+
 ### Metrics
 
 Prometheus endpoint at `GET /metrics` exports 50+ metrics:
@@ -397,6 +430,14 @@ Structured JSON logs to stdout with fields:
 
 <h2 align="center">Deployment</h2>
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-deploy-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-deploy-light.svg">
+    <img src="docs/assets/readme-deploy-light.svg" alt="Deployment options for local, Docker, and Kubernetes." width="100%"/>
+  </picture>
+</p>
+
 ### Docker
 
 ```bash
@@ -405,7 +446,7 @@ docker build -t inference-control-plane:latest .
 
 # Run container
 docker run -p 8000:8000 \
-  -e DATABASE_URL="postgresql://..." \
+  -e DATABASE_URL="postgresql+asyncpg://..." \
   -e REDIS_URL="redis://..." \
   inference-control-plane:latest
 ```
@@ -417,10 +458,6 @@ Manifests in `deploy/kubernetes/`:
 ```bash
 # Apply base configuration
 kubectl apply -k deploy/kubernetes/base/
-
-# Or use Helm
-helm install icp ./deploy/kubernetes/helm/ \
-  --values deploy/kubernetes/helm/values.yaml
 ```
 
 See [deploy/kubernetes/README.md](deploy/kubernetes/README.md) for details on:
@@ -469,7 +506,7 @@ See [deploy/kubernetes/README.md](deploy/kubernetes/README.md) for details on:
 - **Horizontal Pod Autoscaling** — Auto-scale based on queue depth and request latency.
 - **Multi-region** — Route by geography; failover to secondary regions.
 
-<p align="center"><sub>Production deployments handle 100K+ concurrent users with <10ms p99 latency.</sub></p>
+<p align="center"><sub>Designed for high-throughput workloads. Benchmark with your own traffic for production sizing.</sub></p>
 
 <br/><br/>
 

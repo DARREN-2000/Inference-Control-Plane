@@ -11,7 +11,7 @@ This directory provides a baseline Kubernetes deployment for the control plane.
 Apply all base manifests:
 
 ```bash
-kubectl apply -f deploy/kubernetes/base
+kubectl apply -k deploy/kubernetes/base/
 ```
 
 ## Important Notes

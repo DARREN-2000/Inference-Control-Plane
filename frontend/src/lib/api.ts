@@ -45,6 +45,7 @@ type ErrorResponse = {
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+export const isDemoMode = DEMO_MODE;
 const DEMO_COSTS = {
   low: 0.0008,
   high: 0.01,

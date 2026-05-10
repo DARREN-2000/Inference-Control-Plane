@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="260" viewBox="0 0 1600 260" role="img" aria-label="Deployment options for local, Docker, and Kubernetes.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1120"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M120 0H0V120" fill="none" stroke="#1F2937" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0B1120" flood-opacity="0.7"/>
+    </filter>
+    <style>
+      .flow { stroke-dasharray: 18 12; animation: dash 3.2s linear infinite; }
+      .pulse { animation: pulse 2.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+      @keyframes dash { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -76; } }
+      @keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.35); opacity: 1; } }
+    </style>
+  </defs>
+  <rect width="1600" height="260" rx="32" fill="url(#bg)"/>
+  <rect width="1600" height="260" rx="32" fill="url(#grid)" opacity="0.35"/>
+
+  <line class="flow" x1="380" y1="142" x2="1220" y2="142" stroke="url(#flow)" stroke-width="4"/>
+
+  <g font-family="Arial, sans-serif" fill="#E2E8F0" text-anchor="middle">
+    <g transform="translate(250 80)" filter="url(#shadow)">
+      <rect width="300" height="120" rx="20" fill="#0F172A" stroke="#1F2937"/>
+      <text x="150" y="34" font-size="15">Local</text>
+      <rect x="80" y="50" width="140" height="50" rx="8" fill="#111827" stroke="#334155"/>
+      <rect x="98" y="58" width="104" height="26" rx="6" fill="#1F2937"/>
+      <rect x="110" y="90" width="80" height="6" rx="3" fill="#334155"/>
+      <circle class="pulse" cx="210" cy="62" r="6" fill="#38BDF8"/>
+    </g>
+
+    <g transform="translate(650 80)" filter="url(#shadow)">
+      <rect width="300" height="120" rx="20" fill="#0F172A" stroke="#1F2937"/>
+      <text x="150" y="34" font-size="15">Docker</text>
+      <rect x="88" y="54" width="124" height="50" rx="10" fill="#111827" stroke="#334155"/>
+      <rect x="108" y="64" width="84" height="30" rx="8" fill="#1F2937"/>
+      <circle class="pulse" cx="210" cy="80" r="6" fill="#22C55E" style="animation-delay:0.5s"/>
+    </g>
+
+    <g transform="translate(1050 80)" filter="url(#shadow)">
+      <rect width="300" height="120" rx="20" fill="#0F172A" stroke="#1F2937"/>
+      <text x="150" y="34" font-size="15">Kubernetes</text>
+      <circle cx="150" cy="82" r="30" fill="#111827" stroke="#334155"/>
+      <circle cx="150" cy="82" r="16" fill="#1F2937"/>
+      <circle class="pulse" cx="190" cy="72" r="6" fill="#A78BFA" style="animation-delay:1s"/>
+    </g>
+  </g>
+</svg>

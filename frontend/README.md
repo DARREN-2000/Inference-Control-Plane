@@ -30,6 +30,7 @@ npm run dev
 
 - `NEXT_PUBLIC_API_BASE_URL`: Backend base URL. Default value in `.env.example` is `http://localhost:8000/api/v1`.
 - `NEXT_PUBLIC_DEMO_MODE`: When `true`, uses simulated responses for a live demo without a backend.
+- `DEPLOY_TARGET`: Set to `github-pages` to export a static demo build.
 
 ## Quality Checks
 

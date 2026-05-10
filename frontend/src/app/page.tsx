@@ -6,6 +6,7 @@ import {
   fetchUsageLogs,
   generateInference,
   GenerateResponse,
+  isDemoMode,
   UsageLogEntry,
 } from "@/lib/api";
 
@@ -103,6 +104,11 @@ export default function Home() {
             <span className="cp-pill">
               <span className="cp-dot bg-cyan-600" /> Redis online
             </span>
+            {isDemoMode && (
+              <span className="cp-pill">
+                <span className="cp-dot bg-fuchsia-500" /> Demo mode
+              </span>
+            )}
             <span className="cp-pill">
               <span className="cp-dot bg-amber-500" /> Routing: {derivedModel}
             </span>
@@ -186,6 +192,12 @@ export default function Home() {
               </button>
             </div>
           </form>
+
+          {isDemoMode && (
+            <p className="mt-3 text-xs text-neutral-600">
+              Demo mode is enabled. Responses and logs are simulated for preview.
+            </p>
+          )}
 
           {error && (
             <p className="mt-4 rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-[var(--danger)]">

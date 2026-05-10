@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="320" viewBox="0 0 1600 320" role="img" aria-label="Observability overview with traces, metrics, and logs.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1120"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M120 0H0V120" fill="none" stroke="#1F2937" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0B1120" flood-opacity="0.7"/>
+    </filter>
+    <style>
+      .flow { stroke-dasharray: 16 10; animation: dash 3.4s linear infinite; }
+      .pulse { animation: pulse 2.8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+      @keyframes dash { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -80; } }
+      @keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.35); opacity: 1; } }
+    </style>
+  </defs>
+  <rect width="1600" height="320" rx="36" fill="url(#bg)"/>
+  <rect width="1600" height="320" rx="36" fill="url(#grid)" opacity="0.35"/>
+
+  <g font-family="Arial, sans-serif" fill="#E2E8F0" text-anchor="middle">
+    <g transform="translate(140 80)" filter="url(#shadow)">
+      <rect width="420" height="180" rx="22" fill="#0F172A" stroke="#1F2937"/>
+      <text x="210" y="36" font-size="16">Traces</text>
+      <path class="flow" d="M80 90 C 140 60, 200 120, 260 90" fill="none" stroke="url(#flow)" stroke-width="4"/>
+      <path class="flow" d="M160 130 C 210 150, 260 110, 320 130" fill="none" stroke="url(#flow)" stroke-width="3"/>
+      <circle class="pulse" cx="110" cy="86" r="6" fill="#38BDF8"/>
+      <circle class="pulse" cx="250" cy="92" r="6" fill="#22C55E" style="animation-delay:0.6s"/>
+      <circle class="pulse" cx="300" cy="128" r="6" fill="#A78BFA" style="animation-delay:1.2s"/>
+      <text x="210" y="156" font-size="12" fill="#94A3B8">request spans per hop</text>
+    </g>
+
+    <g transform="translate(590 80)" filter="url(#shadow)">
+      <rect width="420" height="180" rx="22" fill="#0F172A" stroke="#1F2937"/>
+      <text x="210" y="36" font-size="16">Metrics</text>
+      <rect x="110" y="130" width="26" height="32" rx="6" fill="#A5B4FC"/>
+      <rect x="150" y="110" width="26" height="52" rx="6" fill="#60A5FA"/>
+      <rect x="190" y="96" width="26" height="66" rx="6" fill="#34D399"/>
+      <rect x="230" y="118" width="26" height="44" rx="6" fill="#FB7185"/>
+      <rect x="270" y="86" width="26" height="76" rx="6" fill="#FBBF24"/>
+      <circle class="pulse" cx="285" cy="78" r="6" fill="#C084FC"/>
+      <text x="210" y="156" font-size="12" fill="#94A3B8">latency, cache, rate limits</text>
+    </g>
+
+    <g transform="translate(1040 80)" filter="url(#shadow)">
+      <rect width="420" height="180" rx="22" fill="#0F172A" stroke="#1F2937"/>
+      <text x="210" y="36" font-size="16">Logs</text>
+      <rect x="100" y="92" width="220" height="14" rx="7" fill="#1F2937"/>
+      <rect x="100" y="114" width="200" height="14" rx="7" fill="#334155"/>
+      <rect x="100" y="136" width="230" height="14" rx="7" fill="#1F2937"/>
+      <rect x="100" y="158" width="180" height="14" rx="7" fill="#334155"/>
+      <circle class="pulse" cx="330" cy="98" r="6" fill="#38BDF8"/>
+      <text x="210" y="188" font-size="12" fill="#94A3B8">structured audit events</text>
+    </g>
+  </g>
+</svg>
