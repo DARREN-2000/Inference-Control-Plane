@@ -287,6 +287,56 @@ See [frontend/README.md](frontend/README.md) for full frontend docs.
 
 <br/><br/>
 
+<h2 align="center">Packaging & Publishing</h2>
+
+### Python package
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m build
+```
+
+Artifacts land in `dist/`. Upload to the GitHub Release automatically when you
+publish a `vX.Y.Z` release (see Versioning below). Optional PyPI publish:
+
+```bash
+python -m twine upload dist/*
+```
+
+### npm package (frontend)
+
+```bash
+cd frontend
+npm install
+npm pack
+```
+
+Publish to GitHub Packages with:
+
+```bash
+npm publish
+```
+
+### Docker image
+
+GitHub releases publish a GHCR image at:
+
+```bash
+ghcr.io/darren-2000/inference-control-plane
+```
+
+Use the Docker commands in the Deployment section below for local builds.
+
+### Versioning and releases
+
+1. Update `app/__init__.py` and `frontend/package.json` to the same version.
+2. Tag a release as `vX.Y.Z` and publish a GitHub Release.
+
+The release workflow uploads Python artifacts to the Release, publishes the
+frontend package to GitHub Packages, and pushes the Docker image to GHCR.
+
+<br/><br/>
+
 <h2 align="center">Observability</h2>
 
 ### Metrics

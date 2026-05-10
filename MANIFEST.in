@@ -1,0 +1,7 @@
+include README.md
+include LICENSE
+include .env.example
+include alembic.ini
+recursive-include alembic *
+global-exclude *.py[cod]
+global-exclude __pycache__/*
