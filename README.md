@@ -355,15 +355,18 @@ Publish to GitHub Packages with:
 npm publish
 ```
 
-### Docker image
+### Docker images
 
-GitHub releases publish a GHCR image at:
+GitHub releases publish two GHCR images:
 
 ```bash
-ghcr.io/darren-2000/inference-control-plane
+ghcr.io/darren-2000/inference-control-plane-api
+ghcr.io/darren-2000/inference-control-plane-worker
 ```
 
-Use the Docker commands in the Deployment section below for local builds.
+The worker image is the same base container today; run it with a worker command
+override for background jobs. Use the Docker commands in the Deployment section
+below for local builds.
 
 ### Versioning and releases
 
@@ -371,7 +374,7 @@ Use the Docker commands in the Deployment section below for local builds.
 2. Tag a release as `vX.Y.Z` and publish a GitHub Release.
 
 The release workflow uploads Python artifacts to the Release, publishes the
-frontend package to GitHub Packages, and pushes the Docker image to GHCR.
+frontend package to GitHub Packages, and pushes the Docker images to GHCR.
 
 <br/><br/>
 
