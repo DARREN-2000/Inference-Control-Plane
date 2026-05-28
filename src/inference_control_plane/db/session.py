@@ -23,7 +23,6 @@ def init_engine(settings: Settings) -> None:
         pool_pre_ping=True,
         pool_size=settings.database_pool_size,
         max_overflow=settings.database_max_overflow,
-        future=True,
     )
     _session_factory = async_sessionmaker(
         bind=_engine,
