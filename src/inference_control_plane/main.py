@@ -13,7 +13,12 @@ from inference_control_plane.core.errors import (
 )
 from inference_control_plane.db.redis import close_redis, init_redis
 from inference_control_plane.db.seed import seed_default_api_key
-from inference_control_plane.db.session import dispose_engine, get_engine, get_session_factory, init_engine
+from inference_control_plane.db.session import (
+    dispose_engine,
+    get_engine,
+    get_session_factory,
+    init_engine,
+)
 from inference_control_plane.observability.logging import configure_logging
 from inference_control_plane.observability.tracing import configure_tracing, shutdown_tracing
 

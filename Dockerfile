@@ -17,13 +17,14 @@ COPY alembic ./alembic
 COPY alembic.ini ./alembic.ini
 COPY .env.example ./.env.example
 
-RUN uv sync --system --frozen
+RUN uv sync --frozen --no-dev
 
 FROM python:3.12-slim AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app/src
+    PYTHONPATH=/app/src \
+    PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
 
@@ -31,7 +32,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local /usr/local
+COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/alembic ./alembic
 COPY --from=builder /app/alembic.ini ./alembic.ini

@@ -2,6 +2,7 @@ import hashlib
 
 from inference_control_plane.services.cache import _cache_key
 
+
 def test_cache_key_generation():
     prompt = "Hello"
     model = "gpt-4"

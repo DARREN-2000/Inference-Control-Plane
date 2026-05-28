@@ -7,13 +7,13 @@ cd "$ROOT_DIR"
 
 echo "[1/6] Installing backend dependencies"
 python -m pip install --user uv
-uv sync --extra dev --system --frozen
+uv sync --extra dev --frozen
 
 echo "[2/6] Linting backend"
-ruff check src/inference_control_plane tests
+uv run ruff check src/inference_control_plane tests
 
 echo "[3/6] Running backend tests"
-pytest
+uv run pytest
 
 echo "[4/6] Installing frontend dependencies"
 cd frontend

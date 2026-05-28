@@ -87,7 +87,9 @@ class Settings(BaseSettings):
                 if not self.azure_openai_base_url or not self.azure_openai_api_key:
                     raise ValueError("AZURE_OPENAI_BASE_URL and AZURE_OPENAI_API_KEY are required.")
                 if not self.azure_openai_deployment:
-                    raise ValueError("AZURE_OPENAI_DEPLOYMENT is required when using azure provider.")
+                    raise ValueError(
+                        "AZURE_OPENAI_DEPLOYMENT is required when using azure provider."
+                    )
 
         if self.environment.lower() == "production":
             if self.default_api_key == "dev-inference-key":

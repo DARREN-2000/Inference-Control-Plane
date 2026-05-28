@@ -1,16 +1,16 @@
 .PHONY: install install-dev test lint-backend lint-frontend build-frontend migrate migration quality
 
 install:
-	uv sync --system --frozen
+	uv sync --frozen
 
 install-dev:
-	uv sync --extra dev --system --frozen
+	uv sync --extra dev --frozen
 
 test:
-	pytest
+	uv run pytest
 
 lint-backend:
-	ruff check src/inference_control_plane tests
+	uv run ruff check src/inference_control_plane tests
 
 lint-frontend:
 	cd frontend && npm run lint
