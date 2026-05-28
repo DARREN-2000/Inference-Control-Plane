@@ -1,8 +1,8 @@
 import math
 from dataclasses import dataclass
 
-from app.core.config import Settings
-from app.schemas.generate import GenerateRequest
+from inference_control_plane.core.config import Settings
+from inference_control_plane.schemas.generate import GenerateRequest
 
 
 @dataclass(slots=True)

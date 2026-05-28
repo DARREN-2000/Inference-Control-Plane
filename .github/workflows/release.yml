@@ -45,10 +45,10 @@ jobs:
 
           version = os.environ["VERSION"]
 
-          init_text = Path("app/__init__.py").read_text()
+          init_text = Path("src/inference_control_plane/__init__.py").read_text()
           match = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", init_text)
           if not match:
-            print("Unable to find __version__ in app/__init__.py")
+            print("Unable to find __version__ in src/inference_control_plane/__init__.py")
             sys.exit(1)
           if match.group(1) != version:
             print(f"Backend version {match.group(1)} does not match tag {version}")

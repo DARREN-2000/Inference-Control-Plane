@@ -7,8 +7,8 @@ from redis.asyncio import Redis
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import Settings
-from app.models.api_key import APIKey
+from inference_control_plane.core.config import Settings
+from inference_control_plane.models.api_key import APIKey
 
 
 @dataclass(slots=True)

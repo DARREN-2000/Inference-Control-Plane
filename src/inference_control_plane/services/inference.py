@@ -4,25 +4,26 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from time import perf_counter
 
-from fastapi import HTTPException, status
+from fastapi import BackgroundTasks, HTTPException, status
 from redis.asyncio import Redis
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.core.config import Settings
-from app.models.request_log import RequestLog
-from app.observability.metrics import (
+from inference_control_plane.core.config import Settings
+from inference_control_plane.db.session import get_session_factory
+from inference_control_plane.models.request_log import RequestLog
+from inference_control_plane.observability.metrics import (
     record_cache_result,
     record_cost,
     record_model_usage,
     record_rate_limit_rejection,
     record_request,
 )
-from app.schemas.generate import GenerateRequest, GenerateResponse
-from app.services.auth import AuthContext
-from app.services.cache import get_cached_response, set_cached_response
-from app.services.llm_client import LLMClientError, generate_completion
-from app.services.rate_limiter import check_rate_limit
-from app.services.router import choose_model, estimate_tokens
+from inference_control_plane.schemas.generate import GenerateRequest, GenerateResponse
+from inference_control_plane.services.auth import AuthContext
+from inference_control_plane.services.cache import get_cached_response, set_cached_response
+from inference_control_plane.services.llm_client import LLMClientError, generate_completion
+from inference_control_plane.services.rate_limiter import check_rate_limit
+from inference_control_plane.services.router import choose_model, estimate_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ def _fallback_model(model: str, settings: Settings) -> str | None:
 
 
 async def _persist_request_log(
-    session: AsyncSession,
+    session_factory: async_sessionmaker[AsyncSession],
     *,
     tenant_id: str,
     user_id: str,
@@ -61,27 +62,63 @@ async def _persist_request_log(
     status_value: str,
     error_message: str | None,
 ) -> None:
-    try:
-        session.add(
-            RequestLog(
-                tenant_id=tenant_id,
-                user_id=user_id,
-                api_key_hash=api_key_hash,
-                prompt=prompt,
-                response=response,
-                model_used=model_used,
-                latency_ms=max(latency_ms, 0.0),
-                tokens=max(tokens, 0),
-                cost=Decimal(str(max(cost, 0.0))),
-                cache_hit=cache_hit,
-                status=status_value,
-                error_message=error_message,
+    async with session_factory() as session:
+        try:
+            session.add(
+                RequestLog(
+                    tenant_id=tenant_id,
+                    user_id=user_id,
+                    api_key_hash=api_key_hash,
+                    prompt=prompt,
+                    response=response,
+                    model_used=model_used,
+                    latency_ms=max(latency_ms, 0.0),
+                    tokens=max(tokens, 0),
+                    cost=Decimal(str(max(cost, 0.0))),
+                    cache_hit=cache_hit,
+                    status=status_value,
+                    error_message=error_message,
+                )
             )
-        )
-        await session.commit()
-    except Exception:
-        await session.rollback()
-        logger.exception("Failed to persist request log.")
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            logger.exception("Failed to persist request log.")
+
+
+def _queue_request_log(
+    background_tasks: BackgroundTasks,
+    *,
+    tenant_id: str,
+    user_id: str,
+    api_key_hash: str,
+    prompt: str,
+    response: str,
+    model_used: str,
+    latency_ms: float,
+    tokens: int,
+    cost: float,
+    cache_hit: bool,
+    status_value: str,
+    error_message: str | None,
+) -> None:
+    session_factory = get_session_factory()
+    background_tasks.add_task(
+        _persist_request_log,
+        session_factory,
+        tenant_id=tenant_id,
+        user_id=user_id,
+        api_key_hash=api_key_hash,
+        prompt=prompt,
+        response=response,
+        model_used=model_used,
+        latency_ms=latency_ms,
+        tokens=tokens,
+        cost=cost,
+        cache_hit=cache_hit,
+        status_value=status_value,
+        error_message=error_message,
+    )
 
 
 async def _enforce_rate_limits(
@@ -144,9 +181,9 @@ async def handle_generate_request(
     *,
     payload: GenerateRequest,
     auth_context: AuthContext,
-    session: AsyncSession,
     settings: Settings,
     redis_client: Redis | None,
+    background_tasks: BackgroundTasks,
 ) -> GenerateResponse:
     started = perf_counter()
     request_id = str(uuid.uuid4())
@@ -178,8 +215,8 @@ async def handle_generate_request(
                 cache_hit=True,
             )
 
-            await _persist_request_log(
-                session,
+            _queue_request_log(
+                background_tasks,
                 tenant_id=auth_context.tenant_id,
                 user_id=payload.user_id,
                 api_key_hash=auth_context.api_key_hash,
@@ -237,8 +274,8 @@ async def handle_generate_request(
             cache_hit=False,
         )
 
-        await _persist_request_log(
-            session,
+        _queue_request_log(
+            background_tasks,
             tenant_id=auth_context.tenant_id,
             user_id=payload.user_id,
             api_key_hash=auth_context.api_key_hash,
@@ -272,8 +309,8 @@ async def handle_generate_request(
             cache_hit=False,
         )
 
-        await _persist_request_log(
-            session,
+        _queue_request_log(
+            background_tasks,
             tenant_id=auth_context.tenant_id,
             user_id=payload.user_id,
             api_key_hash=auth_context.api_key_hash,
@@ -297,8 +334,8 @@ async def handle_generate_request(
             cache_hit=False,
         )
 
-        await _persist_request_log(
-            session,
+        _queue_request_log(
+            background_tasks,
             tenant_id=auth_context.tenant_id,
             user_id=payload.user_id,
             api_key_hash=auth_context.api_key_hash,

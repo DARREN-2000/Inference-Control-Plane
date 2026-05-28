@@ -1,21 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Response, status
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import Settings, get_settings
-from app.core.security import get_auth_context
-from app.db.redis import get_redis_optional, ping_redis
-from app.db.session import get_db_session
-from app.schemas.generate import (
+from inference_control_plane.core.config import Settings, get_settings
+from inference_control_plane.core.security import get_auth_context
+from inference_control_plane.db.redis import get_redis_optional, ping_redis
+from inference_control_plane.db.session import get_db_session
+from inference_control_plane.schemas.generate import (
     GenerateRequest,
     GenerateResponse,
     UsageLogsResponse,
     UsageSummaryResponse,
 )
-from app.services.auth import AuthContext
-from app.services.inference import handle_generate_request
-from app.services.usage import get_usage_logs, get_usage_summary
+from inference_control_plane.services.auth import AuthContext
+from inference_control_plane.services.inference import handle_generate_request
+from inference_control_plane.services.usage import get_usage_logs, get_usage_summary
 
 router = APIRouter()
 
@@ -23,17 +23,17 @@ router = APIRouter()
 @router.post("/generate", response_model=GenerateResponse)
 async def generate(
     payload: GenerateRequest,
+    background_tasks: BackgroundTasks,
     auth_context: AuthContext = Depends(get_auth_context),
-    session: AsyncSession = Depends(get_db_session),
     settings: Settings = Depends(get_settings),
 ) -> GenerateResponse:
     redis_client = get_redis_optional()
     return await handle_generate_request(
         payload=payload,
         auth_context=auth_context,
-        session=session,
         settings=settings,
         redis_client=redis_client,
+        background_tasks=background_tasks,
     )
 
 

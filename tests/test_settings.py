@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.core.config import Settings
+from inference_control_plane.core.config import Settings
 
 
 def test_openai_mode_requires_api_key() -> None:

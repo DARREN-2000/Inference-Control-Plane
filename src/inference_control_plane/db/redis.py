@@ -1,6 +1,6 @@
 from redis.asyncio import Redis
 
-from app.core.config import Settings
+from inference_control_plane.core.config import Settings
 
 _redis_client: Redis | None = None
 

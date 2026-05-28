@@ -2,10 +2,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import APIKeyHeader
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import Settings, get_settings
-from app.db.redis import get_redis_optional
-from app.db.session import get_db_session
-from app.services.auth import AuthContext, validate_api_key
+from inference_control_plane.core.config import Settings, get_settings
+from inference_control_plane.db.redis import get_redis_optional
+from inference_control_plane.db.session import get_db_session
+from inference_control_plane.services.auth import AuthContext, validate_api_key
 
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 

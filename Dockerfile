@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
@@ -9,19 +9,38 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade pip uv
 
-COPY app ./app
+COPY pyproject.toml uv.lock README.md ./
+COPY src ./src
 COPY alembic ./alembic
 COPY alembic.ini ./alembic.ini
-COPY README.md ./README.md
 COPY .env.example ./.env.example
+
+RUN uv sync --system --frozen
+
+FROM python:3.12-slim AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app/src
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/local /usr/local
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/alembic ./alembic
+COPY --from=builder /app/alembic.ini ./alembic.ini
+COPY --from=builder /app/README.md ./README.md
+COPY --from=builder /app/.env.example ./.env.example
 
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
   CMD curl -fsS http://localhost:8000/health/live || exit 1
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "inference_control_plane.main:app", "--app-dir", "src", "--host", "0.0.0.0", "--port", "8000"]

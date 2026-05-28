@@ -3,9 +3,9 @@ from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from app.db.base import Base
-from app.models.request_log import RequestLog
-from app.services.usage import get_usage_summary
+from inference_control_plane.db.base import Base
+from inference_control_plane.models.request_log import RequestLog
+from inference_control_plane.services.usage import get_usage_summary
 
 
 async def _run_usage_summary_test() -> None:

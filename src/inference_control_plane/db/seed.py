@@ -4,8 +4,8 @@ import logging
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.core.config import Settings
-from app.models.api_key import APIKey
+from inference_control_plane.core.config import Settings
+from inference_control_plane.models.api_key import APIKey
 
 logger = logging.getLogger(__name__)
 

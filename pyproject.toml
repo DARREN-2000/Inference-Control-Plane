@@ -39,6 +39,7 @@ dependencies = [
 	"pydantic>=2.8.0,<3.0.0",
 	"pydantic-settings>=2.4.0,<3.0.0",
 	"httpx>=0.27.0,<1.0.0",
+	"tenacity>=8.3.0,<9.0.0",
 	"prometheus-client>=0.20.0,<1.0.0",
 	"opentelemetry-api>=1.26.0,<2.0.0",
 	"opentelemetry-sdk>=1.26.0,<2.0.0",
@@ -54,13 +55,15 @@ dev = [
 	"pytest>=8.2.0,<9.0.0",
 	"aiosqlite>=0.20.0,<1.0.0",
 	"ruff>=0.11.0,<1.0.0",
+	"mypy>=1.10.0,<2.0.0",
+	"pre-commit>=3.7.0,<4.0.0",
 	"pytest-cov>=4.0.0",
 	"build>=1.2.1,<2.0.0",
 	"twine>=5.1.0,<6.0.0",
 ]
 
 [project.scripts]
-inference-control-plane = "app.cli:main"
+inference-control-plane = "inference_control_plane.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/DARREN-2000/Inference-Control-Plane"
@@ -72,12 +75,12 @@ Issues = "https://github.com/DARREN-2000/Inference-Control-Plane/issues"
 include-package-data = false
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["app*"]
+where = ["src"]
+include = ["inference_control_plane*"]
 exclude = ["tests*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "app.__version__"}
+version = {attr = "inference_control_plane.__version__"}
 
 [tool.ruff]
 line-length = 100
@@ -88,4 +91,22 @@ select = ["E", "F", "I", "UP", "B"]
 ignore = ["B008"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["app"]
+known-first-party = ["inference_control_plane"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+check_untyped_defs = true
+ignore_missing_imports = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false

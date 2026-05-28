@@ -1,24 +1,25 @@
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import router as api_router
-from app.core.config import get_settings
-from app.core.errors import (
+from inference_control_plane.api import router as api_router
+from inference_control_plane.core.config import get_settings
+from inference_control_plane.core.errors import (
     RequestIdMiddleware,
     build_http_exception_handler,
     build_unhandled_exception_handler,
 )
-from app.db.redis import close_redis, init_redis
-from app.db.seed import seed_default_api_key
-from app.db.session import dispose_engine, get_engine, get_session_factory, init_engine
-from app.observability.logging import configure_logging
-from app.observability.tracing import configure_tracing, shutdown_tracing
+from inference_control_plane.db.redis import close_redis, init_redis
+from inference_control_plane.db.seed import seed_default_api_key
+from inference_control_plane.db.session import dispose_engine, get_engine, get_session_factory, init_engine
+from inference_control_plane.observability.logging import configure_logging
+from inference_control_plane.observability.tracing import configure_tracing, shutdown_tracing
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
 
     configure_logging(settings.log_level)

@@ -238,7 +238,8 @@ See [docs/OPERATIONS.md](docs/OPERATIONS.md) for deployment tuning, multi-region
 python3 -m venv venv
 source venv/bin/activate
 
-pip install -r requirements.txt
+python -m pip install uv
+uv sync --extra dev
 cp .env.example .env
 ```
 
@@ -256,16 +257,16 @@ alembic revision --autogenerate -m "your change description"
 
 ```bash
 # Development server with auto-reload
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn inference_control_plane.main:app --app-dir src --reload --host 0.0.0.0 --port 8000
 
 # Production server (single process)
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000 --workers 4
 ```
 
 ### Tests
 
 ```bash
-pip install -r requirements-dev.txt
+uv sync --extra dev
 
 # Run all tests
 pytest
@@ -280,8 +281,8 @@ pytest --cov=app tests/
 ### Linting
 
 ```bash
-ruff check app tests
-ruff format app tests
+ruff check src/inference_control_plane tests
+ruff format src/inference_control_plane tests
 
 # Optional shortcuts
 make lint-backend
@@ -330,7 +331,7 @@ See [frontend/README.md](frontend/README.md) for full frontend docs.
 ### Python package
 
 ```bash
-python -m pip install -r requirements-dev.txt
+uv sync --extra dev
 python -m build
 ```
 
@@ -370,7 +371,7 @@ below for local builds.
 
 ### Versioning and releases
 
-1. Update `app/__init__.py` and `frontend/package.json` to the same version.
+1. Update `src/inference_control_plane/__init__.py` and `frontend/package.json` to the same version.
 2. Tag a release as `vX.Y.Z` and publish a GitHub Release.
 
 The release workflow uploads Python artifacts to the Release, publishes the

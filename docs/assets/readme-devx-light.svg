@@ -33,7 +33,7 @@
       <circle cx="26" cy="26" r="6" fill="#34D399"/>
       <circle cx="46" cy="26" r="6" fill="#60A5FA"/>
       <circle cx="66" cy="26" r="6" fill="#F97316"/>
-      <text x="24" y="62">uvicorn app.main:app --reload</text>
+      <text x="24" y="62">uvicorn inference_control_plane.main:app --app-dir src --reload</text>
     </g>
 
     <g transform="translate(1040 90)" filter="url(#shadow)">
