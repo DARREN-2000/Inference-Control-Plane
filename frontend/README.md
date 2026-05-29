@@ -39,12 +39,13 @@ npm run lint
 npm run build
 ```
 
-## Live Demo Deployment
+## Deployment
 
-The GitHub Pages workflow builds a static demo using simulated responses. The
-expected link is:
-
-https://darren-2000.github.io/Inference-Control-Plane/
+- Deploy the backend on Render (or another host) and set
+  `NEXT_PUBLIC_API_BASE_URL` to the service URL.
+- Set `NEXT_PUBLIC_DEMO_MODE=false` for production traffic.
+- For a static demo build only, set `DEPLOY_TARGET=github-pages` and keep
+  `NEXT_PUBLIC_DEMO_MODE=true`.
 
 ## Current UI Scope
 

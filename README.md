@@ -120,13 +120,10 @@
 </p>
 
 <p align="center">
-  https://darren-2000.github.io/Inference-Control-Plane/
-</p>
-
-<p align="center">
-  Demo mode runs with simulated API responses and live UI motion. For a full-stack
-  demo, deploy the API and set <code>NEXT_PUBLIC_API_BASE_URL</code> to your API
-  base URL. Set <code>NEXT_PUBLIC_DEMO_MODE=true</code> to keep demo mode on.
+  The dashboard ships without a hosted demo. For production, deploy the backend
+  on Render and point the frontend at it by setting
+  <code>NEXT_PUBLIC_API_BASE_URL</code>. Set <code>NEXT_PUBLIC_DEMO_MODE=false</code>
+  for real traffic.
 </p>
 
 <br/><br/>
@@ -205,25 +202,38 @@ Open http://localhost:3000 to view the dashboard with live traffic visualization
 See `.env.example` for all settings. Key production parameters:
 
 ```bash
-# Cache settings
-CACHE_TTL_SECONDS=3600          # How long to keep responses (1h default)
-CACHE_EVICTION_POLICY=lru       # eviction strategy for Redis
+# Core
+ENVIRONMENT=production
+CORS_ALLOWED_ORIGINS=["https://your-frontend-domain"]
+DEFAULT_API_KEY=replace-me
+LOG_LEVEL=INFO
 
-# Rate limits
-RATE_LIMIT_WINDOW_SECONDS=60    # per-minute limits
-PER_KEY_RPS=100                 # requests/sec per API key
-PER_USER_RPS=50                 # requests/sec per user
-ALLOW_BURST=1.5                 # burst multiplier (1.5x limit for 10s)
+# Database
+DATABASE_URL=******host:5432/inference_cp
+DATABASE_POOL_SIZE=20
+DATABASE_MAX_OVERFLOW=40
 
-# Model routing
-MODEL_ROUTING_POLICY=weighted   # 'weighted' or 'round-robin'
-CANARY_MODEL_RATIO=0.1          # route 10% to canary models
-FALLBACK_MODELS=gpt-4o,gpt-3.5-turbo  # comma-separated list
+# Redis + rate limits
+REDIS_URL=redis://:password@host:6379/0
+CACHE_TTL_SECONDS=3600
+RATE_LIMIT_WINDOW_SECONDS=60
+DEFAULT_RATE_LIMIT_PER_MINUTE=120
+USER_RATE_LIMIT_PER_MINUTE=60
+
+# LLM providers
+LLM_MODE=openai-compatible
+LLM_PROVIDER_ORDER=openai,anthropic
+LLM_API_KEY=...
+ANTHROPIC_API_KEY=...
+AZURE_OPENAI_BASE_URL=...
+AZURE_OPENAI_API_KEY=...
+AZURE_OPENAI_DEPLOYMENT=...
+LLM_TIMEOUT_SECONDS=20
+LLM_MAX_RETRIES=2
 
 # Observability
 OTLP_ENDPOINT=http://localhost:4317
-PROMETHEUS_PORT=9090
-LOG_LEVEL=info
+PROMETHEUS_NAMESPACE=inference_control_plane
 ```
 
 See [docs/OPERATIONS.md](docs/OPERATIONS.md) for deployment tuning, multi-region setup, and scaling.
@@ -275,7 +285,7 @@ pytest
 pytest tests/test_router.py
 
 # With coverage
-pytest --cov=app tests/
+pytest --cov=inference_control_plane tests/
 ```
 
 ### Linting
@@ -365,9 +375,9 @@ ghcr.io/darren-2000/inference-control-plane-api
 ghcr.io/darren-2000/inference-control-plane-worker
 ```
 
-The worker image is the same base container today; run it with a worker command
-override for background jobs. Use the Docker commands in the Deployment section
-below for local builds.
+The worker tag is reserved for future async processing; today it is the same
+container image. Use the Docker commands in the Deployment section below for
+local builds.
 
 ### Versioning and releases
 
@@ -441,6 +451,30 @@ Structured JSON logs to stdout with fields:
     <img src="docs/assets/readme-deploy-light.svg" alt="Deployment options for local, Docker, and Kubernetes." width="100%"/>
   </picture>
 </p>
+
+### Render (backend)
+
+1. Create a Render **PostgreSQL** and **Redis** instance.
+2. Create a new Render **Web Service** from this repo using the Dockerfile.
+3. Set these environment variables:
+
+```bash
+DATABASE_URL=postgresql+asyncpg://<render-user>:<password>@<render-host>:5432/<db>
+REDIS_URL=redis://:<password>@<render-redis-host>:6379/0
+ENVIRONMENT=production
+DEFAULT_API_KEY=replace-me
+CORS_ALLOWED_ORIGINS=["https://your-frontend-domain"]
+PORT=8000
+```
+
+4. Configure the health check path to `/health/ready`.
+5. Run migrations on deploy (Render start command example):
+
+```bash
+alembic upgrade head && uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000
+```
+
+Update `NEXT_PUBLIC_API_BASE_URL` in the frontend to your Render service URL.
 
 ### Docker
 
