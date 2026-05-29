@@ -1,8 +1,12 @@
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.request_log import RequestLog
-from app.schemas.generate import UsageLogEntry, UsageLogsResponse, UsageSummaryResponse
+from inference_control_plane.models.request_log import RequestLog
+from inference_control_plane.schemas.generate import (
+    UsageLogEntry,
+    UsageLogsResponse,
+    UsageSummaryResponse,
+)
 
 
 async def get_usage_summary(

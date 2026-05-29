@@ -6,9 +6,9 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from app.core.config import get_settings
-from app.db.base import Base
-from app.models import api_key, request_log  # noqa: F401
+from inference_control_plane.core.config import get_settings
+from inference_control_plane.db.base import Base
+from inference_control_plane.models import api_key, request_log  # noqa: F401
 
 config = context.config
 

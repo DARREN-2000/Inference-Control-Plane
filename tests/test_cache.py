@@ -1,6 +1,7 @@
-import pytest
 import hashlib
-from app.services.cache import _cache_key
+
+from inference_control_plane.services.cache import _cache_key
+
 
 def test_cache_key_generation():
     prompt = "Hello"

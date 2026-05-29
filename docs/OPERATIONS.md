@@ -16,7 +16,30 @@ make build-frontend
 docker compose up --build
 ```
 
-The app service runs `alembic upgrade head` at startup before launching the API.
+The docker compose stack runs `alembic upgrade head` at startup before launching the API.
+For other deployments, run migrations separately.
+
+## Render Deployment (Backend)
+
+1. Create Render PostgreSQL and Redis instances.
+2. Create a Render Web Service from this repo using the Dockerfile.
+3. Configure environment variables:
+
+```bash
+DATABASE_URL=postgresql+asyncpg://<render-user>:<password>@<render-host>:5432/<db>
+REDIS_URL=redis://:<password>@<render-redis-host>:6379/0
+ENVIRONMENT=production
+DEFAULT_API_KEY=replace-me
+CORS_ALLOWED_ORIGINS=["https://your-frontend-domain"]
+PORT=8000
+```
+
+4. Health check path: `/health/ready`.
+5. Run migrations at deploy time (Render start command example):
+
+```bash
+alembic upgrade head && uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000
+```
 
 ## Common Checks
 

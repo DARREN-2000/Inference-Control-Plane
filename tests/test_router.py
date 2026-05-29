@@ -1,6 +1,6 @@
-from app.core.config import Settings
-from app.schemas.generate import GenerateRequest
-from app.services.router import choose_model, estimate_tokens
+from inference_control_plane.core.config import Settings
+from inference_control_plane.schemas.generate import GenerateRequest
+from inference_control_plane.services.router import choose_model, estimate_tokens
 
 
 def test_estimate_tokens_minimum_one() -> None:

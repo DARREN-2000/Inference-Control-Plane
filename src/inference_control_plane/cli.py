@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import uvicorn
 
-from app.core.config import get_settings
+from inference_control_plane.core.config import get_settings
 
 
 def main() -> None:
     settings = get_settings()
     uvicorn.run(
-        "app.main:app",
+        "inference_control_plane.main:app",
         host=settings.host,
         port=settings.port,
         log_level=settings.log_level.lower(),

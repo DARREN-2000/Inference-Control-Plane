@@ -5,7 +5,7 @@ from decimal import Decimal
 from sqlalchemy import Boolean, DateTime, Float, Integer, Numeric, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db.base import Base
+from inference_control_plane.db.base import Base
 
 
 class RequestLog(Base):

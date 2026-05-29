@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from app.core.config import Settings
+from inference_control_plane.core.config import Settings
 
 _engine: AsyncEngine | None = None
 _session_factory: async_sessionmaker[AsyncSession] | None = None
@@ -21,7 +21,8 @@ def init_engine(settings: Settings) -> None:
     _engine = create_async_engine(
         settings.database_url,
         pool_pre_ping=True,
-        future=True,
+        pool_size=settings.database_pool_size,
+        max_overflow=settings.database_max_overflow,
     )
     _session_factory = async_sessionmaker(
         bind=_engine,

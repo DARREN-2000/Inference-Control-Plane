@@ -1,3 +1,4 @@
+from fastapi import FastAPI
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -9,12 +10,12 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from app.core.config import Settings
+from inference_control_plane.core.config import Settings
 
 _is_instrumented = False
 
 
-def configure_tracing(app, settings: Settings, engine: AsyncEngine) -> None:
+def configure_tracing(app: FastAPI, settings: Settings, engine: AsyncEngine) -> None:
     global _is_instrumented
 
     if _is_instrumented:

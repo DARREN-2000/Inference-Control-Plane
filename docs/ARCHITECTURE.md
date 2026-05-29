@@ -4,7 +4,7 @@
 
 Inference Control Plane is split into backend API, frontend dashboard, and observability components.
 
-- Backend: FastAPI async gateway in `app/`
+- Backend: FastAPI async gateway in `src/inference_control_plane/`
 - Frontend: Next.js dashboard in `frontend/`
 - Data stores: PostgreSQL (system of record), Redis (cache/rate-limit state)
 - Metrics: Prometheus scrape from `/metrics`
