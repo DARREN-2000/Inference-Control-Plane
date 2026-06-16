@@ -27,7 +27,7 @@ jobs:
 
       - name: Audit backend dependencies
         run: |
-          uv export --format requirements-txt --no-dev > /tmp/requirements.txt
+          uv export --format requirements-txt --no-dev --no-emit-project > /tmp/requirements.txt
           pip-audit -r /tmp/requirements.txt
 
   frontend-dependencies:
