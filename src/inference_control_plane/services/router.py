@@ -1,4 +1,3 @@
-import math
 from dataclasses import dataclass
 
 from inference_control_plane.core.config import Settings
@@ -11,9 +10,13 @@ class RouteDecision:
     estimated_tokens: int
 
 
-def estimate_tokens(text: str) -> int:
+def estimate_tokens_from_length(length: int) -> int:
     # Approximate token estimation suitable for model-routing and cost estimation.
-    return max(1, math.ceil(len(text) / 4))
+    return max(1, (length + 3) // 4)
+
+
+def estimate_tokens(text: str) -> int:
+    return estimate_tokens_from_length(len(text))
 
 
 def choose_model(request: GenerateRequest, settings: Settings) -> RouteDecision:

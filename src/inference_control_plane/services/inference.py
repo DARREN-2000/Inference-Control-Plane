@@ -23,7 +23,10 @@ from inference_control_plane.services.auth import AuthContext
 from inference_control_plane.services.cache import get_cached_response, set_cached_response
 from inference_control_plane.services.llm_client import LLMClientError, generate_completion
 from inference_control_plane.services.rate_limiter import check_rate_limit
-from inference_control_plane.services.router import choose_model, estimate_tokens
+from inference_control_plane.services.router import (
+    choose_model,
+    estimate_tokens_from_length,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -249,7 +252,7 @@ async def handle_generate_request(
             prompt=payload.prompt,
             settings=settings,
         )
-        total_tokens = estimate_tokens(f"{payload.prompt} {generated_text}")
+        total_tokens = estimate_tokens_from_length(len(payload.prompt) + 1 + len(generated_text))
         total_cost = _estimate_cost(model_used, total_tokens, settings)
         latency_ms = (perf_counter() - started) * 1000.0
         timestamp = datetime.now(UTC)
