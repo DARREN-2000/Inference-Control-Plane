@@ -1,0 +1,16 @@
+
+> @darren-2000/inference-control-plane-ui@0.1.1 dev
+> next dev
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 544ms
+
+○ Compiling / ...
+ GET / 200 in 4.8s (next.js: 4.5s, application-code: 339ms)
+ GET / 200 in 76ms (next.js: 6ms, application-code: 69ms)
+ GET / 200 in 67ms (next.js: 4ms, application-code: 63ms)
+ GET / 200 in 80ms (next.js: 4ms, application-code: 76ms)
+ GET / 200 in 63ms (next.js: 4ms, application-code: 59ms)
+ GET / 200 in 63ms (next.js: 4ms, application-code: 59ms)
