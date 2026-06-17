@@ -130,6 +130,10 @@ body::after {
 }
 
 .cp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border-radius: 0.75rem;
   border: 1px solid transparent;
   background: var(--accent);
@@ -137,15 +141,21 @@ body::after {
   font-weight: 600;
   padding: 0.7rem 1rem;
   transition: transform 160ms ease, background-color 160ms ease;
+  outline: none;
 }
 
-.cp-button:hover {
+.cp-button:hover:not(:disabled) {
   background: var(--accent-strong);
   transform: translateY(-1px);
 }
 
+.cp-button:focus-visible {
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 0.4);
+}
+
 .cp-button:disabled {
-  opacity: 0.45;
+  opacity: 0.6;
+  cursor: not-allowed;
   transform: none;
 }
 
