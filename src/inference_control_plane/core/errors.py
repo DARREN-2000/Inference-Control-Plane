@@ -1,9 +1,12 @@
+import logging
 import uuid
 from collections.abc import Awaitable, Callable
 
 from fastapi import HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+
+logger = logging.getLogger(__name__)
 
 
 def _normalize_detail(detail: object) -> tuple[str, object | None]:
@@ -73,8 +76,9 @@ def build_http_exception_handler() -> Callable[[Request, HTTPException], JSONRes
 
 
 def build_unhandled_exception_handler() -> Callable[[Request, Exception], JSONResponse]:
-    async def handler(request: Request, _: Exception) -> JSONResponse:
+    async def handler(request: Request, exc: Exception) -> JSONResponse:
         request_id = getattr(request.state, "request_id", str(uuid.uuid4()))
+        logger.exception("Unhandled application exception", exc_info=exc)
         response = _error_response(
             status_code=500,
             code="INTERNAL_ERROR",
