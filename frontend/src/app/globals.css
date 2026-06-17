@@ -130,13 +130,17 @@ body::after {
 }
 
 .cp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border-radius: 0.75rem;
   border: 1px solid transparent;
   background: var(--accent);
   color: #ecfeff;
   font-weight: 600;
   padding: 0.7rem 1rem;
-  transition: transform 160ms ease, background-color 160ms ease;
+  transition: transform 160ms ease, background-color 160ms ease, outline 160ms ease;
 }
 
 .cp-button:hover {
@@ -144,9 +148,15 @@ body::after {
   transform: translateY(-1px);
 }
 
+.cp-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .cp-button:disabled {
   opacity: 0.45;
   transform: none;
+  cursor: not-allowed;
 }
 
 .cp-chart {
