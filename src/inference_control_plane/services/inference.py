@@ -254,7 +254,8 @@ async def handle_generate_request(
         latency_ms = (perf_counter() - started) * 1000.0
         timestamp = datetime.now(UTC)
 
-        await set_cached_response(
+        background_tasks.add_task(
+            set_cached_response,
             redis_client,
             prompt=payload.prompt,
             model=routed_model,
