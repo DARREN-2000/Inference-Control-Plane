@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import uuid
 from datetime import UTC, datetime
@@ -128,13 +129,26 @@ async def _enforce_rate_limits(
     redis_client: Redis | None,
     settings: Settings,
 ) -> None:
-    key_result = await check_rate_limit(
-        redis_client,
-        scope="api_key",
-        identifier=auth_context.api_key_hash,
-        limit=auth_context.rate_limit_per_minute,
-        window_seconds=settings.rate_limit_window_seconds,
+    user_key = f"{auth_context.tenant_id}:{user_id}"
+
+    # ⚡ Bolt: Run rate limits concurrently to reduce network IO latency on the hot path
+    key_result, user_result = await asyncio.gather(
+        check_rate_limit(
+            redis_client,
+            scope="api_key",
+            identifier=auth_context.api_key_hash,
+            limit=auth_context.rate_limit_per_minute,
+            window_seconds=settings.rate_limit_window_seconds,
+        ),
+        check_rate_limit(
+            redis_client,
+            scope="user",
+            identifier=user_key,
+            limit=settings.user_rate_limit_per_minute,
+            window_seconds=settings.rate_limit_window_seconds,
+        )
     )
+
     if not key_result.allowed:
         record_rate_limit_rejection(scope="api_key")
         raise HTTPException(
@@ -143,14 +157,6 @@ async def _enforce_rate_limits(
             headers={"Retry-After": str(key_result.retry_after_seconds)},
         )
 
-    user_key = f"{auth_context.tenant_id}:{user_id}"
-    user_result = await check_rate_limit(
-        redis_client,
-        scope="user",
-        identifier=user_key,
-        limit=settings.user_rate_limit_per_minute,
-        window_seconds=settings.rate_limit_window_seconds,
-    )
     if not user_result.allowed:
         record_rate_limit_rejection(scope="user")
         raise HTTPException(
