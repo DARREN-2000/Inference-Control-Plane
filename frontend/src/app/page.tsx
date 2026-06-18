@@ -144,40 +144,50 @@ export default function Home() {
 
           <form className="space-y-3" onSubmit={onSubmit}>
             <div className="grid gap-3 md:grid-cols-2">
-              <label className="space-y-1">
-                <span className="cp-label text-neutral-600">User ID</span>
+              <div className="space-y-1">
+                <label htmlFor="userId" className="cp-label block text-neutral-600">
+                  User ID <span className="text-red-500" aria-hidden="true">*</span>
+                </label>
                 <input
+                  id="userId"
                   className="cp-input"
                   value={userId}
                   onChange={(event) => setUserId(event.target.value)}
                   required
                 />
-              </label>
-              <label className="space-y-1">
-                <span className="cp-label text-neutral-600">API Key</span>
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="apiKey" className="cp-label block text-neutral-600">
+                  API Key <span className="text-red-500" aria-hidden="true">*</span>
+                </label>
                 <input
+                  id="apiKey"
                   className="cp-input"
                   value={apiKey}
                   onChange={(event) => setApiKey(event.target.value)}
                   required
                 />
-              </label>
+              </div>
             </div>
 
-            <label className="space-y-1 block">
-              <span className="cp-label text-neutral-600">Prompt</span>
+            <div className="space-y-1">
+              <label htmlFor="prompt" className="cp-label block text-neutral-600">
+                Prompt <span className="text-red-500" aria-hidden="true">*</span>
+              </label>
               <textarea
+                id="prompt"
                 className="cp-input min-h-32"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
                 required
               />
-            </label>
+            </div>
 
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <label className="space-y-1">
-                <span className="cp-label text-neutral-600">Priority</span>
+              <div className="space-y-1">
+                <label htmlFor="priority" className="cp-label block text-neutral-600">Priority</label>
                 <select
+                  id="priority"
                   className="cp-input"
                   value={priority}
                   onChange={(event) => setPriority(event.target.value as "low" | "high")}
@@ -185,9 +195,15 @@ export default function Home() {
                   <option value="low">Low</option>
                   <option value="high">High</option>
                 </select>
-              </label>
+              </div>
 
-              <button className="cp-button md:min-w-56" disabled={isLoading} aria-busy={isLoading} type="submit">
+              <button
+                className="cp-button md:min-w-56"
+                disabled={isLoading}
+                aria-busy={isLoading}
+                aria-label={isLoading ? "Generating..." : "Run Inference"}
+                type="submit"
+              >
                 {isLoading && (
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -265,6 +281,7 @@ export default function Home() {
                 className="cp-button px-3 py-2 text-sm"
                 disabled={isLogsLoading}
                 aria-busy={isLogsLoading}
+                aria-label={isLogsLoading ? "Loading logs..." : "Refresh request logs"}
                 onClick={loadRecentLogs}
                 type="button"
               >
