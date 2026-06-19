@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from inference_control_plane.api import router as api_router
@@ -10,6 +11,7 @@ from inference_control_plane.core.errors import (
     RequestIdMiddleware,
     build_http_exception_handler,
     build_unhandled_exception_handler,
+    build_validation_exception_handler,
 )
 from inference_control_plane.db.redis import close_redis, init_redis
 from inference_control_plane.db.seed import seed_default_api_key
@@ -58,6 +60,7 @@ def create_app() -> FastAPI:
         expose_headers=["x-request-id"],
     )
     app.add_middleware(RequestIdMiddleware)
+    app.add_exception_handler(RequestValidationError, build_validation_exception_handler())
     app.add_exception_handler(HTTPException, build_http_exception_handler())
     app.add_exception_handler(Exception, build_unhandled_exception_handler())
 
