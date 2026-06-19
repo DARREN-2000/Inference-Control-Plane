@@ -3,6 +3,7 @@ import uuid
 from collections.abc import Awaitable, Callable
 
 from fastapi import HTTPException, Request, Response
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -38,6 +39,30 @@ def _error_response(
         payload["error"]["details"] = details
 
     return JSONResponse(status_code=status_code, content=payload)
+
+
+def build_validation_exception_handler() -> (
+    Callable[[Request, RequestValidationError], JSONResponse]
+):
+    async def handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+        request_id = getattr(request.state, "request_id", str(uuid.uuid4()))
+
+        sanitized_details = []
+        for error in exc.errors():
+            sanitized_error = {k: v for k, v in error.items() if k not in ("input", "url", "ctx")}
+            sanitized_details.append(sanitized_error)
+
+        response = _error_response(
+            status_code=422,
+            code="VALIDATION_ERROR",
+            message="Request validation failed.",
+            request_id=request_id,
+            details=sanitized_details,
+        )
+        response.headers["x-request-id"] = request_id
+        return response
+
+    return handler
 
 
 def build_http_exception_handler() -> Callable[[Request, HTTPException], JSONResponse]:

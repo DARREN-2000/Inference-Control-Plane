@@ -1,4 +1,11 @@
-## 2025-02-24 - Unhandled Exception Logging
-**Vulnerability:** Unhandled exceptions (`500 INTERNAL_ERROR`) were intentionally swallowed and returned as generic error messages to the client to prevent stack trace leakage, which is good practice. However, the original exception trace was not logged locally, creating an operational blind spot and potential for undetected repeated exploits/crashes.
-**Learning:** Returning safe `500`s to clients doesn't mean we shouldn't log the full error backend-side. Security relies on auditability and visibility just as much as preventing information leakage.
-**Prevention:** Always log `exc_info=exc` for caught unhandled exceptions before translating them into sanitized `500 INTERNAL_ERROR` API responses.
+## 2025-06-19 - Fast API Default RequestValidationError payload leak
+
+**Vulnerability:** FastAPIs default `RequestValidationError` exception handler echoes the raw incoming payload under the `input` field of validation errors.
+**Learning:** If clients misconfigure payloads and send raw credentials or sensitive fields under unexpected fields, those details might get echoed verbatim in the 422 JSON response. This creates an operational blindspot where logs/interceptors that depend on application logic to sanitize fields miss these because validation rejects the request earlier.
+**Prevention:** Always register a custom exception handler for `RequestValidationError` that sanitizes outputs before calling `JSONResponse` (i.e. removing `url`, `ctx` and `input` from `exc.errors()`).
+
+## 2024-05-19 - FastAPI Default RequestValidationError payload leak
+
+**Vulnerability:** FastAPIs default `RequestValidationError` exception handler echoes the raw incoming payload under the `input` field of validation errors.
+**Learning:** If clients misconfigure payloads and send raw credentials or sensitive fields under unexpected fields, those details might get echoed verbatim in the 422 JSON response. This creates an operational blindspot where logs/interceptors that depend on application logic to sanitize fields miss these because validation rejects the request earlier.
+**Prevention:** Always register a custom exception handler for `RequestValidationError` that sanitizes outputs before calling `JSONResponse` (i.e. removing `url`, `ctx` and `input` from `exc.errors()`).
