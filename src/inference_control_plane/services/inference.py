@@ -333,6 +333,7 @@ async def handle_generate_request(
         )
         raise
     except Exception as exc:
+        logger.exception("Unhandled exception during generation", exc_info=exc)
         latency_ms = (perf_counter() - started) * 1000.0
         record_request(
             model=routed_model,
@@ -354,7 +355,7 @@ async def handle_generate_request(
             cost=0.0,
             cache_hit=False,
             status_value="error",
-            error_message=str(exc)[:1000],
+            error_message="An internal error occurred during generation.",
         )
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,

@@ -7,3 +7,7 @@
 **Vulnerability:** FastAPI default RequestValidationError handler exposes the raw user input in the `input` field of validation errors.
 **Learning:** Unsanitized user inputs in 422 error responses can lead to data leakage and Cross-Site Scripting (XSS) or log injection if error responses are logged or rendered indiscriminately.
 **Prevention:** Always implement a custom `RequestValidationError` exception handler to strip the `input` field and only return safe keys like `loc`, `msg`, and `type`.
+## 2025-06-21 - Fix Exception Data Leakage in Request Logging
+**Vulnerability:** Raw exception strings (`str(exc)`) were stored directly in database records via `_queue_request_log` on unhandled exceptions in `handle_generate_request`. This creates an information leakage vector, potentially exposing stack traces or sensitive internal application data to users viewing their own usage logs.
+**Learning:** Even internal database records intended for observability can leak information if they power user-facing endpoints (like usage/logs APIs). Raw exceptions should never be saved in persistent data stores accessible by non-administrative users.
+**Prevention:** Replace raw exceptions in database payloads with generic error messages (e.g., "An internal error occurred during generation.") and explicitly log the raw exception object locally using `logger.exception(..., exc_info=exc)` for operations to investigate later.
