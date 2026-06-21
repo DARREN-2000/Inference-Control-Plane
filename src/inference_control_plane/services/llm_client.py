@@ -19,6 +19,31 @@ class LLMClientTimeoutError(LLMClientRetryableError):
     pass
 
 
+_http_client: httpx.AsyncClient | None = None
+
+
+def init_http_client() -> None:
+    """Initialize a shared HTTP client for connection pooling."""
+    global _http_client
+    if _http_client is None:
+        _http_client = httpx.AsyncClient()
+
+
+async def close_http_client() -> None:
+    """Close the shared HTTP client."""
+    global _http_client
+    if _http_client is not None:
+        await _http_client.aclose()
+        _http_client = None
+
+
+def _get_http_client() -> httpx.AsyncClient:
+    """Get the shared HTTP client. Raises if not initialized."""
+    if _http_client is None:
+        raise RuntimeError("HTTP client not initialized.")
+    return _http_client
+
+
 def _simulated_response(prompt: str, model: str) -> str:
     prompt_preview = prompt.strip().replace("\n", " ")[:180]
     digest = hashlib.sha1(prompt.encode("utf-8")).hexdigest()[:8]
@@ -104,11 +129,14 @@ async def _request_openai_compatible(
 
     async def _execute() -> str:
         try:
-            async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
-                response = await client.post(endpoint, json=body, headers=headers)
-                response.raise_for_status()
-                payload = response.json()
-                return _extract_message_text(payload)
+            client = _get_http_client()
+            # Reuse connections and avoid repeated TLS handshakes for performance
+            response = await client.post(
+                endpoint, json=body, headers=headers, timeout=settings.llm_timeout_seconds
+            )
+            response.raise_for_status()
+            payload = response.json()
+            return _extract_message_text(payload)
         except (httpx.HTTPStatusError, httpx.RequestError, httpx.TimeoutException) as exc:
             raise _coerce_retryable_error(exc) from exc
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:
@@ -142,11 +170,18 @@ async def _request_azure_openai(
 
     async def _execute() -> str:
         try:
-            async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
-                response = await client.post(endpoint, json=body, headers=headers, params=params)
-                response.raise_for_status()
-                payload = response.json()
-                return _extract_message_text(payload)
+            client = _get_http_client()
+            # Reuse connections and avoid repeated TLS handshakes for performance
+            response = await client.post(
+                endpoint,
+                json=body,
+                headers=headers,
+                params=params,
+                timeout=settings.llm_timeout_seconds,
+            )
+            response.raise_for_status()
+            payload = response.json()
+            return _extract_message_text(payload)
         except (httpx.HTTPStatusError, httpx.RequestError, httpx.TimeoutException) as exc:
             raise _coerce_retryable_error(exc) from exc
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:
@@ -177,11 +212,14 @@ async def _request_anthropic(
 
     async def _execute() -> str:
         try:
-            async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
-                response = await client.post(endpoint, json=body, headers=headers)
-                response.raise_for_status()
-                payload = response.json()
-                return _extract_anthropic_text(payload)
+            client = _get_http_client()
+            # Reuse connections and avoid repeated TLS handshakes for performance
+            response = await client.post(
+                endpoint, json=body, headers=headers, timeout=settings.llm_timeout_seconds
+            )
+            response.raise_for_status()
+            payload = response.json()
+            return _extract_anthropic_text(payload)
         except (httpx.HTTPStatusError, httpx.RequestError, httpx.TimeoutException) as exc:
             raise _coerce_retryable_error(exc) from exc
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:

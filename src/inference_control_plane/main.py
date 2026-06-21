@@ -23,6 +23,7 @@ from inference_control_plane.db.session import (
 )
 from inference_control_plane.observability.logging import configure_logging
 from inference_control_plane.observability.tracing import configure_tracing, shutdown_tracing
+from inference_control_plane.services.llm_client import close_http_client, init_http_client
 
 
 @asynccontextmanager
@@ -35,10 +36,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     init_redis(settings)
     configure_tracing(app, settings, get_engine())
+    init_http_client()
 
     try:
         yield
     finally:
+        await close_http_client()
         await close_redis()
         await dispose_engine()
         shutdown_tracing()
