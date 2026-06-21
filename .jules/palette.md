@@ -5,3 +5,6 @@
 ## 2024-08-16 - Form and Async Action Accessibility Enhancements
 **Learning:** Buttons with dynamically changing inner text (e.g. "Generating..." / "Run Inference") do not need an `aria-label`, as screen readers will simply read the inner text. Using both is redundant and can cause double-reading. Additionally, dynamic content updates like API error messages or async results should be explicitly labeled with `role="alert"` or `aria-live="polite"` respectively, to ensure screen readers announce these updates.
 **Action:** When creating buttons with dynamic inner text, avoid redundant `aria-label`s. Always use `aria-live` or `role="alert"` for important dynamic UI state changes, and hide purely decorative loading SVGs using `aria-hidden="true"`.
+## 2026-06-21 - Wrap form in fieldset to disable all inputs natively
+**Learning:** Wrapping form inputs inside a `<fieldset disabled={isLoading}>` is an excellent native HTML pattern for disabling an entire form during an async request. It automatically removes all inputs, selects, and buttons from the tab order, visually disables them (when styled), and provides semantic context to screen readers, instead of having to manage a disabled prop on each individual element manually.
+**Action:** Use this pattern instead of passing `disabled={isLoading}` to every single input or button.
