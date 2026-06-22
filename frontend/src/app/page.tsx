@@ -142,8 +142,9 @@ export default function Home() {
             <p className="cp-label text-neutral-500">POST /api/v1/generate</p>
           </div>
 
-          <form className="space-y-3" onSubmit={onSubmit}>
-            <div className="grid gap-3 md:grid-cols-2">
+          <form onSubmit={onSubmit}>
+            <fieldset disabled={isLoading} className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2">
               <div className="space-y-1">
                 <label htmlFor="userId" className="cp-label block text-neutral-600">
                   User ID <span className="text-red-500" aria-hidden="true">*</span>
@@ -185,7 +186,7 @@ export default function Home() {
                 onKeyDown={(event) => {
                   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
                     event.preventDefault();
-                    if (!isLoading) {
+                    if (!isLoading && event.currentTarget.form) {
                       event.currentTarget.form?.requestSubmit();
                     }
                   }
@@ -210,7 +211,6 @@ export default function Home() {
 
               <button
                 className="cp-button md:min-w-56"
-                disabled={isLoading}
                 aria-busy={isLoading}
                 type="submit"
               >
@@ -223,6 +223,7 @@ export default function Home() {
                 {isLoading ? "Generating..." : "Run Inference"}
               </button>
             </div>
+            </fieldset>
           </form>
 
           {isDemoMode && (
