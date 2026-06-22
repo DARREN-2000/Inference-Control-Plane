@@ -4,3 +4,6 @@
 ## 2024-06-18 - Concurrent Redis lookups
 **Learning:** Sequential network IO requests (like Redis calls) on the critical request path create unnecessary cumulative latency, especially with un-batched operations.
 **Action:** Use `asyncio.gather` to perform independent async operations (like checking API key and user rate limits) concurrently.
+## 2025-02-12 - Reusing httpx.AsyncClient for external API calls
+**Learning:** Creating a new `httpx.AsyncClient` inside a function body for every outbound API request destroys the ability to connection pool and requires a full TCP and TLS handshake every time. This creates enormous, redundant latency on the critical path of an application.
+**Action:** Always maintain long-lived `httpx.AsyncClient` instances globally (or within class instances) initialized during application startup and reuse them for consecutive requests to the same endpoints to capitalize on connection pooling.
