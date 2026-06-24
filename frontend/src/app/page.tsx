@@ -142,87 +142,88 @@ export default function Home() {
             <p className="cp-label text-neutral-500">POST /api/v1/generate</p>
           </div>
 
-          <form className="space-y-3" onSubmit={onSubmit}>
-            <div className="grid gap-3 md:grid-cols-2">
-              <div className="space-y-1">
-                <label htmlFor="userId" className="cp-label block text-neutral-600">
-                  User ID <span className="text-red-500" aria-hidden="true">*</span>
-                </label>
-                <input
-                  id="userId"
-                  className="cp-input"
-                  value={userId}
-                  onChange={(event) => setUserId(event.target.value)}
-                  required
-                />
+          <form onSubmit={onSubmit}>
+            <fieldset disabled={isLoading} className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-1">
+                  <label htmlFor="userId" className="cp-label block text-neutral-600">
+                    User ID <span className="text-red-500" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="userId"
+                    className="cp-input"
+                    value={userId}
+                    onChange={(event) => setUserId(event.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label htmlFor="apiKey" className="cp-label block text-neutral-600">
+                    API Key <span className="text-red-500" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="apiKey"
+                    className="cp-input"
+                    value={apiKey}
+                    onChange={(event) => setApiKey(event.target.value)}
+                    required
+                  />
+                </div>
               </div>
-              <div className="space-y-1">
-                <label htmlFor="apiKey" className="cp-label block text-neutral-600">
-                  API Key <span className="text-red-500" aria-hidden="true">*</span>
-                </label>
-                <input
-                  id="apiKey"
-                  className="cp-input"
-                  value={apiKey}
-                  onChange={(event) => setApiKey(event.target.value)}
-                  required
-                />
-              </div>
-            </div>
 
-            <div className="space-y-1">
-              <label htmlFor="prompt" className="cp-label block text-neutral-600">
-                Prompt <span className="text-red-500" aria-hidden="true">*</span>
-                <span className="ml-2 text-xs font-normal normal-case tracking-normal text-neutral-400">
-                  (Cmd/Ctrl + Enter to run)
-                </span>
-              </label>
-              <textarea
-                id="prompt"
-                className="cp-input min-h-32"
-                value={prompt}
-                onChange={(event) => setPrompt(event.target.value)}
-                onKeyDown={(event) => {
-                  if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-                    event.preventDefault();
-                    if (!isLoading) {
-                      event.currentTarget.form?.requestSubmit();
+              <div className="space-y-1">
+                <label htmlFor="prompt" className="cp-label block text-neutral-600">
+                  Prompt <span className="text-red-500" aria-hidden="true">*</span>
+                  <span className="ml-2 text-xs font-normal normal-case tracking-normal text-neutral-400">
+                    (Cmd/Ctrl + Enter to run)
+                  </span>
+                </label>
+                <textarea
+                  id="prompt"
+                  className="cp-input min-h-32"
+                  value={prompt}
+                  onChange={(event) => setPrompt(event.target.value)}
+                  onKeyDown={(event) => {
+                    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                      event.preventDefault();
+                      if (!isLoading) {
+                        event.currentTarget.form?.requestSubmit();
+                      }
                     }
-                  }
-                }}
-                required
-              />
-            </div>
-
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div className="space-y-1">
-                <label htmlFor="priority" className="cp-label block text-neutral-600">Priority</label>
-                <select
-                  id="priority"
-                  className="cp-input"
-                  value={priority}
-                  onChange={(event) => setPriority(event.target.value as "low" | "high")}
-                >
-                  <option value="low">Low</option>
-                  <option value="high">High</option>
-                </select>
+                  }}
+                  required
+                />
               </div>
 
-              <button
-                className="cp-button md:min-w-56"
-                disabled={isLoading}
-                aria-busy={isLoading}
-                type="submit"
-              >
-                {isLoading && (
-                  <svg aria-hidden="true" className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                )}
-                {isLoading ? "Generating..." : "Run Inference"}
-              </button>
-            </div>
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1">
+                  <label htmlFor="priority" className="cp-label block text-neutral-600">Priority</label>
+                  <select
+                    id="priority"
+                    className="cp-input"
+                    value={priority}
+                    onChange={(event) => setPriority(event.target.value as "low" | "high")}
+                  >
+                    <option value="low">Low</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+
+                <button
+                  className="cp-button md:min-w-56"
+                  aria-busy={isLoading}
+                  type="submit"
+                >
+                  {isLoading && (
+                    <svg aria-hidden="true" className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {isLoading ? "Generating..." : "Run Inference"}
+                </button>
+              </div>
+            </fieldset>
           </form>
 
           {isDemoMode && (
