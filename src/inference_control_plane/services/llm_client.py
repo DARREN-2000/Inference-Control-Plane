@@ -6,6 +6,28 @@ from tenacity import AsyncRetrying, retry_if_exception_type, stop_after_attempt,
 
 from inference_control_plane.core.config import Settings
 
+# ⚡ Bolt: Maintain a shared, long-lived HTTP client to enable connection pooling.
+# This avoids expensive TCP handshakes and TLS negotiations on every outbound LLM request,
+# significantly reducing latency and CPU overhead on the hot path.
+_http_client: httpx.AsyncClient | None = None
+
+def init_http_client(settings: Settings) -> None:
+    global _http_client
+    if _http_client is None:
+        _http_client = httpx.AsyncClient(timeout=settings.llm_timeout_seconds)
+
+def get_http_client() -> httpx.AsyncClient:
+    if _http_client is None:
+        raise RuntimeError("HTTP client not initialized")
+    return _http_client
+
+async def close_http_client() -> None:
+    global _http_client
+    if _http_client is not None:
+        await _http_client.aclose()
+        _http_client = None
+
+
 
 class LLMClientError(RuntimeError):
     pass
@@ -104,11 +126,11 @@ async def _request_openai_compatible(
 
     async def _execute() -> str:
         try:
-            async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
-                response = await client.post(endpoint, json=body, headers=headers)
-                response.raise_for_status()
-                payload = response.json()
-                return _extract_message_text(payload)
+            client = get_http_client()
+            response = await client.post(endpoint, json=body, headers=headers)
+            response.raise_for_status()
+            payload = response.json()
+            return _extract_message_text(payload)
         except (httpx.HTTPStatusError, httpx.RequestError, httpx.TimeoutException) as exc:
             raise _coerce_retryable_error(exc) from exc
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:
@@ -142,11 +164,11 @@ async def _request_azure_openai(
 
     async def _execute() -> str:
         try:
-            async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
-                response = await client.post(endpoint, json=body, headers=headers, params=params)
-                response.raise_for_status()
-                payload = response.json()
-                return _extract_message_text(payload)
+            client = get_http_client()
+            response = await client.post(endpoint, json=body, headers=headers, params=params)
+            response.raise_for_status()
+            payload = response.json()
+            return _extract_message_text(payload)
         except (httpx.HTTPStatusError, httpx.RequestError, httpx.TimeoutException) as exc:
             raise _coerce_retryable_error(exc) from exc
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:
@@ -177,11 +199,11 @@ async def _request_anthropic(
 
     async def _execute() -> str:
         try:
-            async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
-                response = await client.post(endpoint, json=body, headers=headers)
-                response.raise_for_status()
-                payload = response.json()
-                return _extract_anthropic_text(payload)
+            client = get_http_client()
+            response = await client.post(endpoint, json=body, headers=headers)
+            response.raise_for_status()
+            payload = response.json()
+            return _extract_anthropic_text(payload)
         except (httpx.HTTPStatusError, httpx.RequestError, httpx.TimeoutException) as exc:
             raise _coerce_retryable_error(exc) from exc
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:
