@@ -354,7 +354,7 @@ async def handle_generate_request(
             cost=0.0,
             cache_hit=False,
             status_value="error",
-            error_message=str(exc)[:1000],
+            error_message="Internal error during generation.",
         )
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
