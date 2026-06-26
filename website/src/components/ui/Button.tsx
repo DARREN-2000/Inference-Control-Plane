@@ -1,25 +1,28 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+/* eslint-disable react-refresh/only-export-components */
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-400 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   {
     variants: {
       variant: {
-        default: "bg-white text-zinc-950 shadow hover:bg-zinc-200",
-        destructive: "bg-red-500 text-zinc-50 shadow-sm hover:bg-red-500/90",
-        outline: "border border-white/10 bg-transparent shadow-sm hover:bg-white/10 text-white",
-        secondary: "bg-zinc-800 text-zinc-50 shadow-sm hover:bg-zinc-800/80",
-        ghost: "hover:bg-white/10 text-zinc-300 hover:text-white",
-        link: "text-zinc-50 underline-offset-4 hover:underline",
+        default: "bg-white text-black hover:bg-zinc-200 shadow-sm",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-white/10 bg-transparent hover:bg-white/5 text-white",
+        secondary: "bg-zinc-900 text-white border border-white/10 hover:bg-zinc-800",
+        ghost: "hover:bg-white/10 hover:text-white text-zinc-300",
+        link: "text-primary underline-offset-4 hover:underline",
+        premium: "bg-linear-to-r from-violet-600 to-cyan-600 text-white hover:from-violet-500 hover:to-cyan-500 border border-white/10 shadow-[0_0_20px_rgba(139,92,246,0.3)]",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-12 rounded-md px-8 text-base",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
@@ -27,26 +30,26 @@ const buttonVariants = cva(
       size: "default",
     },
   }
-);
+)
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
+  asChild?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+    const Comp = asChild ? Slot : "button"
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       />
-    );
+    )
   }
-);
-Button.displayName = "Button";
+)
+Button.displayName = "Button"
 
-export { Button, buttonVariants };
+export { Button, buttonVariants }

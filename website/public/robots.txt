@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://darren-2000.github.io/Inference-Control-Plane/sitemap.xml
