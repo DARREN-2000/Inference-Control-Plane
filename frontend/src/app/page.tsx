@@ -142,7 +142,8 @@ export default function Home() {
             <p className="cp-label text-neutral-500">POST /api/v1/generate</p>
           </div>
 
-          <form className="space-y-3" onSubmit={onSubmit}>
+          <form onSubmit={onSubmit}>
+            <fieldset disabled={isLoading} className="m-0 min-w-0 space-y-3 border-0 p-0">
             <div className="grid gap-3 md:grid-cols-2">
               <div className="space-y-1">
                 <label htmlFor="userId" className="cp-label block text-neutral-600">
@@ -210,7 +211,6 @@ export default function Home() {
 
               <button
                 className="cp-button md:min-w-56"
-                disabled={isLoading}
                 aria-busy={isLoading}
                 type="submit"
               >
@@ -223,6 +223,7 @@ export default function Home() {
                 {isLoading ? "Generating..." : "Run Inference"}
               </button>
             </div>
+            </fieldset>
           </form>
 
           {isDemoMode && (
