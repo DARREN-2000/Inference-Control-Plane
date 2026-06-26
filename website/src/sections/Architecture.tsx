@@ -35,7 +35,7 @@ export const Architecture = () => {
 
           <div className="lg:w-1/2 w-full">
             <div className="relative p-8 rounded-2xl border border-white/10 bg-black/50 backdrop-blur-sm">
-              <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/10 to-cyan-500/10 rounded-2xl" />
+              <div className="absolute inset-0 bg-linear-to-tr from-violet-500/10 to-cyan-500/10 rounded-2xl" />
 
               <div className="relative flex flex-col gap-8">
                 {/* App Layer */}
@@ -50,7 +50,7 @@ export const Architecture = () => {
                 </div>
 
                 {/* Laminar Layer */}
-                <div className="bg-gradient-to-r from-violet-600/20 to-cyan-600/20 border border-white/20 p-6 rounded-xl flex flex-col items-center">
+                <div className="bg-linear-to-r from-violet-600/20 to-cyan-600/20 border border-white/20 p-6 rounded-xl flex flex-col items-center">
                   <div className="font-bold text-white mb-4">Laminar Gateway</div>
                   <div className="flex gap-4 w-full">
                     <div className="flex-1 bg-black/50 border border-white/10 p-3 rounded text-center text-xs text-zinc-300">Router</div>

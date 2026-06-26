@@ -6,7 +6,7 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/Inference-Control-Plane/', // Update to repo name
+  base: '/Inference-Control-Plane/', // Update to repo name for GitHub pages
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
