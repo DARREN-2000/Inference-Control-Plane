@@ -63,8 +63,10 @@ export const Hero = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center"
           >
-            <Button size="lg" variant="default" className="gap-2 w-full sm:w-auto">
-              Start Building Free <ArrowRight className="w-4 h-4" />
+            <Button size="lg" variant="default" className="gap-2 w-full sm:w-auto" asChild>
+              <a href="./dashboard/">
+                Start Building Free <ArrowRight className="w-4 h-4" />
+              </a>
             </Button>
             <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto glass">
               <Terminal className="w-4 h-4" /> Read Documentation

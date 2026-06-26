@@ -8,12 +8,13 @@ The website is automatically deployed to GitHub Pages when changes are pushed to
 
 ### Workflow
 
-The deployment is handled by a GitHub Actions workflow located at `.github/workflows/deploy-website.yml`.
+The deployment is handled by a GitHub Actions workflow located at `.github/workflows/deploy.yml`. This workflow deploys BOTH the main website and the Next.js dashboard frontend.
 
-1.  **Trigger**: The workflow runs on pushes to `main` (if files in `website/` are modified) or manually via `workflow_dispatch`.
-2.  **Build**: It installs dependencies using `npm install` and builds the static assets using `npm run build` inside the `website/` directory.
-3.  **Upload**: The build output (`website/dist`) is uploaded as an artifact.
-4.  **Deploy**: The artifact is deployed to GitHub Pages.
+1.  **Trigger**: The workflow runs on pushes to `main` or manually via `workflow_dispatch`.
+2.  **Build Website**: It installs dependencies using `npm install` and builds the static assets using `npm run build` inside the `website/` directory.
+3.  **Build Dashboard**: It installs dependencies using `pnpm install` and builds the static assets using `pnpm run build` inside the `frontend/` directory.
+4.  **Merge**: The dashboard build (`frontend/out`) is copied into the website build (`website/dist/dashboard`).
+5.  **Upload & Deploy**: The merged build output (`website/dist`) is uploaded as an artifact and deployed to GitHub Pages.
 
 ### Manual Deployment (Local Build)
 
@@ -33,7 +34,7 @@ Ensure that your GitHub repository settings are configured correctly:
 
 1.  Go to **Settings** > **Pages**.
 2.  Under **Build and deployment**, select **GitHub Actions** as the source.
-3.  The `deploy-website.yml` workflow will automatically handle the rest.
+3.  The `deploy.yml` workflow will automatically handle the rest.
 
 ### React Router on GitHub Pages
 
