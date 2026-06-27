@@ -1,0 +1,63 @@
+name: Deploy Website and Dashboard (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Build website
+        working-directory: website
+        run: |
+          npm install
+          npm run build
+
+      - name: Build frontend dashboard
+        working-directory: frontend
+        env:
+          DEPLOY_TARGET: github-pages
+          NEXT_PUBLIC_DEMO_MODE: "true"
+        run: |
+          pnpm install
+          pnpm run build
+
+      - name: Merge builds
+        run: |
+          # Copy frontend output into website dist/dashboard
+          cp -r frontend/out website/dist/dashboard
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

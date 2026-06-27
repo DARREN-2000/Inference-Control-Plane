@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Hero } from "@/sections/Hero";
-import { TrustedTechnologies } from "@/sections/TrustedTechnologies";
+import { Integrations } from "@/sections/Integrations";
 import { Problem } from "@/sections/Problem";
 
 // Lazy load below-the-fold components for performance
@@ -24,7 +24,7 @@ export default function Home() {
     <div className="w-full flex flex-col bg-black text-white">
       {/* Above the fold */}
       <Hero />
-      <TrustedTechnologies />
+      <Integrations />
       <Problem />
 
       {/* Below the fold (Lazy Loaded) */}
