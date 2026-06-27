@@ -16,7 +16,7 @@ export const Security = () => {
             Zero-Trust by design.
           </h2>
           <p className="text-lg text-zinc-400">
-            Enterprise AI requires enterprise security. Laminar ensures sensitive data never reaches third-party APIs without explicit consent.
+            Enterprise AI requires enterprise security. Inference Control Plane ensures sensitive data never reaches third-party APIs without explicit consent.
           </p>
         </div>
 

@@ -9,7 +9,7 @@ export const Footer = () => {
               <div className="w-6 h-6 rounded bg-linear-to-tr from-violet-600 to-cyan-500 flex items-center justify-center">
                 <span className="text-white font-bold text-xs">L</span>
               </div>
-              <span className="text-white font-semibold tracking-tight">Laminar</span>
+              <span className="text-white font-semibold tracking-tight">Inference Control Plane</span>
             </div>
             <p className="text-sm text-zinc-400 mb-6 max-w-xs">
               The enterprise control plane for AI inference. Routing, caching, and observability for scale.
@@ -31,6 +31,7 @@ export const Footer = () => {
               <li><a href="#architecture" className="text-sm text-zinc-400 hover:text-white transition-colors">Architecture</a></li>
               <li><a href="#performance" className="text-sm text-zinc-400 hover:text-white transition-colors">Performance</a></li>
               <li><a href="#enterprise" className="text-sm text-zinc-400 hover:text-white transition-colors">Enterprise</a></li>
+              <li><a href="./dashboard/" className="text-sm text-zinc-400 hover:text-white transition-colors">Dashboard</a></li>
             </ul>
           </div>
 
@@ -56,7 +57,7 @@ export const Footer = () => {
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-zinc-500">
-            &copy; {new Date().getFullYear()} Laminar Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} Inference Control Plane. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 relative">

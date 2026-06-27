@@ -30,7 +30,7 @@ export const Navigation = () => {
               <div className="w-8 h-8 rounded-md bg-linear-to-tr from-violet-600 to-cyan-500 flex items-center justify-center transition-transform group-hover:scale-105">
                 <span className="text-white font-bold text-lg leading-none">L</span>
               </div>
-              <span className="text-white font-semibold text-xl tracking-tight">Laminar</span>
+              <span className="text-white font-semibold text-xl tracking-tight">Inference Control Plane</span>
             </Link>
           </div>
 
@@ -39,6 +39,7 @@ export const Navigation = () => {
             <a href="#performance" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Performance</a>
             <a href="#enterprise" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Enterprise</a>
             <a href="#docs" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Docs</a>
+            <a href="./dashboard/" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Dashboard</a>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -63,6 +64,7 @@ export const Navigation = () => {
             <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md">Features</a>
             <a href="#performance" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md">Performance</a>
             <a href="#enterprise" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md">Enterprise</a>
+            <a href="./dashboard/" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md">Dashboard</a>
             <div className="pt-4 flex flex-col gap-2">
               <Button variant="outline" className="w-full justify-center">Sign In</Button>
               <Button className="w-full justify-center">Get Started</Button>

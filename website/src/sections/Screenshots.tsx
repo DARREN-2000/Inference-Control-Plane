@@ -27,7 +27,7 @@ export const Screenshots = () => {
              <div className="w-3 h-3 rounded-full bg-white/20" />
              <div className="w-3 h-3 rounded-full bg-white/20" />
              <div className="w-3 h-3 rounded-full bg-white/20" />
-             <div className="flex-1 text-xs text-zinc-500 font-mono text-center pr-8">app.laminar.ai</div>
+             <div className="flex-1 text-xs text-zinc-500 font-mono text-center pr-8">app.inference-control-plane.ai</div>
           </div>
 
           <div className="pt-10 w-full h-full relative">

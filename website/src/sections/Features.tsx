@@ -118,7 +118,7 @@ export const Features = () => {
             transition={{ delay: 0.1 }}
             className="text-lg text-zinc-400"
           >
-            Stop building boilerplate. Laminar provides a complete, enterprise-grade suite of tools to make your LLM applications fast, reliable, and observable.
+            Stop building boilerplate. Inference Control Plane provides a complete, enterprise-grade suite of tools to make your LLM applications fast, reliable, and observable.
           </motion.p>
         </div>
 

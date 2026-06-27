@@ -13,7 +13,7 @@ export const Cta = () => {
           <span className="text-gradient-primary">AI traffic?</span>
         </h2>
         <p className="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto">
-          Deploy Laminar in minutes and gain complete control, visibility, and reliability over your LLM inference.
+          Deploy Inference Control Plane in minutes and gain complete control, visibility, and reliability over your LLM inference.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="gap-2">

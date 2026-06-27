@@ -1,6 +1,6 @@
 # Deployment Instructions
 
-The Laminar website is built with React 19, Vite, and Tailwind CSS v4, and is deployed to GitHub Pages.
+The Inference Control Plane website is built with React 19, Vite, and Tailwind CSS v4, and is deployed to GitHub Pages.
 
 ## GitHub Pages Deployment
 

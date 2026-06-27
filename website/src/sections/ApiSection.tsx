@@ -5,8 +5,8 @@ export const ApiSection = () => {
   const [lang, setLang] = useState<"curl" | "node" | "python">("curl");
 
   const snippets = {
-    curl: `curl -X POST https://api.laminar.ai/v1/chat/completions \\
-  -H "Authorization: Bearer lam_live_xxxxxx" \\
+    curl: `curl -X POST https://api.inference-control-plane.ai/v1/chat/completions \\
+  -H "Authorization: Bearer tg_live_xxxxxx" \\
   -H "Content-Type: application/json" \\
   -H "X-Laminar-Route-To: cheapest" \\
   -H "X-Laminar-Cache: true" \\
@@ -17,8 +17,8 @@ export const ApiSection = () => {
     node: `import OpenAI from 'openai';
 
 const client = new OpenAI({
-  baseURL: 'https://api.laminar.ai/v1',
-  apiKey: 'lam_live_xxxxxx'
+  baseURL: 'https://api.inference-control-plane.ai/v1',
+  apiKey: 'tg_live_xxxxxx'
 });
 
 const response = await client.chat.completions.create({
@@ -33,8 +33,8 @@ const response = await client.chat.completions.create({
     python: `import openai
 
 client = openai.Client(
-    base_url="https://api.laminar.ai/v1",
-    api_key="lam_live_xxxxxx"
+    base_url="https://api.inference-control-plane.ai/v1",
+    api_key="tg_live_xxxxxx"
 )
 
 response = client.chat.completions.create(
@@ -57,7 +57,7 @@ response = client.chat.completions.create(
               Integrate in seconds.
             </h2>
             <p className="text-zinc-400 mb-8">
-              Because Laminar speaks standard OpenAI API protocols, you can use your favorite HTTP clients and libraries.
+              Because Inference Control Plane speaks standard OpenAI API protocols, you can use your favorite HTTP clients and libraries.
             </p>
 
             <div className="flex flex-col gap-2">

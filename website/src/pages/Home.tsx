@@ -28,7 +28,7 @@ export default function Home() {
       <Problem />
 
       {/* Below the fold (Lazy Loaded) */}
-      <Suspense fallback={<div className="h-screen bg-black flex items-center justify-center text-zinc-500 font-mono text-sm animate-pulse">Loading Laminar Control Plane...</div>}>
+      <Suspense fallback={<div className="h-screen bg-black flex items-center justify-center text-zinc-500 font-mono text-sm animate-pulse">Loading Inference Control Plane Control Plane...</div>}>
         <Solution />
         <Features />
         <HowItWorks />
