@@ -19,7 +19,7 @@ export const Solution = () => {
               One unified API for <span className="text-gradient-primary">everything.</span>
             </h2>
             <p className="text-lg text-zinc-400">
-              Replace dozens of messy SDKs with a single, intelligent proxy. Laminar handles the complexity of caching, routing, and fallbacks transparently.
+              Replace dozens of messy SDKs with a single, intelligent proxy. Inference Control Plane handles the complexity of caching, routing, and fallbacks transparently.
             </p>
           </motion.div>
         </div>
@@ -35,13 +35,13 @@ export const Solution = () => {
               language="python"
               code={`import openai
 
-# Just point your standard client to Laminar
+# Just point your standard client to Inference Control Plane
 client = openai.Client(
-    base_url="https://api.laminar.ai/v1",
-    api_key="lam_live_xxxxx"
+    base_url="https://api.inference-control-plane.ai/v1",
+    api_key="tg_live_xxxxx"
 )
 
-# Request hits Laminar Gateway
+# Request hits Inference Control Plane Gateway
 response = client.chat.completions.create(
     model="gpt-4-turbo",      # Or 'claude-3', 'llama-3'
     messages=[...],

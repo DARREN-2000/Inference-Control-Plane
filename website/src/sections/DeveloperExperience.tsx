@@ -10,7 +10,7 @@ export const DeveloperExperience = () => {
             Loved by developers.
           </h2>
           <p className="text-lg text-zinc-400">
-            We built Laminar to feel invisible. No new paradigms to learn, just standard APIs supercharged with enterprise capabilities.
+            We built Inference Control Plane to feel invisible. No new paradigms to learn, just standard APIs supercharged with enterprise capabilities.
           </p>
         </div>
 

@@ -30,7 +30,7 @@ export const Workflow = () => {
               See the fallback chain in action.
             </h2>
             <p className="text-zinc-400 mb-8 leading-relaxed">
-              When OpenAI goes down, your app shouldn't. Laminar detects timeouts and automatically routes the exact same request to Anthropic, entirely transparent to your end-user.
+              When OpenAI goes down, your app shouldn't. Inference Control Plane detects timeouts and automatically routes the exact same request to Anthropic, entirely transparent to your end-user.
             </p>
 
             <Button
@@ -61,7 +61,7 @@ export const Workflow = () => {
                       animate={{ opacity: 1, x: 0 }}
                       className="flex gap-3 text-blue-400"
                     >
-                      <span>Laminar:</span>
+                      <span>Inference Control Plane:</span>
                       <span>Routing to Primary (OpenAI GPT-4)</span>
                     </motion.div>
                   )}
@@ -83,7 +83,7 @@ export const Workflow = () => {
                       animate={{ opacity: 1, x: 0 }}
                       className="flex gap-3 text-amber-400"
                     >
-                      <span>Laminar:</span>
+                      <span>Inference Control Plane:</span>
                       <span>Executing Fallback Strategy (Anthropic Claude-3)</span>
                     </motion.div>
                   )}

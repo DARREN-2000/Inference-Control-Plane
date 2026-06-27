@@ -11,7 +11,7 @@ export const Architecture = () => {
               Built for extreme scale.
             </h2>
             <p className="text-lg text-zinc-400 mb-8">
-              Laminar sits transparently between your application and your AI providers. Written in Python with FastAPI and Asyncpg, it's designed to process thousands of requests per second with near-zero latency overhead.
+              Inference Control Plane sits transparently between your application and your AI providers. Written in Python with FastAPI and Asyncpg, it's designed to process thousands of requests per second with near-zero latency overhead.
             </p>
 
             <ul className="space-y-6">
@@ -49,9 +49,9 @@ export const Architecture = () => {
                   <ArrowRight className="w-5 h-5 text-zinc-600 rotate-90" />
                 </div>
 
-                {/* Laminar Layer */}
+                {/* Inference Control Plane Layer */}
                 <div className="bg-linear-to-r from-violet-600/20 to-cyan-600/20 border border-white/20 p-6 rounded-xl flex flex-col items-center">
-                  <div className="font-bold text-white mb-4">Laminar Gateway</div>
+                  <div className="font-bold text-white mb-4">Inference Control Plane Gateway</div>
                   <div className="flex gap-4 w-full">
                     <div className="flex-1 bg-black/50 border border-white/10 p-3 rounded text-center text-xs text-zinc-300">Router</div>
                     <div className="flex-1 bg-black/50 border border-white/10 p-3 rounded text-center text-xs text-zinc-300">Cache</div>

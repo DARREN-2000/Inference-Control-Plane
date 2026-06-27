@@ -32,7 +32,7 @@ export const Hero = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
                 </span>
-                Laminar v2.0 is now generally available
+                Inference Control Plane v2.0 is now generally available
                 <ArrowRight className="w-3 h-3 ml-1" />
               </span>
             </Badge>
@@ -90,7 +90,7 @@ export const Hero = () => {
               <div className="w-3 h-3 rounded-full bg-amber-500/80" />
               <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
               <div className="flex-1 flex justify-center text-xs text-zinc-500 font-mono">
-                laminar-dashboard
+                inference-control-plane-dashboard
               </div>
             </div>
 

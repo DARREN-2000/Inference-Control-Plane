@@ -4,7 +4,7 @@ const faqs = [
   {
     id: "1",
     q: "Do I need to change my application code?",
-    a: "No. Laminar is fully compatible with OpenAI and Anthropic SDKs. You only need to change the base URL to point to your Laminar Gateway and provide your Laminar API key. Your application remains unaware of the complex routing happening behind the scenes."
+    a: "No. Inference Control Plane is fully compatible with OpenAI and Anthropic SDKs. You only need to change the base URL to point to your Inference Control Plane Gateway and provide your Inference Control Plane API key. Your application remains unaware of the complex routing happening behind the scenes."
   },
   {
     id: "2",
@@ -14,11 +14,11 @@ const faqs = [
   {
     id: "3",
     q: "What happens if my primary LLM provider goes down?",
-    a: "Laminar monitors provider health in real-time. If a request times out or returns a 5xx error, Laminar automatically translates the request schema and routes it to your configured fallback provider (e.g., Anthropic Claude), returning the result to your client without dropping the connection."
+    a: "Inference Control Plane monitors provider health in real-time. If a request times out or returns a 5xx error, Inference Control Plane automatically translates the request schema and routes it to your configured fallback provider (e.g., Anthropic Claude), returning the result to your client without dropping the connection."
   },
   {
     id: "4",
-    q: "Does Laminar store my prompt data?",
+    q: "Does Inference Control Plane store my prompt data?",
     a: "By default, we log metadata (token counts, latency, cost) but do not store raw prompt text to ensure privacy. If you enable prompt logging or semantic caching, data is stored entirely within your own PostgreSQL/Redis instances."
   }
 ];

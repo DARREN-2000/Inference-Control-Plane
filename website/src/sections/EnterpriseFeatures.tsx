@@ -15,7 +15,7 @@ export const EnterpriseFeatures = () => {
               Ready for production workloads.
             </h2>
             <p className="text-lg text-zinc-400 mb-8 leading-relaxed">
-              Whether you are a startup scaling your first AI feature or a Fortune 500 company securing hundreds of LLM applications, Laminar has you covered.
+              Whether you are a startup scaling your first AI feature or a Fortune 500 company securing hundreds of LLM applications, Inference Control Plane has you covered.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -49,7 +49,7 @@ export const EnterpriseFeatures = () => {
               className="bg-black border border-white/10 rounded-2xl p-8 shadow-2xl relative z-20"
             >
                <h3 className="text-xl font-bold text-white mb-2">Self-Hosted Deployment</h3>
-               <p className="text-sm text-zinc-400 mb-6">Deploy Laminar in your own VPC for maximum security and compliance.</p>
+               <p className="text-sm text-zinc-400 mb-6">Deploy Inference Control Plane in your own VPC for maximum security and compliance.</p>
 
                <div className="space-y-4">
                  <div className="p-3 bg-zinc-900 border border-white/5 rounded-lg flex items-center justify-between">

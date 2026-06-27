@@ -12,7 +12,7 @@ export const HowItWorks = () => {
             Architected for extreme scale.
           </h2>
           <p className="text-lg text-zinc-400">
-            Laminar sits transparently between your application and your AI providers. Written in Python with FastAPI and Asyncpg, it processes thousands of requests per second with near-zero latency overhead.
+            Inference Control Plane sits transparently between your application and your AI providers. Written in Python with FastAPI and Asyncpg, it processes thousands of requests per second with near-zero latency overhead.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ export const HowItWorks = () => {
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">1. Your Application</h3>
               <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                Send standard OpenAI-formatted requests to the Laminar Gateway instead of directly to providers. No SDK changes required.
+                Send standard OpenAI-formatted requests to the Inference Control Plane Gateway instead of directly to providers. No SDK changes required.
               </p>
               <div className="p-3 bg-white/5 rounded-lg border border-white/5 font-mono text-xs text-zinc-500">
                 POST /v1/chat/completions
@@ -59,7 +59,7 @@ export const HowItWorks = () => {
               <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6">
                 <Network className="w-6 h-6 text-cyan-400" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">2. Laminar Control Plane</h3>
+              <h3 className="text-xl font-semibold text-white mb-3">2. Inference Control Plane Control Plane</h3>
               <ul className="space-y-3 text-sm text-zinc-300">
                 <li className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-emerald-400" /> Auth & Rate Limiting</li>
                 <li className="flex items-center gap-2"><Lock className="w-4 h-4 text-amber-400" /> PII Redaction</li>

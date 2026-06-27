@@ -106,7 +106,7 @@
     --ring: 240 4.9% 83.9%;
   }
 
-  /* Force dark mode for Laminar brand aesthetic */
+  /* Force dark mode for Inference Control Plane brand aesthetic */
   body {
     @apply bg-black text-white;
     --background: 0 0% 0%;

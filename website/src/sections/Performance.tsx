@@ -19,7 +19,7 @@ export const Performance = () => {
               <span className="text-zinc-500">optimized for speed.</span>
             </h2>
             <p className="text-lg text-zinc-400 mb-8 leading-relaxed">
-              Laminar is built on FastAPI and Asyncpg, utilizing an entirely asynchronous, non-blocking architecture. Connection pooling and optimized Redis caching ensure your proxy never becomes the bottleneck.
+              Inference Control Plane is built on FastAPI and Asyncpg, utilizing an entirely asynchronous, non-blocking architecture. Connection pooling and optimized Redis caching ensure your proxy never becomes the bottleneck.
             </p>
 
             <div className="grid grid-cols-2 gap-8">

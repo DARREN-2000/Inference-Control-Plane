@@ -92,6 +92,9 @@ export default function Home() {
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Control Plane Dashboard
             </h1>
+            <a href={process.env.NEXT_PUBLIC_DEMO_MODE === "true" ? "/Inference-Control-Plane/" : "/"} className="mt-4 inline-block text-sm font-medium text-[var(--accent-strong)] hover:underline">
+              &larr; Back to Website
+            </a>
             <p className="mt-2 max-w-2xl text-sm/6 text-neutral-700 md:text-base/7">
               Production operator view for routing, usage, cache efficiency, and rapid
               prompt validation.
