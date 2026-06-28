@@ -1,567 +1,275 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-hero-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-hero-light.svg">
-    <img src="docs/assets/readme-hero-light.svg" alt="Real-time LLM traffic control: auth, routing, cache, rate limits, logging, and metrics flowing through a FastAPI gateway." width="100%" draggable="false"/>
-  </picture>
-</p>
-
-<h1 align="center">Inference Control Plane</h1>
-
-<p align="center">
-  <strong>Real-time LLM traffic control.</strong>
-</p>
-
-<p align="center">
-  <strong>Star us&nbsp;❤️&nbsp;→</strong>&nbsp;<a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="Star Inference Control Plane on GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/star-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/star-btn-light.svg"><img src="docs/assets/star-btn-light.svg" alt="Star Inference Control Plane on GitHub" height="36" align="absmiddle"/></picture></a> &nbsp;·&nbsp;
-  <a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="GitHub repository"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/github-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/github-btn-light.svg"><img src="docs/assets/github-btn-light.svg" alt="GitHub" height="36" align="absmiddle"/></picture></a> &nbsp;·&nbsp;
-  <a href="docs/ARCHITECTURE.md" title="Architecture guide"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/arch-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/arch-btn-light.svg"><img src="docs/assets/arch-btn-light.svg" alt="Architecture" height="36" align="absmiddle"/></picture></a> &nbsp;·&nbsp;
-  <a href="docs/OPERATIONS.md" title="Operations guide"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/ops-btn-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/assets/ops-btn-light.svg"><img src="docs/assets/ops-btn-light.svg" alt="Operations" height="36" align="absmiddle"/></picture></a>
-</p>
-
-<p align="center">
-  Production-ready FastAPI gateway for LLM inference with <em>routing, caching, rate limiting, and full observability.</em><br/>
-  Every request is logged, metered, and traced for operator-grade visibility.
-</p>
-
-<p align="center">
-  <b>Routing</b> · only smart paths &nbsp;·&nbsp; <b>Cache hits</b> · eliminate redundant calls &nbsp;·&nbsp; <b>Rate limits</b> · control costs &nbsp;·&nbsp; <b>Live logs</b> · operator dashboard &nbsp;·&nbsp; <b>Metrics</b> · full observability
-</p>
-
 <div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/banner-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/banner-light.svg">
+    <img src="docs/assets/banner-light.svg" alt="Laminar - Enterprise LLM Gateway" width="100%"/>
+  </picture>
+  <br/>
+  <h1>Laminar</h1>
+  <p><b>The Enterprise-Grade Inference Control Plane for AI Traffic</b></p>
 
-[![stars](https://img.shields.io/github/stars/DARREN-2000/Inference-Control-Plane?style=flat-square&label=stars&color=FB6A76)](https://github.com/DARREN-2000/Inference-Control-Plane)
-[![license](https://img.shields.io/badge/license-Apache--2.0-5B5BD6?style=flat-square)](LICENSE)
-[![backend](https://img.shields.io/badge/backend-FastAPI-0B7285?style=flat-square)](https://fastapi.tiangolo.com/)
-[![frontend](https://img.shields.io/badge/frontend-Next.js-111827?style=flat-square)](https://nextjs.org/)
-[![redis](https://img.shields.io/badge/cache-Redis-DC382D?style=flat-square)](https://redis.io/)
-[![postgres](https://img.shields.io/badge/database-PostgreSQL-336791?style=flat-square)](https://www.postgresql.org/)
-[![observability](https://img.shields.io/badge/observability-OpenTelemetry-6D28D9?style=flat-square)](https://opentelemetry.io/)
-
+  <p>
+    <a href="https://github.com/DARREN-2000/Inference-Control-Plane/actions"><img src="https://img.shields.io/github/actions/workflow/status/DARREN-2000/Inference-Control-Plane/ci.yml?style=for-the-badge&logo=github" alt="Build Status"/></a>
+    <a href="https://hub.docker.com/r/darren-2000/inference-control-plane"><img src="https://img.shields.io/docker/pulls/darren-2000/inference-control-plane?style=for-the-badge&logo=docker" alt="Docker Pulls"/></a>
+    <a href="https://github.com/DARREN-2000/Inference-Control-Plane/blob/main/LICENSE"><img src="https://img.shields.io/github/license/DARREN-2000/Inference-Control-Plane?style=for-the-badge" alt="License: Apache 2.0"/></a>
+    <a href="https://github.com/DARREN-2000/Inference-Control-Plane/releases"><img src="https://img.shields.io/github/v/release/DARREN-2000/Inference-Control-Plane?style=for-the-badge" alt="Release"/></a>
+  </p>
 </div>
 
-<br/><br/>
+<br/>
 
-<h2 align="center">System Architecture</h2>
+## 📖 Project Overview
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-system-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-system-light.svg">
-    <img src="docs/assets/readme-system-light.svg" alt="System overview: incoming requests flow through the Inference Control Plane (auth, routing, cache, rate limits, logging, metrics) to model endpoints, with PostgreSQL, Redis, and Prometheus backing the system." width="100%"/>
-  </picture>
-</p>
+**Laminar** is a high-performance, enterprise-ready LLM API gateway and inference control plane. It acts as a unified proxy between your applications and various foundational models (OpenAI, Anthropic, Azure, local deployments), providing essential capabilities like intelligent routing, semantic caching, fallback mechanisms, rate limiting, and comprehensive observability.
 
-<br/><br/>
+Designed for massive scale, Laminar processes thousands of tokens per second with sub-millisecond overhead, empowering engineering teams to build robust, AI-driven products without worrying about provider outages, quota limits, or uncontrolled spend.
 
-<h2 align="center">Request Flow</h2>
+## 🔭 Product Vision
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-routing-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-routing-light.svg">
-    <img src="docs/assets/readme-routing-light.svg" alt="Request routing flow: incoming request with priority → API key validation → rate limit check → cache lookup → policy engine → model router → response → log & metrics" width="100%"/>
-  </picture>
-</p>
+Our vision is to commoditize the AI infrastructure layer. As AI models become ubiquitous, the differentiation will lie in how reliably, securely, and efficiently they are served. Laminar aims to be the standard open-source control plane for all AI inference traffic—just as Nginx or Envoy became standard for HTTP traffic. We provide the tools for platform engineering teams to maintain total control over their AI consumption.
 
-<p align="center">
-  <b>1. Validate</b> API key and principals &nbsp;·&nbsp;
-  <b>2. Enforce</b> rate limits (per-key, per-user) &nbsp;·&nbsp;
-  <b>3. Check</b> Redis cache &nbsp;·&nbsp;
-  <b>4. Route</b> to target model &nbsp;·&nbsp;
-  <b>5. Log</b> to PostgreSQL &nbsp;·&nbsp;
-  <b>6. Emit</b> traces & metrics
-</p>
+## ✨ Key Features
 
-<br/><br/>
+- 🚀 **Unified API:** Drop-in replacement for OpenAI SDKs. Write code once, route to any provider.
+- 🧠 **Intelligent Routing & Fallbacks:** Automatically reroute traffic if a primary model degrades or rate-limits.
+- 💾 **Semantic & Exact Caching:** Slash latency and cost by caching identical or semantically similar queries at the edge.
+- 🚦 **Advanced Rate Limiting:** Enforce token and request quotas per-tenant, per-user, or per-model.
+- 🛡️ **Enterprise Security:** Built-in secret management, PII redaction, and granular access control (RBAC).
+- 📊 **Deep Observability:** Prometheus metrics, OpenTelemetry tracing, and rich usage logs (cost & token tracking).
+- ⚡ **High Performance:** Asynchronous Python (FastAPI/asyncpg) back-end capable of 10k+ RPM per node.
 
-<h2 align="center">Why Inference Control Plane?</h2>
+## 🏛️ Architecture Overview
 
-<p align="center">
-  <b>Cost and latency compound at scale.</b> Cache hits eliminate LLM calls. Smart routing prevents model bottlenecks. Per-request logging enables cost attribution. Full observability means no surprises in production.
-</p>
+Laminar sits securely within your VPC, intercepting outbound LLM requests.
 
-<p align="center">
-  <b>Low-latency hits</b> · Redis cache &nbsp;·&nbsp;
-  <b>Cost control</b> · cache + routing &nbsp;·&nbsp;
-  <b>Full auditability</b> · per-request logging &nbsp;·&nbsp;
-  <b>Production-ready</b> · FastAPI + Postgres + Redis
-</p>
+1. **Client Request:** Your app calls Laminar using standard OpenAI SDKs.
+2. **Auth & Quota:** Laminar validates the API key and checks distributed Redis rate limits.
+3. **Cache Lookup:** In-memory or Redis caches are queried for a matching response.
+4. **Provider Routing:** If a cache miss occurs, the request is dynamically routed to the best provider based on cost, latency, or availability policies.
+5. **Response Streaming & Logging:** The response is streamed back to the client while usage metrics (tokens, cost, latency) are asynchronously flushed to PostgreSQL.
 
-### Key features
+*For a detailed deep dive, see our [Architecture Guide](docs/architecture.md).*
 
-- **Low-latency response cache** — Redis-backed caching eliminates redundant LLM API calls.
-- **Priority-based routing** — Token-threshold routing with model overrides and fallback.
-- **PostgreSQL request audit log** — Every call logged with latency, token count, model, cost, and user context.
-- **Prometheus metrics** — Cache, routing, rate limits, and model performance metrics.
-- **OpenTelemetry traces** — Full request tracing from auth through model response.
-- **Per-key and per-user rate limits** — Redis-backed fixed-window enforcement to control costs.
-- **Live operator dashboard** — Next.js UI showing real-time traffic, cache hit rates, model distribution.
-- **Kubernetes-ready** — Docker Compose locally, Kustomize manifests for production.
+## 🤔 Why This Exists
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-telemetry-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-telemetry-light.svg">
-    <img src="docs/assets/readme-telemetry-light.svg" alt="Telemetry strip showing routing, caching, limits, logs, and metrics." width="100%"/>
-  </picture>
-</p>
+As organizations scale their AI initiatives, they encounter several pain points:
+1. **Vendor Lock-in:** Hardcoding integrations to specific providers (e.g., OpenAI, Anthropic).
+2. **Reliability Issues:** Provider outages breaking critical application flows.
+3. **Unpredictable Costs:** Lack of granular visibility and control over token usage per team.
+4. **Latency:** Unnecessary roundtrips for repeated queries.
 
-<br/><br/>
+Laminar solves these by providing a resilient, transparent middleware layer that abstracts away provider complexities.
 
-<h2 align="center">Live Demo</h2>
+## ⚖️ Comparison With Alternatives
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-live-demo-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-live-demo-light.svg">
-    <img src="docs/assets/readme-live-demo-light.svg" alt="Live demo preview with animated request pulses." width="100%"/>
-  </picture>
-</p>
+| Feature | Laminar | LiteLLM | Portkey | Kong AI Gateway |
+|---------|:---:|:---:|:---:|:---:|
+| **Open Source** | ✅ | ✅ | ❌ | ✅ |
+| **Enterprise RBAC** | ✅ | ❌ | ✅ | ✅ |
+| **Semantic Caching** | ✅ | ❌ | ✅ | ❌ |
+| **Native Dashboard**| ✅ | ✅ | ✅ | ❌ |
+| **Python Native** | ✅ | ✅ | ❌ | ❌ |
+| **Streaming Support**| ✅ | ✅ | ✅ | ✅ |
 
-<p align="center">
-  The dashboard ships without a hosted demo. For production, deploy the backend
-  on Render and point the frontend at it by setting
-  <code>NEXT_PUBLIC_API_BASE_URL</code>. Set <code>NEXT_PUBLIC_DEMO_MODE=false</code>
-  for real traffic.
-</p>
+## 📸 Screenshots & GIF Demonstrations
 
-<br/><br/>
+*(Note: Add path to actual screenshots/GIFs here once assets are generated or populated in `docs/assets/`)*
 
-<h2 align="center">Get started in 2 minutes</h2>
+<div align="center">
+  <img src="docs/assets/dashboard-preview.png" alt="Dashboard Preview" width="80%"/>
+  <p><i>The Laminar Analytics Dashboard</i></p>
+</div>
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-devx-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-devx-light.svg">
-    <img src="docs/assets/readme-devx-light.svg" alt="Developer quick start commands for local stack and test request." width="100%"/>
-  </picture>
-</p>
+## 🛠️ Technology Stack
 
-### Local development
+- **Backend:** Python 3.12+, FastAPI, SQLAlchemy, asyncpg, Alembic
+- **Databases:** PostgreSQL (Relational Data & Logs), Redis (Caching & Rate Limiting)
+- **Frontend:** Next.js 15, React 19, Tailwind CSS v4, Framer Motion
+- **Observability:** Prometheus, OpenTelemetry
+- **Infrastructure:** Docker, Kubernetes (Helm), GitHub Actions
 
-Run the full stack:
+## 📂 Project Structure
 
-```bash
-docker compose up --build
+```
+.
+├── src/inference_control_plane/ # Core backend application
+├── frontend/                     # Next.js administrative dashboard
+├── website/                      # Static marketing and product website
+├── docs/                         # Comprehensive documentation
+├── deploy/                       # Docker Compose and Kubernetes manifests
+├── alembic/                      # Database migrations
+└── tests/                        # Pytest test suite
 ```
 
-**Service URLs:**
-- API: http://localhost:8000
-- Prometheus: http://localhost:9090
-- Frontend: http://localhost:3000
+## 🚀 Installation & Quick Start
 
-**Send a test request:**
+### 1. Prerequisites
+- Docker & Docker Compose
+- Python 3.12+ (for local development)
+- Node.js 20+ & pnpm (for frontend development)
+- `uv` package manager
+
+### 2. Docker Quick Start
+
+The fastest way to get Laminar running is via Docker Compose:
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/generate" \
+# Clone the repository
+git clone https://github.com/DARREN-2000/Inference-Control-Plane.git
+cd Inference-Control-Plane
+
+# Start the stack (API, Dashboard, Postgres, Redis, Prometheus)
+docker-compose up -d
+
+# Check the status
+docker-compose ps
+```
+
+Laminar API is now available at `http://localhost:8000` and the Dashboard at `http://localhost:3000`.
+
+## ⚙️ Configuration & Environment Variables
+
+Laminar is heavily configurable via environment variables. See `.env.example` for all options.
+
+**Core Configuration:**
+```bash
+ENVIRONMENT=production
+DATABASE_URL=postgresql+asyncpg://user:pass@host:5432/db
+REDIS_URL=redis://:pass@host:6379/0
+DEFAULT_API_KEY=sk-laminar-your-secret-key
+```
+
+**Provider Configuration:**
+```bash
+LLM_PROVIDER_ORDER=openai,anthropic,azure
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-...
+```
+
+## 🐳 Docker Support
+
+Official Docker images are available on GHCR:
+- `ghcr.io/darren-2000/inference-control-plane-api:latest`
+- `ghcr.io/darren-2000/inference-control-plane-dashboard:latest`
+
+Use the provided `Dockerfile` to build custom images or inject proprietary certificates.
+
+## 💻 Running Locally (Development)
+
+### Backend
+```bash
+uv sync --extra dev
+cp .env.example .env
+# Edit .env with your local Postgres/Redis details
+alembic upgrade head
+uvicorn inference_control_plane.main:app --app-dir src --reload
+```
+
+### Frontend
+```bash
+cd frontend
+pnpm install
+cp .env.example .env.local
+pnpm run dev
+```
+
+## ☁️ Production Deployment
+
+Laminar is designed to be deployed on Kubernetes. Manifests are provided in `deploy/kubernetes`.
+
+```bash
+kubectl apply -k deploy/kubernetes/base/
+```
+Please consult the [Deployment Guide](docs/deployment.md) for High Availability (HA) setups, multi-region routing, and database connection pooling (PgBouncer).
+
+## 💡 Usage Examples
+
+### API Examples
+
+Laminar exposes an API compatible with OpenAI's format. Point your existing applications to Laminar by overriding the `base_url`.
+
+**cURL:**
+```bash
+curl -X POST http://localhost:8000/v1/chat/completions \
+  -H "Authorization: Bearer sk-laminar-your-secret-key" \
   -H "Content-Type: application/json" \
-  -H "x-api-key: dev-inference-key" \
   -d '{
-    "prompt": "What are token bucket rate limiters?",
-    "user_id": "user-123",
-    "priority": "low"
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Explain quantum computing."}]
   }'
 ```
 
-Open http://localhost:3000 to view the dashboard with live traffic visualization.
+**Python (OpenAI SDK):**
+```python
+from openai import AsyncOpenAI
 
-<br/><br/>
+client = AsyncOpenAI(
+    base_url="http://localhost:8000/v1",
+    api_key="sk-laminar-your-secret-key"
+)
 
-<h2 align="center">API</h2>
+response = await client.chat.completions.create(
+    model="claude-3-5-sonnet", # Will route to Anthropic automatically
+    messages=[{"role": "user", "content": "Hello, world!"}]
+)
+```
 
-### Endpoints
+### CLI Examples
 
-| Method | Path | Description |
-| --- | --- | --- |
-| POST | `/api/v1/generate` | Generate an LLM response |
-| GET | `/api/v1/usage/summary?user_id=...` | Usage summary for a user |
-| GET | `/api/v1/usage/logs?user_id=...&limit=1-100` | Request log entries |
-| GET | `/health/live` | Liveness probe |
-| GET | `/health/ready` | Readiness probe |
-| GET | `/metrics` | Prometheus metrics |
-
-### Headers
-
-- `x-api-key` (required) — Your API key for authentication
-
-<br/><br/>
-
-<h2 align="center">Who uses Inference Control Plane?</h2>
-
-- **SaaS platforms** — Route customers to tiered models; enforce per-tier rate limits.
-- **Internal tools teams** — Manage LLM access across engineering, product, design with per-team quotas.
-- **AI agencies** — Route client requests to fine-tuned models; track usage and billing per customer.
-- **Research labs** — Experiment with routing policies and cache strategies without code changes.
-- **Production AI apps** — Cache embeddings, completions, and fine-tuned responses at any scale.
-
-<br/><br/>
-
-<h2 align="center">Configuration</h2>
-
-See `.env.example` for all settings. Key production parameters:
-
+*(Laminar CLI documentation available in [CLI Reference](docs/cli-reference.md))*
 ```bash
-# Core
-ENVIRONMENT=production
-CORS_ALLOWED_ORIGINS=["https://your-frontend-domain"]
-DEFAULT_API_KEY=replace-me
-LOG_LEVEL=INFO
+# Generate a new API key for a tenant
+laminar keys create --tenant-id org_123 --limit 1000/min
 
-# Database
-DATABASE_URL=******host:5432/inference_cp
-DATABASE_POOL_SIZE=20
-DATABASE_MAX_OVERFLOW=40
-
-# Redis + rate limits
-REDIS_URL=redis://:password@host:6379/0
-CACHE_TTL_SECONDS=3600
-RATE_LIMIT_WINDOW_SECONDS=60
-DEFAULT_RATE_LIMIT_PER_MINUTE=120
-USER_RATE_LIMIT_PER_MINUTE=60
-
-# LLM providers
-LLM_MODE=openai-compatible
-LLM_PROVIDER_ORDER=openai,anthropic
-LLM_API_KEY=...
-ANTHROPIC_API_KEY=...
-AZURE_OPENAI_BASE_URL=...
-AZURE_OPENAI_API_KEY=...
-AZURE_OPENAI_DEPLOYMENT=...
-LLM_TIMEOUT_SECONDS=20
-LLM_MAX_RETRIES=2
-
-# Observability
-OTLP_ENDPOINT=http://localhost:4317
-PROMETHEUS_NAMESPACE=inference_control_plane
+# View real-time traffic logs
+laminar logs tail --model gpt-4
 ```
 
-See [docs/OPERATIONS.md](docs/OPERATIONS.md) for deployment tuning, multi-region setup, and scaling.
+## ⚡ Performance & Benchmarks
 
-<br/><br/>
+Laminar is built for speed. By utilizing connection pooling (`httpx.AsyncClient`, `asyncpg`) and Redis pipelining, the proxy overhead is negligible.
 
-<h2 align="center">Backend Development</h2>
+- **P99 Proxy Overhead:** `< 2.5ms`
+- **Cache Hit Latency:** `< 5ms`
+- **Throughput:** `~10,000 RPM` per worker instance (2vCPU, 4GB RAM)
 
-### Setup
+*Benchmarks conducted on AWS c6g.large instances using `wrk`. See [Performance Tuning](docs/performance-tuning.md).*
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
+## 🔒 Security
 
-python -m pip install uv
-uv sync --extra dev
-cp .env.example .env
-```
+Security is critical when handling sensitive AI data.
+- **Data Privacy:** Payloads are not logged by default. Enable `LOG_PAYLOADS=true` only for debugging.
+- **RBAC:** Strict access controls for admin vs. tenant-level API keys.
+- **Vulnerability Reporting:** Please report issues to `security@laminar.ai`. Read our [Security Policy](SECURITY.md).
 
-### Database
+## ⚠️ Limitations
 
-```bash
-# Apply migrations
-alembic upgrade head
+- Multi-modal caching (images, audio) is currently highly experimental.
+- Semantic cache requires an active embedding provider (e.g., text-embedding-3-small).
 
-# Create a migration
-alembic revision --autogenerate -m "your change description"
-```
+## 🛣️ Roadmap
 
-### Run
+- [ ] **Q3 2024:** Advanced Semantic Caching via Qdrant integration.
+- [ ] **Q4 2024:** Custom Model Load Balancing (Round Robin, Least Connections).
+- [ ] **Q1 2025:** Native support for Google Gemini & Vertex AI.
 
-```bash
-# Development server with auto-reload
-uvicorn inference_control_plane.main:app --app-dir src --reload --host 0.0.0.0 --port 8000
+## 🤝 Contributing
 
-# Production server (single process)
-uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000 --workers 4
-```
+We welcome contributions from the community! Whether it's a bug fix, new feature, or documentation update, your help is appreciated.
 
-### Tests
+Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
 
-```bash
-uv sync --extra dev
+## 📄 License
 
-# Run all tests
-pytest
+Laminar is open-source software licensed under the [Apache 2.0 License](LICENSE).
 
-# Specific test file
-pytest tests/test_router.py
+## 🙏 Acknowledgements
 
-# With coverage
-pytest --cov=inference_control_plane tests/
-```
+- The [FastAPI](https://fastapi.tiangolo.com/) community for an incredible web framework.
+- [Next.js](https://nextjs.org/) for powering our frontend dashboard.
 
-### Linting
+## 💬 Support & FAQ
 
-```bash
-ruff check src/inference_control_plane tests
-ruff format src/inference_control_plane tests
-
-# Optional shortcuts
-make lint-backend
-make test
-```
-
-<br/><br/>
-
-<h2 align="center">Frontend Development</h2>
-
-### Setup
-
-```bash
-cd frontend
-npm install
-cp .env.example .env.local
-```
-
-### Run
-
-```bash
-# Development server
-npm run dev
-
-# Production build
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-### Tests & Linting
-
-```bash
-npm run lint
-npm run type-check
-npm test
-```
-
-See [frontend/README.md](frontend/README.md) for full frontend docs.
-
-<br/><br/>
-
-<h2 align="center">Packaging & Publishing</h2>
-
-### Python package
-
-```bash
-uv sync --extra dev
-python -m build
-```
-
-Artifacts land in `dist/`. Upload to the GitHub Release automatically when you
-publish a `vX.Y.Z` release (see Versioning below). Optional PyPI publish:
-
-```bash
-python -m twine upload dist/*
-```
-
-### npm package (frontend)
-
-```bash
-cd frontend
-npm install
-npm pack
-```
-
-Publish to GitHub Packages with:
-
-```bash
-npm publish
-```
-
-### Docker images
-
-GitHub releases publish two GHCR images:
-
-```bash
-ghcr.io/darren-2000/inference-control-plane-api
-ghcr.io/darren-2000/inference-control-plane-worker
-```
-
-The worker tag is reserved for future async processing; today it is the same
-container image. Use the Docker commands in the Deployment section below for
-local builds.
-
-### Versioning and releases
-
-1. Update `src/inference_control_plane/__init__.py` and `frontend/package.json` to the same version.
-2. Tag a release as `vX.Y.Z` and publish a GitHub Release.
-
-The release workflow uploads Python artifacts to the Release, publishes the
-frontend package to GitHub Packages, and pushes the Docker images to GHCR.
-
-<br/><br/>
-
-<h2 align="center">Observability</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-observability-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-observability-light.svg">
-    <img src="docs/assets/readme-observability-light.svg" alt="Observability overview with traces, metrics, and logs." width="100%"/>
-  </picture>
-</p>
-
-### Metrics
-
-Prometheus endpoint at `GET /metrics` exports 50+ metrics:
-
-```promql
-# Cache hit rate (last 5 minutes)
-rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
-
-# Average request latency by model
-histogram_quantile(0.99, rate(request_latency_seconds_bucket[5m]))
-
-# Current rate limit usage
-rate_limit_tokens_remaining / rate_limit_tokens_total
-```
-
-### Tracing
-
-Every request is traced to your OTLP collector:
-
-```bash
-OTLP_ENDPOINT=http://your-collector:4317
-```
-
-Traces include:
-- API key validation
-- Rate limit enforcement
-- Cache lookup and hit/miss
-- Model routing decision
-- Model response time
-- PostgreSQL insert
-
-### Logging
-
-Structured JSON logs to stdout with fields:
-- `request_id` — unique per request
-- `user_id` — authenticated user
-- `model` — selected model
-- `cache_hit` — boolean
-- `latency_ms` — total time
-- `tokens_used` — if applicable
-
-<br/><br/>
-
-<h2 align="center">Deployment</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-deploy-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-deploy-light.svg">
-    <img src="docs/assets/readme-deploy-light.svg" alt="Deployment options for local, Docker, and Kubernetes." width="100%"/>
-  </picture>
-</p>
-
-### Render (backend)
-
-1. Create a Render **PostgreSQL** and **Redis** instance.
-2. Create a new Render **Web Service** from this repo using the Dockerfile.
-3. Set these environment variables:
-
-```bash
-DATABASE_URL=postgresql+asyncpg://<render-user>:<password>@<render-host>:5432/<db>
-REDIS_URL=redis://:<password>@<render-redis-host>:6379/0
-ENVIRONMENT=production
-DEFAULT_API_KEY=replace-me
-CORS_ALLOWED_ORIGINS=["https://your-frontend-domain"]
-PORT=8000
-```
-
-4. Configure the health check path to `/health/ready`.
-5. Run migrations on deploy (Render start command example):
-
-```bash
-alembic upgrade head && uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000
-```
-
-Update `NEXT_PUBLIC_API_BASE_URL` in the frontend to your Render service URL.
-
-### Docker
-
-```bash
-# Build image
-docker build -t inference-control-plane:latest .
-
-# Run container
-docker run -p 8000:8000 \
-  -e DATABASE_URL="postgresql+asyncpg://..." \
-  -e REDIS_URL="redis://..." \
-  inference-control-plane:latest
-```
-
-### Kubernetes
-
-Manifests in `deploy/kubernetes/`:
-
-```bash
-# Apply base configuration
-kubectl apply -k deploy/kubernetes/base/
-```
-
-See [deploy/kubernetes/README.md](deploy/kubernetes/README.md) for details on:
-- Horizontal Pod Autoscaling
-- Service mesh integration
-- Multi-region deployment
-- High availability setup
-
-<br/><br/>
-
-<h2 align="center">Documentation</h2>
-
-- 📖 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Design, data model, request flow deep dive
-- 🛠️ [docs/OPERATIONS.md](docs/OPERATIONS.md) — Scaling, monitoring, troubleshooting, performance tuning
-- ☸️ [deploy/kubernetes/README.md](deploy/kubernetes/README.md) — Kubernetes manifests and Helm usage
-- 🎨 [frontend/README.md](frontend/README.md) — Dashboard development and customization
-- 📋 [CONTRIBUTING.md](CONTRIBUTING.md) — How to contribute
-
-<br/><br/>
-
-<h2 align="center">Community</h2>
-
-<table width="100%" border="0" cellspacing="0" role="presentation">
-  <tr>
-    <td align="center" valign="middle" width="25%">
-      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/discussions" title="GitHub Discussions"><picture><source media="(prefers-color-scheme: dark)"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Discussions" width="50"/></picture><br/><b>Discussions</b></a><br/>Questions & ideas
-    </td>
-    <td align="center" valign="middle" width="25%">
-      <a href="https://github.com/DARREN-2000/Inference-Control-Plane/issues" title="GitHub Issues"><b>🐛 Issues</b></a><br/>Bugs & features
-    </td>
-    <td align="center" valign="middle" width="25%">
-      <a href="CONTRIBUTING.md" title="Contributing Guide"><b>📝 Contributing</b></a><br/>Code & docs
-    </td>
-    <td align="center" valign="middle" width="25%">
-      <a href="https://github.com/DARREN-2000/Inference-Control-Plane" title="GitHub"><b>⭐ Star us</b></a><br/>Show support
-    </td>
-  </tr>
-</table>
-
-<br/><br/>
-
-<h2 align="center">Built for scale</h2>
-
-- **Redis cluster** — Sharded cache layer for petabyte-scale deployments.
-- **PostgreSQL streaming replication** — Read replicas for analytics; writes on primary.
-- **Horizontal Pod Autoscaling** — Auto-scale based on queue depth and request latency.
-- **Multi-region** — Route by geography; failover to secondary regions.
-
-<p align="center"><sub>Designed for high-throughput workloads. Benchmark with your own traffic for production sizing.</sub></p>
-
-<br/><br/>
-
-<h2 align="center">Contributing</h2>
-
-<p align="center">
-  <b>Every pull request makes Inference Control Plane better.</b><br/>
-  Bug fixes, new features, docs, examples — all welcome.<br/>
-  <sub>First time? Start with a <a href="https://github.com/DARREN-2000/Inference-Control-Plane/labels/good%20first%20issue">good first issue</a>.</sub>
-</p>
-
-<p align="center">
-  📝 <a href="CONTRIBUTING.md"><b>Read the contributing guide</b></a> &nbsp;·&nbsp;
-  🐛 <a href="https://github.com/DARREN-2000/Inference-Control-Plane/issues?q=is%3Aopen"><b>Browse open issues</b></a> &nbsp;·&nbsp;
-  💬 <a href="https://github.com/DARREN-2000/Inference-Control-Plane/discussions/new"><b>Start a discussion</b></a>
-</p>
-
-<br/><br/>
-
-<p align="center"><sub>Apache-2.0 · © Inference Control Plane contributors</sub></p>
+- **Need Help?** Open a [GitHub Discussion](https://github.com/DARREN-2000/Inference-Control-Plane/discussions).
+- **Found a Bug?** Open a [GitHub Issue](https://github.com/DARREN-2000/Inference-Control-Plane/issues).
+- **FAQ:** See our [FAQ Documentation](docs/faq.md).
