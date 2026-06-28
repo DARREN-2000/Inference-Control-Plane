@@ -39,7 +39,7 @@ export const Problem = () => {
               transition={{ duration: 0.5 }}
             >
               <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-                Scaling AI is <span className="text-destructive">painful</span>.
+                Scaling AI is <span className="text-zinc-400">painful</span>.
               </h2>
               <p className="text-lg text-zinc-400 mb-8 leading-relaxed">
                 Building a quick prototype with an LLM is easy. But putting it into production exposes your infrastructure to unpredictable costs, rate limits, latency spikes, and provider unreliability.
@@ -49,8 +49,8 @@ export const Problem = () => {
                 {painPoints.slice(0, 2).map((point, index) => (
                   <div key={index} className="flex gap-4">
                     <div className="flex-shrink-0 mt-1">
-                      <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center border border-destructive/20">
-                        <point.icon className="w-5 h-5 text-destructive" />
+                      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                        <point.icon className="w-5 h-5 text-zinc-400" />
                       </div>
                     </div>
                     <div>
@@ -65,18 +65,18 @@ export const Problem = () => {
 
           <div className="relative">
             {/* Visual representation of the mess */}
-            <div className="absolute inset-0 bg-linear-to-tr from-destructive/20 to-transparent rounded-2xl blur-3xl -z-10" />
+            <div className="absolute inset-0 bg-linear-to-tr from-zinc-800/40 to-transparent rounded-2xl blur-3xl -z-10" />
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Card className="border-destructive/20 bg-black/50 overflow-hidden">
+              <Card className="border-white/5 bg-black/50 overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="bg-destructive/10 border-b border-destructive/20 px-4 py-3 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-destructive" />
-                    <span className="text-sm font-mono text-destructive">Production Alerts (Last 24h)</span>
+                  <div className="bg-white/5 border-b border-white/5 px-4 py-3 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-zinc-400" />
+                    <span className="text-sm font-mono text-zinc-400">Production Alerts (Last 24h)</span>
                   </div>
                   <div className="p-4 space-y-3 font-mono text-sm">
                     {[
@@ -87,7 +87,7 @@ export const Problem = () => {
                     ].map((log, i) => (
                       <div key={i} className="flex gap-3">
                         <span className="text-zinc-600">{log.time}</span>
-                        <span className={log.type === 'error' ? 'text-destructive' : 'text-amber-400'}>{log.msg}</span>
+                        <span className={log.type === 'error' ? 'text-zinc-400' : 'text-zinc-500'}>{log.msg}</span>
                       </div>
                     ))}
                     <div className="animate-pulse flex gap-3 opacity-50 mt-4">

@@ -8,14 +8,13 @@ export const Hero = () => {
     <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-screen flex items-center justify-center">
       {/* Animated Background Gradients */}
       <div className="absolute inset-0 bg-black -z-20" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/40 via-black to-black" />
       <motion.div
         animate={{
           opacity: [0.3, 0.5, 0.3],
           scale: [1, 1.05, 1],
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-cyan-900/30 blur-[120px] rounded-full -z-10 pointer-events-none"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-white/5 blur-[120px] rounded-full -z-10 pointer-events-none"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -29,10 +28,10 @@ export const Hero = () => {
             <Badge variant="premium" className="mb-8 px-4 py-1">
               <span className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-500"></span>
                 </span>
-                Inference Control Plane v2.0 is now generally available
+                Laminar v2.0 is now generally available
                 <ArrowRight className="w-3 h-3 ml-1" />
               </span>
             </Badge>
@@ -83,14 +82,14 @@ export const Hero = () => {
         >
           <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent z-10 bottom-0 h-1/3 pointer-events-none" />
 
-          <div className="rounded-xl border border-white/10 bg-zinc-950/80 backdrop-blur-xl shadow-2xl overflow-hidden relative">
+          <div className="rounded-xl border border-white/5 bg-black backdrop-blur-xl shadow-2xl overflow-hidden relative">
             {/* Mac OS window controls */}
             <div className="h-10 border-b border-white/5 bg-white/5 flex items-center px-4 gap-2">
-              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              <div className="w-3 h-3 rounded-full bg-zinc-800" />
+              <div className="w-3 h-3 rounded-full bg-zinc-800" />
+              <div className="w-3 h-3 rounded-full bg-zinc-800" />
               <div className="flex-1 flex justify-center text-xs text-zinc-500 font-mono">
-                inference-control-plane-dashboard
+                laminar-dashboard
               </div>
             </div>
 
@@ -111,7 +110,7 @@ export const Hero = () => {
                     <h3 className="text-xl font-semibold text-white mb-1">Inference Traffic</h3>
                     <p className="text-sm text-zinc-500">Last 24 hours across all providers</p>
                   </div>
-                  <Badge variant="glass" className="text-emerald-400 border-emerald-500/20">System Healthy</Badge>
+                  <Badge variant="glass" className="text-zinc-400 border-zinc-500/20">System Healthy</Badge>
                 </div>
 
                 {/* Fake Chart */}
@@ -125,7 +124,7 @@ export const Hero = () => {
                          initial={{ height: 0 }}
                          animate={{ height: `${height}%` }}
                          transition={{ delay: 0.6 + (i * 0.05), duration: 0.5 }}
-                         className={`w-full rounded-t-sm ${isHigh ? 'bg-violet-500/80' : 'bg-cyan-500/40'}`}
+                         className={`w-full rounded-t-sm ${isHigh ? 'bg-zinc-600' : 'bg-zinc-800'}`}
                        />
                      )
                    })}

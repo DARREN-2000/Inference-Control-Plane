@@ -20,17 +20,17 @@ export const Navigation = () => {
     <nav
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent",
-        isScrolled ? "glass border-[rgba(255,255,255,0.08)] py-3 shadow-lg" : "bg-transparent py-6"
+        isScrolled ? "glass border-[rgba(255,255,255,0.08)] py-3 shadow-lg" : "bg-transparent py-4"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-md bg-linear-to-tr from-violet-600 to-cyan-500 flex items-center justify-center transition-transform group-hover:scale-105">
-                <span className="text-white font-bold text-lg leading-none">L</span>
+              <div className="w-8 h-8 rounded-md bg-white text-black flex items-center justify-center transition-transform group-hover:scale-105">
+                <span className="font-bold text-lg leading-none">L</span>
               </div>
-              <span className="text-white font-semibold text-xl tracking-tight">Inference Control Plane</span>
+              <span className="text-white font-semibold text-xl tracking-tight">Laminar</span>
             </Link>
           </div>
 

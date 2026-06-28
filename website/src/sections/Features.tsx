@@ -16,65 +16,65 @@ const features = [
     title: "Intelligent Routing",
     description: "Route requests based on cost, latency, or custom logic to optimize your AI spend across multiple providers.",
     icon: GitMerge,
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-    border: "border-blue-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Semantic Caching",
     description: "Sub-millisecond response times for similar queries using Redis-backed vector search. Save up to 90% on compute.",
     icon: Layers,
-    color: "text-violet-400",
-    bg: "bg-violet-400/10",
-    border: "border-violet-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Automatic Fallbacks",
     description: "Zero-latency failover chain (OpenAI → Anthropic → Local) to ensure 99.99% uptime during provider outages.",
     icon: ShieldAlert,
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-    border: "border-emerald-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Rate Limiting",
     description: "Protect your budgets and prevent abuse with distributed token-bucket algorithms and user-level quotas.",
     icon: Lock,
-    color: "text-rose-400",
-    bg: "bg-rose-400/10",
-    border: "border-rose-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Real-time Observability",
     description: "Complete visibility into every token, prompt, and latency metric with OpenTelemetry integration.",
     icon: Activity,
-    color: "text-cyan-400",
-    bg: "bg-cyan-400/10",
-    border: "border-cyan-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Zero-Trust Security",
     description: "Automatic PII redaction and secure enterprise key management. Never leak sensitive data to external LLMs.",
     icon: KeyRound,
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-    border: "border-amber-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Prompt Management",
     description: "Version control your prompts independent of your codebase. Run A/B tests on prompts without deployments.",
     icon: TerminalSquare,
-    color: "text-fuchsia-400",
-    bg: "bg-fuchsia-400/10",
-    border: "border-fuchsia-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   },
   {
     title: "Universal Support",
     description: "Write once, run on any LLM. Normalized request and response schemas across 20+ provider APIs.",
     icon: Globe2,
-    color: "text-indigo-400",
-    bg: "bg-indigo-400/10",
-    border: "border-indigo-400/20"
+    color: "text-zinc-100",
+    bg: "bg-white/5",
+    border: "border-white/10"
   }
 ];
 
