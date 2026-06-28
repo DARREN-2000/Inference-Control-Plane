@@ -1,0 +1,100 @@
+--- src/inference_control_plane/services/inference.py
++++ src/inference_control_plane/services/inference.py
+@@ -1,6 +1,7 @@
+ import asyncio
+ import uuid
++import re
+ from datetime import UTC, datetime
+ from decimal import Decimal
+ from time import perf_counter
+@@ -23,6 +24,13 @@
+ )
+
+
++def redact_pii(text: str) -> str:
++    """Simple regex-based PII redaction for emails and phone numbers."""
++    # Redact emails
++    text = re.sub(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', '[REDACTED_EMAIL]', text)
++    # Redact phone numbers (simple pattern)
++    text = re.sub(r'\b(?:\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b', '[REDACTED_PHONE]', text)
++    return text
++
+ def _estimate_cost(model: str, token_units: int, settings: Settings) -> float:
+     if token_units <= 0:
+         return 0.0
+@@ -155,6 +163,8 @@
+     request_id = str(uuid.uuid4())
+     route = choose_model(payload, settings)
+     routed_model = route.model
++
++    safe_prompt = redact_pii(payload.prompt)
+
+     try:
+         await _enforce_rate_limits(
+@@ -166,7 +176,7 @@
+
+         cached = await get_cached_response(
+             redis_client,
+-            prompt=payload.prompt,
++            prompt=safe_prompt,
+             model=routed_model,
+         )
+         if cached is not None:
+@@ -182,7 +192,7 @@
+                 tenant_id=auth_context.tenant_id,
+                 user_id=payload.user_id,
+                 api_key_hash=auth_context.api_key_hash,
+-                prompt=payload.prompt,
++                prompt=safe_prompt,
+                 response=cached.response,
+                 model_used=cached.model_used,
+                 latency_ms=latency_ms,
+@@ -207,17 +217,17 @@
+
+         model_used, generated_text = await _generate_with_fallback(
+             model=routed_model,
+-            prompt=payload.prompt,
++            prompt=safe_prompt,
+             settings=settings,
+         )
+-        total_tokens = estimate_tokens(f"{payload.prompt} {generated_text}")
++        total_tokens = estimate_tokens(f"{safe_prompt} {generated_text}")
+         total_cost = _estimate_cost(model_used, total_tokens, settings)
+         latency_ms = (perf_counter() - started) * 1000.0
+         timestamp = datetime.now(UTC)
+
+         background_tasks.add_task(
+             set_cached_response,
+             redis_client,
+-            prompt=payload.prompt,
++            prompt=safe_prompt,
+             model=routed_model,
+             response=generated_text,
+             model_used=model_used,
+@@ -239,7 +249,7 @@
+             tenant_id=auth_context.tenant_id,
+             user_id=payload.user_id,
+             api_key_hash=auth_context.api_key_hash,
+-            prompt=payload.prompt,
++            prompt=safe_prompt,
+             response=generated_text,
+             model_used=model_used,
+             latency_ms=latency_ms,
+@@ -274,7 +284,7 @@
+             tenant_id=auth_context.tenant_id,
+             user_id=payload.user_id,
+             api_key_hash=auth_context.api_key_hash,
+-            prompt=payload.prompt,
++            prompt=safe_prompt,
+             response="",
+             model_used=routed_model,
+             latency_ms=latency_ms,
+@@ -298,7 +308,7 @@
+             tenant_id=auth_context.tenant_id,
+             user_id=payload.user_id,
+             api_key_hash=auth_context.api_key_hash,
+-            prompt=payload.prompt,
++            prompt=safe_prompt,
+             response="",
+             model_used=routed_model,
+             latency_ms=latency_ms,

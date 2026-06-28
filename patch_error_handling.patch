@@ -1,0 +1,16 @@
+--- src/inference_control_plane/services/inference.py
++++ src/inference_control_plane/services/inference.py
+@@ -341,13 +341,14 @@
+             cost=0.0,
+             cache_hit=False,
+             status_value="error",
+-            error_message=str(exc.detail),
++            error_message="HTTP Error during generation.",
+         )
+         raise
+     except Exception as exc:
++        logger.exception("Internal error during generation.", exc_info=exc)
+         latency_ms = (perf_counter() - started) * 1000.0
+         record_request(
+             model=routed_model,
+             status="error",

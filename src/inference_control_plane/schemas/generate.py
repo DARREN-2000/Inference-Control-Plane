@@ -45,3 +45,14 @@ class UsageLogsResponse(BaseModel):
     user_id: str
     limit: int
     entries: list[UsageLogEntry]
+
+class DashboardMetric(BaseModel):
+    label: str
+    value: str
+    delta: str
+
+class DashboardMetricsResponse(BaseModel):
+    metrics: list[DashboardMetric]
+
+class DashboardActivityResponse(BaseModel):
+    activity: list[str]

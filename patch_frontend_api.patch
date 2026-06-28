@@ -1,0 +1,85 @@
+--- frontend/src/lib/api.ts
++++ frontend/src/lib/api.ts
+@@ -32,6 +32,19 @@
+   entries: UsageLogEntry[];
+ };
+
++export type DashboardMetric = {
++  label: string;
++  value: string;
++  delta: string;
++};
++
++export type DashboardMetricsResponse = {
++  metrics: DashboardMetric[];
++};
++
++export type DashboardActivityResponse = {
++  activity: string[];
++};
++
+ type ErrorResponse = {
+   error?: {
+     code?: string;
+@@ -213,3 +226,63 @@
+
+   return (await response.json()) as UsageLogsResponse;
+ }
++
++export async function fetchDashboardMetrics(
++  apiKey: string,
++): Promise<DashboardMetricsResponse> {
++  if (DEMO_MODE) {
++    return {
++      metrics: [
++        { label: "P95 Latency", value: "218ms", delta: "-11%" },
++        { label: "Cache Hit Ratio", value: "67.4%", delta: "+9%" },
++        { label: "Requests (24h)", value: "1.4M", delta: "+23%" },
++        { label: "Cost / 1K req", value: "$4.82", delta: "-6%" },
++      ]
++    };
++  }
++
++  const response = await fetch(`${BASE_URL}/dashboard/metrics`, {
++    method: "GET",
++    headers: {
++      "x-api-key": apiKey,
++    },
++    cache: "no-store",
++  });
++
++  if (!response.ok) {
++    throw new Error(`Request failed with status ${response.status}`);
++  }
++
++  return (await response.json()) as DashboardMetricsResponse;
++}
++
++export async function fetchDashboardActivity(
++  apiKey: string,
++): Promise<DashboardActivityResponse> {
++  if (DEMO_MODE) {
++    return {
++      activity: [
++        "API key rotation policy enabled",
++        "Rate limiting bumped for tenant enterprise-a",
++        "Fallback route triggered 12 times in the last hour",
++        "Prometheus scrape health is stable",
++      ]
++    };
++  }
++
++  const response = await fetch(`${BASE_URL}/dashboard/activity`, {
++    method: "GET",
++    headers: {
++      "x-api-key": apiKey,
++    },
++    cache: "no-store",
++  });
++
++  if (!response.ok) {
++    throw new Error(`Request failed with status ${response.status}`);
++  }
++
++  return (await response.json()) as DashboardActivityResponse;
++}

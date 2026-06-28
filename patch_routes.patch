@@ -1,0 +1,26 @@
+--- src/inference_control_plane/api/routes.py
++++ src/inference_control_plane/api/routes.py
+@@ -40,6 +40,11 @@
+     auth_context: AuthContext = Depends(get_auth_context),
+     session: AsyncSession = Depends(get_db_session),
+ ) -> UsageSummaryResponse:
++    if auth_context.role != "admin":
++        raise HTTPException(
++            status_code=status.HTTP_403_FORBIDDEN,
++            detail="Admin privileges required to view usage summary.",
++        )
+     return await get_usage_summary(
+         session,
+         tenant_id=auth_context.tenant_id,
+@@ -54,6 +59,11 @@
+     auth_context: AuthContext = Depends(get_auth_context),
+     session: AsyncSession = Depends(get_db_session),
+ ) -> UsageLogsResponse:
++    if auth_context.role != "admin":
++        raise HTTPException(
++            status_code=status.HTTP_403_FORBIDDEN,
++            detail="Admin privileges required to view usage logs.",
++        )
+     return await get_usage_logs(
+         session,
+         tenant_id=auth_context.tenant_id,

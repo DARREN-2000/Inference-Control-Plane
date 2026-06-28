@@ -320,7 +320,7 @@ async def handle_generate_request(
             cost=total_cost,
             timestamp=timestamp,
         )
-    except HTTPException as exc:
+    except HTTPException:
         latency_ms = (perf_counter() - started) * 1000.0
         record_request(
             model=routed_model,
@@ -342,7 +342,7 @@ async def handle_generate_request(
             cost=0.0,
             cache_hit=False,
             status_value="error",
-            error_message=str(exc.detail),
+            error_message="HTTP Error during generation.",
         )
         raise
     except Exception as exc:

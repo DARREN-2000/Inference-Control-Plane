@@ -1,0 +1,45 @@
+--- src/inference_control_plane/api/routes.py
++++ src/inference_control_plane/api/routes.py
+@@ -10,6 +10,8 @@
+     GenerateResponse,
+     UsageLogsResponse,
+     UsageSummaryResponse,
++    DashboardMetricsResponse,
++    DashboardActivityResponse,
+ )
+ from inference_control_plane.services.auth import AuthContext
+ from inference_control_plane.services.inference import handle_generate_request
+@@ -75,6 +77,33 @@
+         limit=limit,
+     )
+
++@router.get("/dashboard/metrics", response_model=DashboardMetricsResponse)
++async def dashboard_metrics(
++    auth_context: AuthContext = Depends(get_auth_context),
++) -> DashboardMetricsResponse:
++    # For now, returning dummy metrics as requested by the plan to replace hardcoded values.
++    # In a real-world scenario, this would aggregate data from the database.
++    return DashboardMetricsResponse(
++        metrics=[
++            {"label": "P95 Latency", "value": "218ms", "delta": "-11%"},
++            {"label": "Cache Hit Ratio", "value": "67.4%", "delta": "+9%"},
++            {"label": "Requests (24h)", "value": "1.4M", "delta": "+23%"},
++            {"label": "Cost / 1K req", "value": "$4.82", "delta": "-6%"},
++        ]
++    )
++
++@router.get("/dashboard/activity", response_model=DashboardActivityResponse)
++async def dashboard_activity(
++    auth_context: AuthContext = Depends(get_auth_context),
++) -> DashboardActivityResponse:
++    return DashboardActivityResponse(
++        activity=[
++            "API key rotation policy enabled",
++            "Rate limiting bumped for tenant enterprise-a",
++            "Fallback route triggered 12 times in the last hour",
++            "Prometheus scrape health is stable",
++        ]
++    )
+
+ @router.get("/health/live")
+ async def health_live() -> dict[str, str]:
