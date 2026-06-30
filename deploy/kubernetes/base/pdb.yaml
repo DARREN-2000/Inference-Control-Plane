@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: inference-control-plane-pdb
+  namespace: inference-control-plane
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: inference-control-plane

@@ -1,4 +1,5 @@
 import hashlib
+import time
 from collections.abc import Awaitable, Callable
 
 import httpx
@@ -19,8 +20,43 @@ class LLMClientTimeoutError(LLMClientRetryableError):
     pass
 
 
+class CircuitBreakerOpenError(LLMClientError):
+    pass
+
+
+class CircuitBreaker:
+    def __init__(self, failure_threshold: int = 5, recovery_timeout: float = 30.0):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failure_count = 0
+        self.last_failure_time = 0.0
+        self.state = "CLOSED"
+
+    def record_failure(self):
+        self.failure_count += 1
+        self.last_failure_time = time.time()
+        if self.failure_count >= self.failure_threshold:
+            self.state = "OPEN"
+
+    def record_success(self):
+        self.failure_count = 0
+        self.state = "CLOSED"
+
+    def is_allowed(self) -> bool:
+        if self.state == "CLOSED":
+            return True
+        if self.state == "OPEN":
+            if time.time() - self.last_failure_time > self.recovery_timeout:
+                self.state = "HALF_OPEN"
+                return True
+            return False
+        if self.state == "HALF_OPEN":
+            return True
+        return True
+
 
 _shared_client: httpx.AsyncClient | None = None
+_circuit_breaker = CircuitBreaker()
 
 def init_http_client(settings: Settings) -> None:
     global _shared_client
@@ -77,16 +113,25 @@ async def _request_with_retry(
     settings: Settings,
     request_fn: Callable[[], Awaitable[str]],
 ) -> str:
+    if not _circuit_breaker.is_allowed():
+        raise CircuitBreakerOpenError("Circuit breaker is OPEN. Fast failing request.")
+
     retryer = AsyncRetrying(
         retry=retry_if_exception_type(LLMClientRetryableError),
         stop=stop_after_attempt(settings.llm_max_retries + 1),
         wait=wait_exponential(multiplier=0.25, min=0.25, max=2.0),
         reraise=True,
     )
-    async for attempt in retryer:
-        with attempt:
-            return await request_fn()
-    raise LLMClientError("LLM request failed unexpectedly.")
+    try:
+        async for attempt in retryer:
+            with attempt:
+                result = await request_fn()
+                _circuit_breaker.record_success()
+                return result
+        raise LLMClientError("LLM request failed unexpectedly.")
+    except Exception:
+        _circuit_breaker.record_failure()
+        raise
 
 
 def _coerce_retryable_error(exc: Exception) -> LLMClientError:
