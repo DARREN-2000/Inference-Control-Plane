@@ -129,7 +129,7 @@ async def _request_with_retry(
                 _circuit_breaker.record_success()
                 return result
         raise LLMClientError("LLM request failed unexpectedly.")
-    except Exception as exc:
+    except Exception:
         _circuit_breaker.record_failure()
         raise
 
