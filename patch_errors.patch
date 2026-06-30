@@ -1,0 +1,11 @@
+--- src/inference_control_plane/core/errors.py
++++ src/inference_control_plane/core/errors.py
+@@ -73,7 +73,7 @@
+         details = []
+         for err in exc.errors():
+             details.append({
+                 "loc": err.get("loc"),
+-                "msg": err.get("msg"),
++                "msg": "Invalid input.",
+                 "type": err.get("type"),
+             })

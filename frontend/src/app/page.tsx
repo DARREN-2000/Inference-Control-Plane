@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import {
   fetchUsageLogs,
@@ -8,21 +8,10 @@ import {
   GenerateResponse,
   isDemoMode,
   UsageLogEntry,
+  DashboardMetric,
+  fetchDashboardMetrics,
+  fetchDashboardActivity,
 } from "@/lib/api";
-
-const metrics = [
-  { label: "P95 Latency", value: "218ms", delta: "-11%" },
-  { label: "Cache Hit Ratio", value: "67.4%", delta: "+9%" },
-  { label: "Requests (24h)", value: "1.4M", delta: "+23%" },
-  { label: "Cost / 1K req", value: "$4.82", delta: "-6%" },
-];
-
-const activity = [
-  "API key rotation policy enabled",
-  "Rate limiting bumped for tenant enterprise-a",
-  "Fallback route triggered 12 times in the last hour",
-  "Prometheus scrape health is stable",
-];
 
 export default function Home() {
   const [apiKey, setApiKey] = useState("dev-inference-key");
@@ -35,6 +24,13 @@ export default function Home() {
   const [result, setResult] = useState<GenerateResponse | null>(null);
   const [logsError, setLogsError] = useState<string | null>(null);
   const [recentLogs, setRecentLogs] = useState<UsageLogEntry[]>([]);
+  const [metrics, setMetrics] = useState<DashboardMetric[]>([]);
+  const [activity, setActivity] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchDashboardMetrics(apiKey).then(res => setMetrics(res.metrics)).catch(console.error);
+    fetchDashboardActivity(apiKey).then(res => setActivity(res.activity)).catch(console.error);
+  }, [apiKey]);
 
   const derivedModel = useMemo(() => {
     return priority === "high" ? "premium-model" : "smart-router";

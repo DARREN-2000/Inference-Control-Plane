@@ -1,0 +1,13 @@
+--- src/inference_control_plane/services/inference.py
++++ src/inference_control_plane/services/inference.py
+@@ -341,8 +341,9 @@
+             cost=0.0,
+             cache_hit=False,
+             status_value="error",
+-            error_message="HTTP Error during generation.",
++            error_message=f"HTTP Error during generation. Reason: {exc.detail}",
+         )
++        logger.exception(f"HTTP Error during generation. Reason: {exc.detail}", exc_info=exc)
+         raise
+     except Exception as exc:
+         logger.exception("Internal error during generation.", exc_info=exc)

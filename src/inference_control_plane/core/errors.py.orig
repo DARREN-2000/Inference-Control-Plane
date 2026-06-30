@@ -84,7 +84,7 @@ def build_validation_exception_handler(
         for err in exc.errors():
             details.append({
                 "loc": err.get("loc"),
-                "msg": "Invalid input.",
+                "msg": err.get("msg"),
                 "type": err.get("type"),
             })
 
