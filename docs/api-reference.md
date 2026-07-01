@@ -1,15 +1,15 @@
 # API Reference
 
-The Laminar API provides a unified interface for interacting with LLMs, as well as administrative endpoints for managing your control plane.
+The Inference Control Plane API provides a unified interface for interacting with LLMs, as well as administrative endpoints for managing your control plane.
 
-**Base URL:** `http://<your-laminar-host>:8000/v1`
+**Base URL:** `http://<your-inference_control_plane-host>:8000/v1`
 
 ## Authentication
 
-All API requests must include your Laminar API key in the `Authorization` header.
+All API requests must include your Inference Control Plane API key in the `Authorization` header.
 
 ```http
-Authorization: Bearer sk-laminar-your-secret-key
+Authorization: Bearer sk-inference-control-plane-your-secret-key
 ```
 
 ## Inference Endpoints
@@ -17,7 +17,7 @@ Authorization: Bearer sk-laminar-your-secret-key
 ### 1. Generate Completion
 **`POST /generate`**
 
-This is the primary endpoint for inference. It acts as a drop-in replacement for OpenAI's Chat Completions endpoint, with added support for Laminar-specific routing and caching policies.
+This is the primary endpoint for inference. It acts as a drop-in replacement for OpenAI's Chat Completions endpoint, with added support for Inference Control Plane-specific routing and caching policies.
 
 #### Request Body (JSON)
 
@@ -28,20 +28,20 @@ This is the primary endpoint for inference. It acts as a drop-in replacement for
 | `temperature` | float | No | What sampling temperature to use, between 0 and 2. Default is 1. |
 | `stream` | boolean | No | If true, partial message deltas will be sent via Server-Sent Events. |
 | `user_id` | string | No | A unique identifier representing your end-user, useful for rate limiting and billing. |
-| `laminar_fallback_models` | array | No | A list of model IDs to try if the primary `model` fails. (e.g. `["gpt-4", "gpt-3.5-turbo"]`). |
-| `laminar_cache_bypass` | boolean | No | If true, forces the request to bypass the cache. |
+| `inference_control_plane_fallback_models` | array | No | A list of model IDs to try if the primary `model` fails. (e.g. `["gpt-4", "gpt-3.5-turbo"]`). |
+| `inference_control_plane_cache_bypass` | boolean | No | If true, forces the request to bypass the cache. |
 
 #### Example Request
 
 ```bash
 curl -X POST "http://localhost:8000/v1/generate" \
-  -H "Authorization: Bearer sk-laminar-your-secret-key" \
+  -H "Authorization: Bearer sk-inference-control-plane-your-secret-key" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o",
     "messages": [{"role": "user", "content": "Explain quantum computing in one sentence."}],
     "user_id": "user_98765",
-    "laminar_fallback_models": ["claude-3-5-sonnet"]
+    "inference_control_plane_fallback_models": ["claude-3-5-sonnet"]
   }'
 ```
 
@@ -66,7 +66,7 @@ curl -X POST "http://localhost:8000/v1/generate" \
     "completion_tokens": 28,
     "total_tokens": 40
   },
-  "laminar_metrics": {
+  "inference_control_plane_metrics": {
     "cache_hit": false,
     "latency_ms": 842,
     "provider_used": "openai"
@@ -96,7 +96,7 @@ Retrieves aggregated token usage and cost for a specific user or tenant over the
 #### Example Request
 ```bash
 curl "http://localhost:8000/v1/usage/summary?user_id=user_98765" \
-  -H "Authorization: Bearer sk-laminar-admin-key"
+  -H "Authorization: Bearer sk-inference-control-plane-admin-key"
 ```
 
 #### Example Response (200 OK)
@@ -121,7 +121,7 @@ Retrieves raw request logs for auditing or debugging.
 #### Example Request
 ```bash
 curl "http://localhost:8000/v1/usage/logs?user_id=user_98765&limit=2" \
-  -H "Authorization: Bearer sk-laminar-admin-key"
+  -H "Authorization: Bearer sk-inference-control-plane-admin-key"
 ```
 
 ---

@@ -1,25 +1,25 @@
 # Scaling Model
 
-Laminar is designed to handle petabyte-scale API traffic. This document explains how to scale the control plane components.
+Inference Control Plane is designed to handle petabyte-scale API traffic. This document explains how to scale the control plane components.
 
 ## 1. Scaling the Proxy API (Compute)
 
-The Laminar Proxy is inherently stateless. All state is offloaded to Redis and PostgreSQL. Therefore, scaling the API is as simple as adding more pods.
+The Inference Control Plane Proxy is inherently stateless. All state is offloaded to Redis and PostgreSQL. Therefore, scaling the API is as simple as adding more pods.
 
 ### Horizontal Pod Autoscaling (HPA)
 
-We strongly recommend configuring an HPA based on **CPU utilization**. Because Laminar is asynchronous (FastAPI/asyncio), it is highly CPU-bound rather than memory-bound during heavy streaming workloads.
+We strongly recommend configuring an HPA based on **CPU utilization**. Because Inference Control Plane is asynchronous (FastAPI/asyncio), it is highly CPU-bound rather than memory-bound during heavy streaming workloads.
 
 ```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: laminar-api-hpa
+  name: inference_control_plane-api-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: laminar-api
+    name: inference_control_plane-api
   minReplicas: 3
   maxReplicas: 50
   metrics:
@@ -35,7 +35,7 @@ spec:
 
 ## 2. Scaling the Database (PostgreSQL)
 
-While Laminar's reads from Postgres are minimal (mostly loading configuration at startup), its writes are extremely heavy. **Every single LLM request results in a database insert** for usage logging.
+While Inference Control Plane's reads from Postgres are minimal (mostly loading configuration at startup), its writes are extremely heavy. **Every single LLM request results in a database insert** for usage logging.
 
 ### Connection Pooling (PgBouncer)
 As you scale API pods horizontally, the number of open connections to Postgres will spike.
@@ -57,11 +57,11 @@ Redis is heavily utilized for:
 ### Redis Clustering
 For deployments exceeding 5,000 Requests Per Minute (RPM), a single Redis node may become a bottleneck due to the single-threaded nature of Lua script execution used in rate limiting.
 - Deploy a Redis Cluster.
-- Configure Laminar to use `redis-py-cluster` (supported via standard connection strings).
+- Configure Inference Control Plane to use `redis-py-cluster` (supported via standard connection strings).
 
 ## 4. Multi-Region Scaling
 
-To reduce latency for a global user base, Laminar supports Multi-Region deployments.
+To reduce latency for a global user base, Inference Control Plane supports Multi-Region deployments.
 - Deploy API pods and a local Redis cluster in Region A (e.g., US-East) and Region B (e.g., EU-West).
 - Use a Global Server Load Balancer (GSLB) to route user traffic to the nearest region.
 - Point both regions to a central PostgreSQL database. Since writes are performed asynchronously, the cross-region database latency will not impact the user's TTFT (Time To First Token).

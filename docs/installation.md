@@ -1,10 +1,10 @@
 # Installation Guide
 
-This guide covers the various ways to install and run Laminar depending on your use case, from local development to production deployment.
+This guide covers the various ways to install and run Inference Control Plane depending on your use case, from local development to production deployment.
 
 ## Method 1: Docker Compose (Recommended for Quick Start)
 
-The Docker Compose method is the fastest way to get a fully featured Laminar environment, including the required PostgreSQL and Redis dependencies.
+The Docker Compose method is the fastest way to get a fully featured Inference Control Plane environment, including the required PostgreSQL and Redis dependencies.
 
 ### Prerequisites
 - [Docker](https://docs.docker.com/get-docker/)
@@ -36,7 +36,7 @@ The Docker Compose method is the fastest way to get a fully featured Laminar env
 
 ## Method 2: Local Python Development
 
-If you want to contribute to the Laminar backend or run it natively for debugging, you can install it using `uv`, the fast Python package installer.
+If you want to contribute to the Inference Control Plane backend or run it natively for debugging, you can install it using `uv`, the fast Python package installer.
 
 ### Prerequisites
 - Python 3.12+
@@ -63,7 +63,7 @@ If you want to contribute to the Laminar backend or run it natively for debuggin
    Open `.env` and ensure `DATABASE_URL` and `REDIS_URL` point to your running Postgres and Redis instances.
 
 4. Run Database Migrations:
-   Laminar uses Alembic to manage database schema. Initialize the tables:
+   Inference Control Plane uses Alembic to manage database schema. Initialize the tables:
    ```bash
    alembic upgrade head
    ```
@@ -75,7 +75,7 @@ If you want to contribute to the Laminar backend or run it natively for debuggin
 
 ## Method 3: Kubernetes (Helm / Kustomize)
 
-For production deployments, Laminar provides Kubernetes manifests.
+For production deployments, Inference Control Plane provides Kubernetes manifests.
 
 ### Prerequisites
 - A running Kubernetes cluster
@@ -98,7 +98,7 @@ We provide base Kustomize manifests in `deploy/kubernetes/base`.
 
 ## Method 4: Frontend Development
 
-If you only want to work on the Laminar Next.js Dashboard:
+If you only want to work on the Inference Control Plane Next.js Dashboard:
 
 ### Prerequisites
 - Node.js 20+

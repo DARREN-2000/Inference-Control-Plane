@@ -46,9 +46,9 @@ response = client.chat.completions.create(
     model="gpt-4-turbo",      # Or 'claude-3', 'llama-3'
     messages=[...],
     extra_headers={
-        "X-Laminar-Cache": "true",
-        "X-Laminar-Route-To": "cheapest_available",
-        "X-Laminar-Fallback": "claude-3-haiku"
+        "X-Inference-Control-Plane-Cache": "true",
+        "X-Inference-Control-Plane-Route-To": "cheapest_available",
+        "X-Inference-Control-Plane-Fallback": "claude-3-haiku"
     }
 )`}
             />

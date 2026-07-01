@@ -1,6 +1,6 @@
 # Release Process
 
-This document outlines the standard operating procedure for cutting a new release of Laminar.
+This document outlines the standard operating procedure for cutting a new release of Inference Control Plane.
 
 ## 1. Pre-Release Checks
 Before initiating a release, ensure:
@@ -10,7 +10,7 @@ Before initiating a release, ensure:
 - You have run local tests: `make test` and `make lint-backend`.
 
 ## 2. Update Versions
-Laminar requires versions to be synchronized across the backend and frontend.
+Inference Control Plane requires versions to be synchronized across the backend and frontend.
 
 1. **Backend:** Update the version string in `src/inference_control_plane/__init__.py`.
    ```python

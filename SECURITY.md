@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We currently provide security updates for the following versions of Laminar:
+We currently provide security updates for the following versions of Inference Control Plane:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,11 +11,11 @@ We currently provide security updates for the following versions of Laminar:
 
 ## Reporting a Vulnerability
 
-Security is a top priority for Laminar, especially given its role as an enterprise gateway handling sensitive AI traffic.
+Security is a top priority for Inference Control Plane, especially given its role as an enterprise gateway handling sensitive AI traffic.
 
-If you discover a security vulnerability in Laminar, please **DO NOT** disclose it publicly by creating a GitHub issue.
+If you discover a security vulnerability in Inference Control Plane, please **DO NOT** disclose it publicly by creating a GitHub issue.
 
-Instead, please report it via email to `security@laminar.ai` or via a direct message to the maintainers.
+Instead, please report it via email to `security@inference_control_plane.ai` or via a direct message to the maintainers.
 
 ### What to include in your report:
 - A clear description of the vulnerability.
@@ -29,4 +29,4 @@ Instead, please report it via email to `security@laminar.ai` or via a direct mes
 3. If confirmed, we will develop a patch and issue a security advisory on GitHub (CVE if appropriate).
 4. We will credit you for the discovery in the advisory, unless you prefer to remain anonymous.
 
-Thank you for helping keep Laminar secure!
+Thank you for helping keep Inference Control Plane secure!

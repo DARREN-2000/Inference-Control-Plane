@@ -1,10 +1,10 @@
 # Monitoring & Observability
 
-To confidently run AI workloads in production, you need deep visibility into request lifecycles, latency, and token consumption. Laminar provides a comprehensive observability suite out-of-the-box.
+To confidently run AI workloads in production, you need deep visibility into request lifecycles, latency, and token consumption. Inference Control Plane provides a comprehensive observability suite out-of-the-box.
 
 ## 1. Prometheus Metrics
 
-Laminar exposes a `/metrics` endpoint on the API server. This should be scraped by your Prometheus server.
+Inference Control Plane exposes a `/metrics` endpoint on the API server. This should be scraped by your Prometheus server.
 
 **Key Metrics Exposed:**
 - `request_count_total` (Counter): Total requests processed, labeled by `tenant_id`, `model`, and `status_code`.
@@ -20,7 +20,7 @@ rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_tot
 
 ## 2. OpenTelemetry Tracing (OTLP)
 
-Laminar supports distributed tracing via OpenTelemetry. This is crucial for visualizing the "waterfall" of an AI request, especially when fallback routing is triggered.
+Inference Control Plane supports distributed tracing via OpenTelemetry. This is crucial for visualizing the "waterfall" of an AI request, especially when fallback routing is triggered.
 
 **Configuration:**
 Set the `OTLP_ENDPOINT` environment variable to point to your collector (e.g., Jaeger, Honeycomb, Datadog Agent).
@@ -39,7 +39,7 @@ A single request trace will include spans for:
 
 ## 3. Structured Logging
 
-By default, Laminar outputs JSON structured logs to `stdout` in production environments (`ENVIRONMENT=production`).
+By default, Inference Control Plane outputs JSON structured logs to `stdout` in production environments (`ENVIRONMENT=production`).
 
 **Log Format:**
 ```json
@@ -59,7 +59,7 @@ These logs should be ingested by your logging platform (e.g., Elasticsearch, Dat
 
 ## 4. Usage Logging (PostgreSQL)
 
-While Prometheus handles ephemeral metrics, Laminar writes persistent usage data to PostgreSQL. This data is used by the Dashboard to display historical charts and calculate billing.
+While Prometheus handles ephemeral metrics, Inference Control Plane writes persistent usage data to PostgreSQL. This data is used by the Dashboard to display historical charts and calculate billing.
 
 Data stored includes:
 - Timestamp

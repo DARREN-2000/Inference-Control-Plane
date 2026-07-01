@@ -1,8 +1,8 @@
 # Getting Started
 
-Welcome to Laminar! This guide will help you get your first Inference Control Plane proxy up and running in under 5 minutes.
+Welcome to Inference Control Plane! This guide will help you get your first Inference Control Plane proxy up and running in under 5 minutes.
 
-Laminar acts as a single endpoint for all your LLM traffic, giving you observability, caching, and failovers without changing how you write code.
+Inference Control Plane acts as a single endpoint for all your LLM traffic, giving you observability, caching, and failovers without changing how you write code.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ Before starting, ensure you have:
 
 ## 1. Start the Control Plane
 
-The easiest way to start Laminar is using the provided Docker Compose stack, which includes the API, a Postgres database for logs, Redis for caching/rate-limiting, and Prometheus for metrics.
+The easiest way to start Inference Control Plane is using the provided Docker Compose stack, which includes the API, a Postgres database for logs, Redis for caching/rate-limiting, and Prometheus for metrics.
 
 ```bash
 # Clone the repo
@@ -32,7 +32,7 @@ You should see `inference-api`, `postgres`, `redis`, and `prometheus` running su
 
 ## 2. Configure Your Environment
 
-By default, Laminar loads configuration from `.env`. While `docker-compose.yml` provides sensible defaults, you need to provide your actual LLM API keys.
+By default, Inference Control Plane loads configuration from `.env`. While `docker-compose.yml` provides sensible defaults, you need to provide your actual LLM API keys.
 
 Copy the example environment file:
 ```bash
@@ -51,9 +51,9 @@ docker-compose restart inference-api
 
 ## 3. Make Your First Request
 
-Laminar exposes a unified API that matches the standard OpenAI `/v1/chat/completions` format.
+Inference Control Plane exposes a unified API that matches the standard OpenAI `/v1/chat/completions` format.
 
-Instead of sending requests directly to OpenAI, you send them to Laminar (`http://localhost:8000/v1`). Laminar requires its own API key for authentication, which defaults to `replace-me` for local development.
+Instead of sending requests directly to OpenAI, you send them to Inference Control Plane (`http://localhost:8000/v1`). Inference Control Plane requires its own API key for authentication, which defaults to `replace-me` for local development.
 
 ```bash
 curl -X POST http://localhost:8000/v1/generate \
@@ -74,17 +74,17 @@ curl -X POST http://localhost:8000/v1/generate \
   }'
 ```
 
-You should receive a standard ChatCompletion response. Behind the scenes, Laminar authenticated your request, checked rate limits, routed the request to OpenAI, and logged the usage metrics.
+You should receive a standard ChatCompletion response. Behind the scenes, Inference Control Plane authenticated your request, checked rate limits, routed the request to OpenAI, and logged the usage metrics.
 
 ## 4. Test Semantic Caching
 
 Run the exact same `curl` command again.
 
-You should notice the response is almost instantaneous. Because the exact same prompt was sent, Laminar served the response directly from its Redis cache, saving you both latency and token costs.
+You should notice the response is almost instantaneous. Because the exact same prompt was sent, Inference Control Plane served the response directly from its Redis cache, saving you both latency and token costs.
 
 ## 5. View Your Usage Dashboard
 
-Laminar includes a built-in admin dashboard (served by Next.js) to visualize traffic, manage keys, and view logs.
+Inference Control Plane includes a built-in admin dashboard (served by Next.js) to visualize traffic, manage keys, and view logs.
 
 By default, the dashboard is available at:
 **http://localhost:3000**
@@ -93,9 +93,9 @@ By default, the dashboard is available at:
 
 ## Next Steps
 
-Now that you have Laminar running, explore how to productionize and scale it:
+Now that you have Inference Control Plane running, explore how to productionize and scale it:
 
 - 📚 **[Core Concepts](concepts.md)**: Learn about Tenants, Policies, and Routing.
 - ⚙️ **[Configuration](configuration.md)**: Explore all available environment variables.
-- 🚀 **[Deployment](deployment.md)**: Deploy Laminar to Kubernetes or Render.
-- 👨‍💻 **[SDK Guide](sdk-guide.md)**: Integrate Laminar with Python and TypeScript SDKs.
+- 🚀 **[Deployment](deployment.md)**: Deploy Inference Control Plane to Kubernetes or Render.
+- 👨‍💻 **[SDK Guide](sdk-guide.md)**: Integrate Inference Control Plane with Python and TypeScript SDKs.

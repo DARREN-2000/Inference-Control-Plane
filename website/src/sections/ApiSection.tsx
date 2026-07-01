@@ -8,8 +8,8 @@ export const ApiSection = () => {
     curl: `curl -X POST https://api.inference-control-plane.ai/v1/chat/completions \\
   -H "Authorization: Bearer tg_live_xxxxxx" \\
   -H "Content-Type: application/json" \\
-  -H "X-Laminar-Route-To: cheapest" \\
-  -H "X-Laminar-Cache: true" \\
+  -H "X-Inference-Control-Plane-Route-To: cheapest" \\
+  -H "X-Inference-Control-Plane-Cache: true" \\
   -d '{
     "model": "gpt-4-turbo",
     "messages": [{"role": "user", "content": "Hello!"}]
@@ -26,8 +26,8 @@ const response = await client.chat.completions.create({
   messages: [{ role: 'user', content: 'Hello!' }],
 }, {
   headers: {
-    'X-Laminar-Route-To': 'cheapest',
-    'X-Laminar-Cache': 'true'
+    'X-Inference-Control-Plane-Route-To': 'cheapest',
+    'X-Inference-Control-Plane-Cache': 'true'
   }
 });`,
     python: `import openai
@@ -41,8 +41,8 @@ response = client.chat.completions.create(
     model="gpt-4-turbo",
     messages=[{"role": "user", "content": "Hello!"}],
     extra_headers={
-        "X-Laminar-Route-To": "cheapest",
-        "X-Laminar-Cache": "true"
+        "X-Inference-Control-Plane-Route-To": "cheapest",
+        "X-Inference-Control-Plane-Cache": "true"
     }
 )`
   };

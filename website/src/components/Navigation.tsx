@@ -30,7 +30,7 @@ export const Navigation = () => {
               <div className="w-8 h-8 rounded-md bg-white text-black flex items-center justify-center transition-transform group-hover:scale-105">
                 <span className="font-bold text-lg leading-none">L</span>
               </div>
-              <span className="text-white font-semibold text-xl tracking-tight">Laminar</span>
+              <span className="text-white font-semibold text-xl tracking-tight">Inference Control Plane</span>
             </Link>
           </div>
 

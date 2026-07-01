@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve Laminar
+about: Create a report to help us improve Inference Control Plane
 title: "[BUG] "
 labels: ["bug", "triage"]
 assignees: ""
@@ -25,7 +25,7 @@ If applicable, add screenshots or paste server logs (ensure you redact any sensi
  - Deployment: [e.g. Docker Compose, Kubernetes, Local uv]
  - OS: [e.g. Ubuntu 22.04, macOS]
  - Python Version: [e.g. 3.12]
- - Laminar Version / Commit: [e.g. v1.0.0 or commit hash]
+ - Inference Control Plane Version / Commit: [e.g. v1.0.0 or commit hash]
  - Database: [e.g. PostgreSQL 15, Redis 7.2]
 
 **Additional context**
