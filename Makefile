@@ -13,10 +13,10 @@ lint-backend:
 	uv run ruff check src/inference_control_plane tests
 
 lint-frontend:
-	cd frontend && npm run lint
+	cd frontend && pnpm lint
 
 build-frontend:
-	cd frontend && npm run build
+	cd frontend && pnpm build
 
 migrate:
 	alembic upgrade head

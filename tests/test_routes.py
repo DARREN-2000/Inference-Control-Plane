@@ -4,16 +4,20 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 
 import inference_control_plane.db.session
+from inference_control_plane.core.security import get_auth_context
 from inference_control_plane.main import app
+from inference_control_plane.services.auth import AuthContext
 
 
 @pytest.fixture
 def auth_headers():
     return {"x-api-key": "test-key"}
 
+
 @pytest.fixture
 def transport():
     return ASGITransport(app=app)
+
 
 @pytest.mark.asyncio
 async def test_health_live(transport):
@@ -21,6 +25,7 @@ async def test_health_live(transport):
         response = await ac.get("/health/live")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
 
 @pytest.mark.asyncio
 async def test_health_ready_success(transport):
@@ -39,6 +44,7 @@ async def test_health_ready_success(transport):
             finally:
                 app.dependency_overrides.pop(inference_control_plane.db.session.get_db_session)
 
+
 @pytest.mark.asyncio
 async def test_health_ready_db_fail(transport):
     mock_session = AsyncMock()
@@ -54,6 +60,7 @@ async def test_health_ready_db_fail(transport):
         assert "database" in response.text
     finally:
         app.dependency_overrides.pop(inference_control_plane.db.session.get_db_session)
+
 
 @pytest.mark.asyncio
 async def test_health_ready_redis_fail(transport):
@@ -71,6 +78,7 @@ async def test_health_ready_redis_fail(transport):
         finally:
             app.dependency_overrides.pop(inference_control_plane.db.session.get_db_session)
 
+
 @pytest.mark.asyncio
 async def test_metrics(transport):
     with patch("inference_control_plane.api.routes.generate_latest", return_value=b"test metrics"):
@@ -79,8 +87,9 @@ async def test_metrics(transport):
         assert response.status_code == 200
         assert response.content == b"test metrics"
 
-from inference_control_plane.core.security import get_auth_context
-from inference_control_plane.services.auth import AuthContext
+
+
+
 
 
 @pytest.mark.asyncio
@@ -89,7 +98,16 @@ async def test_generate_route(transport):
     app.dependency_overrides[get_auth_context] = lambda: mock_auth
 
     with patch("inference_control_plane.api.routes.handle_generate_request") as mock_handle:
-        mock_handle.return_value = {"request_id": "123", "response": "resp", "model_used": "model", "cached": False, "latency_ms": 1.0, "tokens": 10, "cost": 0.01, "timestamp": "2024-01-01T00:00:00Z"}
+        mock_handle.return_value = {
+            "request_id": "123",
+            "response": "resp",
+            "model_used": "model",
+            "cached": False,
+            "latency_ms": 1.0,
+            "tokens": 10,
+            "cost": 0.01,
+            "timestamp": "2024-01-01T00:00:00Z",
+        }
 
         try:
             async with AsyncClient(transport=transport, base_url="http://test") as ac:
@@ -99,11 +117,6 @@ async def test_generate_route(transport):
             app.dependency_overrides.pop(get_auth_context)
 
 
-@pytest.mark.asyncio
-async def test_usage_summary_route(transport):
-    # Need admin role... Ah, AuthContext doesn't have role anymore, let's see.
-    # Oh wait, AuthContext does not have role? Wait, how does `auth_context.role != "admin"` work in api/routes.py?
-    pass
 
 
 @pytest.mark.asyncio
@@ -112,15 +125,20 @@ async def test_usage_summary_route(transport):
     app.dependency_overrides[get_auth_context] = lambda: mock_auth
     app.dependency_overrides[inference_control_plane.db.session.get_db_session] = lambda: AsyncMock()
 
-
     with patch("inference_control_plane.api.routes.get_usage_summary") as mock_summary:
-        mock_summary.return_value = {"user_id": "u-1", "requests": 1, "total_tokens": 10, "total_cost": 0.01}
+        mock_summary.return_value = {
+            "user_id": "u-1",
+            "requests": 1,
+            "total_tokens": 10,
+            "total_cost": 0.01,
+        }
         try:
             async with AsyncClient(transport=transport, base_url="http://test") as ac:
                 response = await ac.get("/usage/summary?user_id=u-1")
             assert response.status_code == 200
         finally:
             app.dependency_overrides.pop(get_auth_context)
+
 
 @pytest.mark.asyncio
 async def test_usage_summary_route_forbidden(transport):
@@ -134,6 +152,7 @@ async def test_usage_summary_route_forbidden(transport):
         assert response.status_code == 403
     finally:
         app.dependency_overrides.pop(get_auth_context)
+
 
 @pytest.mark.asyncio
 async def test_usage_logs_route(transport):
@@ -150,6 +169,7 @@ async def test_usage_logs_route(transport):
         finally:
             app.dependency_overrides.pop(get_auth_context)
 
+
 @pytest.mark.asyncio
 async def test_usage_logs_route_forbidden(transport):
     mock_auth = AuthContext(tenant_id="t-1", api_key_hash="hash", rate_limit_per_minute=100, role="tenant")
@@ -162,6 +182,7 @@ async def test_usage_logs_route_forbidden(transport):
         assert response.status_code == 403
     finally:
         app.dependency_overrides.pop(get_auth_context)
+
 
 @pytest.mark.asyncio
 async def test_dashboard_metrics(transport):
@@ -185,6 +206,7 @@ async def test_dashboard_metrics(transport):
         app.dependency_overrides.pop(get_auth_context)
         app.dependency_overrides.pop(inference_control_plane.db.session.get_db_session)
 
+
 @pytest.mark.asyncio
 async def test_dashboard_metrics_forbidden(transport):
     mock_auth = AuthContext(tenant_id="t-1", api_key_hash="hash", rate_limit_per_minute=100, role="tenant")
@@ -197,6 +219,7 @@ async def test_dashboard_metrics_forbidden(transport):
         assert response.status_code == 403
     finally:
         app.dependency_overrides.pop(get_auth_context)
+
 
 @pytest.mark.asyncio
 async def test_dashboard_activity(transport):
@@ -218,6 +241,7 @@ async def test_dashboard_activity(transport):
     finally:
         app.dependency_overrides.pop(get_auth_context)
         app.dependency_overrides.pop(inference_control_plane.db.session.get_db_session)
+
 
 @pytest.mark.asyncio
 async def test_dashboard_activity_forbidden(transport):
