@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying Laminar for production workloads using Kubernetes, which is the recommended orchestration platform for high availability and scale.
+This guide covers deploying Inference Control Plane for production workloads using Kubernetes, which is the recommended orchestration platform for high availability and scale.
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ This guide covers deploying Laminar for production workloads using Kubernetes, w
 
 ## 1. Database Setup
 
-Before deploying the Laminar pods, you must provision your stateful infrastructure.
+Before deploying the Inference Control Plane pods, you must provision your stateful infrastructure.
 **Do not run PostgreSQL and Redis inside Kubernetes for production unless you have a dedicated DBRE team.**
 
 1. Provision PostgreSQL (version 15+).
@@ -27,11 +27,11 @@ We provide base manifests in `deploy/kubernetes/base`. We recommend using Kustom
 Never commit API keys or database passwords to version control. Create a Kubernetes Secret manually or via a tool like External Secrets Operator.
 
 ```bash
-kubectl create secret generic laminar-secrets \
+kubectl create secret generic inference_control_plane-secrets \
   --from-literal=DATABASE_URL="postgresql+asyncpg://user:pass@host:5432/db" \
   --from-literal=REDIS_URL="redis://:pass@host:6379/0" \
   --from-literal=OPENAI_API_KEY="sk-..." \
-  --from-literal=DEFAULT_API_KEY="sk-laminar-admin-key"
+  --from-literal=DEFAULT_API_KEY="sk-inference-control-plane-admin-key"
 ```
 
 ### Applying the Base Manifests
@@ -41,7 +41,7 @@ kubectl apply -k deploy/kubernetes/base/
 ```
 
 This will create:
-- A `Deployment` for the Laminar API.
+- A `Deployment` for the Inference Control Plane API.
 - A `Service` to expose the API.
 - A `ConfigMap` for non-sensitive environment variables.
 
@@ -57,12 +57,12 @@ initContainers:
     command: ["alembic", "upgrade", "head"]
     envFrom:
       - secretRef:
-          name: laminar-secrets
+          name: inference_control_plane-secrets
 ```
 
 ## 3. Ingress and SSL
 
-Laminar must be placed behind a Reverse Proxy (e.g., NGINX Ingress Controller, AWS ALB) that terminates SSL.
+Inference Control Plane must be placed behind a Reverse Proxy (e.g., NGINX Ingress Controller, AWS ALB) that terminates SSL.
 
 Ensure your Ingress controller is configured to support **Server-Sent Events (SSE)**.
 - For NGINX Ingress, you may need to add annotations to disable buffering:
@@ -75,5 +75,5 @@ Ensure your Ingress controller is configured to support **Server-Sent Events (SS
 The Next.js dashboard is built as a static export or standalone Node.js server.
 
 If running the Docker container `ghcr.io/darren-2000/inference-control-plane-dashboard`:
-1. Ensure the `NEXT_PUBLIC_API_BASE_URL` environment variable points to the public URL of your Laminar API.
+1. Ensure the `NEXT_PUBLIC_API_BASE_URL` environment variable points to the public URL of your Inference Control Plane API.
 2. Deploy the dashboard container using a standard Deployment and Service.

@@ -1,6 +1,6 @@
 # CLI Reference
 
-Laminar includes a built-in Python Command Line Interface (CLI) for managing the control plane, generating API keys, and interacting with the database.
+Inference Control Plane includes a built-in Python Command Line Interface (CLI) for managing the control plane, generating API keys, and interacting with the database.
 
 The CLI is executed via the `api/cli.py` script.
 

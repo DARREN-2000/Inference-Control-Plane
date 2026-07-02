@@ -1,10 +1,10 @@
 # Performance Tuning
 
-Laminar is built on an asynchronous architecture capable of high throughput, but out-of-the-box defaults may need tuning for massive scale.
+Inference Control Plane is built on an asynchronous architecture capable of high throughput, but out-of-the-box defaults may need tuning for massive scale.
 
 ## 1. Connection Pooling (HTTPX)
 
-Laminar uses `httpx.AsyncClient` to make requests to LLM providers.
+Inference Control Plane uses `httpx.AsyncClient` to make requests to LLM providers.
 - **The Optimization:** The client is instantiated once during the FastAPI application lifecycle (`lifespan`) and shared across all requests. This prevents the TCP/TLS handshake overhead (which can take 50-100ms) on every single API call.
 - **Tuning:** If you are hitting thousands of requests per second, you may need to increase the `httpx.Limits(max_connections=...)` internally in the codebase.
 
@@ -34,11 +34,11 @@ If your API starts returning `500` errors related to timeouts acquiring a connec
 
 ## 4. Redis Pipelining
 
-Rate limiting in Laminar uses Redis Lua scripts to ensure atomicity and speed.
+Rate limiting in Inference Control Plane uses Redis Lua scripts to ensure atomicity and speed.
 If you notice Redis latency spiking during high traffic:
 - Ensure Redis is deployed in the same VPC/Region as your API pods to minimize network hops.
 - Keep `CACHE_ENABLED=true` even if you have low hit rates, as the lookup cost (<<1ms) is vastly outweighed by the latency saved on a hit.
 
 ## 5. Avoiding Premature Optimization
 
-Avoid altering the core routing logic to shave microseconds off the proxy execution time. The overwhelming majority of request latency (99%+) comes from the LLM provider generation time (often 1000ms - 5000ms), not the Laminar proxy overhead (< 3ms). Focus your optimization efforts on caching strategies and intelligent routing policies.
+Avoid altering the core routing logic to shave microseconds off the proxy execution time. The overwhelming majority of request latency (99%+) comes from the LLM provider generation time (often 1000ms - 5000ms), not the Inference Control Plane proxy overhead (< 3ms). Focus your optimization efforts on caching strategies and intelligent routing policies.

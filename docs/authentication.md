@@ -1,32 +1,32 @@
 # Authentication & Authorization
 
-Securing the control plane and correctly isolating tenants is a primary responsibility of Laminar.
+Securing the control plane and correctly isolating tenants is a primary responsibility of Inference Control Plane.
 
 ## The Two Layers of Authentication
 
-Laminar deals with two distinct API layers, and therefore two types of authentication.
+Inference Control Plane deals with two distinct API layers, and therefore two types of authentication.
 
-### 1. Client-to-Laminar (Ingress Auth)
-When a client application (e.g., your Next.js app, your internal microservice) makes a request to Laminar, it must authenticate using a Laminar-issued API key.
+### 1. Client-to-Inference Control Plane (Ingress Auth)
+When a client application (e.g., your Next.js app, your internal microservice) makes a request to Inference Control Plane, it must authenticate using a Inference Control Plane-issued API key.
 
 ```http
-Authorization: Bearer sk-laminar-abc123def456
+Authorization: Bearer sk-inference-control-plane-abc123def456
 ```
-This key tells Laminar *who* is making the request (Tenant) and dictates what rate limits and policies apply.
+This key tells Inference Control Plane *who* is making the request (Tenant) and dictates what rate limits and policies apply.
 
-### 2. Laminar-to-Provider (Egress Auth)
-When Laminar routes a request to OpenAI or Anthropic, it strips the Laminar API key and injects the actual provider API key (e.g., `sk-proj-...`). The client application never sees or possesses the provider keys.
+### 2. Inference Control Plane-to-Provider (Egress Auth)
+When Inference Control Plane routes a request to OpenAI or Anthropic, it strips the Inference Control Plane API key and injects the actual provider API key (e.g., `sk-proj-...`). The client application never sees or possesses the provider keys.
 
 ## API Key Architecture
 
-Laminar API Keys follow the format: `sk-laminar-[random_bytes]`.
+Inference Control Plane API Keys follow the format: `sk-inference-control-plane-[random_bytes]`.
 
 ### Key Validation Flow
 1. Request arrives.
 2. The `Depends(get_auth_context)` middleware extracts the Bearer token.
-3. Laminar hashes the token (SHA-256) and looks it up in Redis.
+3. Inference Control Plane hashes the token (SHA-256) and looks it up in Redis.
 4. If found in Redis, the request proceeds (Sub-millisecond).
-5. If not found in Redis, Laminar queries PostgreSQL. If valid, it hydrates the Redis cache and proceeds. If invalid, returns `401 Unauthorized`.
+5. If not found in Redis, Inference Control Plane queries PostgreSQL. If valid, it hydrates the Redis cache and proceeds. If invalid, returns `401 Unauthorized`.
 
 ## Tenants and Role-Based Access Control (RBAC)
 

@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This guide addresses common issues encountered when deploying or operating Laminar.
+This guide addresses common issues encountered when deploying or operating Inference Control Plane.
 
 ## 1. 401 Unauthorized Errors
 
@@ -19,9 +19,9 @@ This guide addresses common issues encountered when deploying or operating Lamin
 **Possible Causes:**
 1. **Upstream Provider Failure:** All models in your fallback chain failed.
    - *Fix:* Check `LLM_PROVIDER_ORDER`. Ensure you have valid API keys for the providers in your fallback chain.
-2. **Database Connectivity:** Laminar cannot connect to PostgreSQL.
+2. **Database Connectivity:** Inference Control Plane cannot connect to PostgreSQL.
    - *Fix:* Verify `DATABASE_URL`. If using Docker Compose, ensure the `postgres` container is healthy. Check for "Too many clients" errors indicating connection pool exhaustion.
-3. **Redis Connectivity:** Laminar cannot connect to Redis.
+3. **Redis Connectivity:** Inference Control Plane cannot connect to Redis.
    - *Fix:* Verify `REDIS_URL`.
 
 ## 3. Streaming Responses Are Buffered (Not Streaming)

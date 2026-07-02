@@ -15,6 +15,7 @@ class APIKey(Base):
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     tenant_id: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
     rate_limit_per_minute: Mapped[int] = mapped_column(Integer, nullable=False, default=120)
+    role: Mapped[str] = mapped_column(String(32), nullable=False, default="tenant")
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

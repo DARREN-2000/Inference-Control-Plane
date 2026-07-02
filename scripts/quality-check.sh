@@ -17,10 +17,10 @@ uv run pytest
 
 echo "[4/6] Installing frontend dependencies"
 cd frontend
-npm ci
+pnpm install
 
 echo "[5/6] Linting frontend"
-npm run lint
+pnpm lint
 
 echo "[6/6] Building frontend"
-npm run build
+pnpm build

@@ -1,11 +1,11 @@
 # Operations Guide
 
-This guide covers day-to-day operational tasks, maintenance, and alerting strategies for a Laminar cluster.
+This guide covers day-to-day operational tasks, maintenance, and alerting strategies for a Inference Control Plane cluster.
 
 ## Maintenance
 
 ### Database Migrations
-When upgrading Laminar to a new version, the database schema may change.
+When upgrading Inference Control Plane to a new version, the database schema may change.
 - Always review the release notes.
 - Migrations are handled by Alembic.
 - **Downtime:** Migrations are designed to be backward compatible where possible, allowing rolling upgrades. However, taking a database backup before running `alembic upgrade head` in production is strongly recommended.
@@ -13,7 +13,7 @@ When upgrading Laminar to a new version, the database schema may change.
 ### Log Pruning
 The `usage_logs` PostgreSQL table will grow rapidly. To maintain performance, configure a cron job to prune old logs.
 
-Using the Laminar CLI:
+Using the Inference Control Plane CLI:
 ```bash
 # Delete logs older than 90 days
 python -m inference_control_plane.cli db prune-logs --days 90
@@ -27,7 +27,7 @@ Based on the exposed Prometheus metrics, we recommend setting up the following a
 ### 1. High Error Rate (5xx)
 **Condition:** `rate(request_count_total{status_code=~"5.."}[5m]) / rate(request_count_total[5m]) > 0.05`
 **Meaning:** More than 5% of requests are failing completely (after all routing fallbacks have been exhausted).
-**Action:** Check provider status pages (OpenAI, Anthropic). Check Laminar application logs for network timeouts or authentication failures with the upstream provider.
+**Action:** Check provider status pages (OpenAI, Anthropic). Check Inference Control Plane application logs for network timeouts or authentication failures with the upstream provider.
 
 ### 2. High Upstream Latency
 **Condition:** `histogram_quantile(0.95, rate(upstream_latency_seconds_bucket[5m])) > 10`

@@ -16,6 +16,7 @@ class AuthContext:
     tenant_id: str
     api_key_hash: str
     rate_limit_per_minute: int
+    role: str
 
 
 def hash_api_key(api_key: str) -> str:
@@ -42,6 +43,7 @@ async def _load_cached_auth_context(
         tenant_id=payload["tenant_id"],
         api_key_hash=api_key_hash,
         rate_limit_per_minute=int(payload["rate_limit_per_minute"]),
+        role=payload.get("role", "tenant"),
     )
 
 
@@ -54,6 +56,7 @@ async def _store_cached_auth_context(
         "tenant_id": api_key.tenant_id,
         "rate_limit_per_minute": api_key.rate_limit_per_minute,
         "is_active": api_key.is_active,
+        "role": getattr(api_key, "role", "tenant"),
     }
     await redis_client.set(
         _auth_cache_key(api_key.key_hash),
@@ -97,4 +100,5 @@ async def validate_api_key(
         tenant_id=key_record.tenant_id,
         api_key_hash=key_record.key_hash,
         rate_limit_per_minute=key_record.rate_limit_per_minute,
+        role=getattr(key_record, "role", "tenant"),
     )

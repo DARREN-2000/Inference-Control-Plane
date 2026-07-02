@@ -1,10 +1,10 @@
 # Developer Experience (DX) & Onboarding
 
-Welcome to the Laminar codebase! This document outlines our repository structure, coding conventions, and CI/CD pipelines to help you contribute effectively.
+Welcome to the Inference Control Plane codebase! This document outlines our repository structure, coding conventions, and CI/CD pipelines to help you contribute effectively.
 
 ## Repository Structure
 
-Laminar is a monorepo containing multiple interconnected applications.
+Inference Control Plane is a monorepo containing multiple interconnected applications.
 
 ```text
 Inference-Control-Plane/

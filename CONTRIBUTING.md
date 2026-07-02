@@ -1,8 +1,8 @@
-# Contributing to Laminar
+# Contributing to Inference Control Plane
 
-First off, thank you for considering contributing to Laminar! It's people like you that make open-source software great.
+First off, thank you for considering contributing to Inference Control Plane! It's people like you that make open-source software great.
 
-Laminar aims to be the standard open-source Inference Control Plane. We welcome contributions from everyone, whether it's fixing bugs, adding new features, improving documentation, or optimizing performance.
+Inference Control Plane aims to be the standard open-source Inference Control Plane. We welcome contributions from everyone, whether it's fixing bugs, adding new features, improving documentation, or optimizing performance.
 
 ## Getting Started
 

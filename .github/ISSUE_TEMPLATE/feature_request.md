@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for Laminar
+about: Suggest an idea for Inference Control Plane
 title: "[FEATURE] "
 labels: ["enhancement", "triage"]
 assignees: ""

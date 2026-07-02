@@ -1,6 +1,6 @@
 # Configuration
 
-Laminar is designed as a cloud-native, 12-factor application. All configuration is managed exclusively through environment variables.
+Inference Control Plane is designed as a cloud-native, 12-factor application. All configuration is managed exclusively through environment variables.
 
 This guide details all available configuration parameters.
 
@@ -16,7 +16,7 @@ This guide details all available configuration parameters.
 
 ## Database Connection
 
-Laminar requires PostgreSQL via `asyncpg` driver and Redis for caching/rate-limiting.
+Inference Control Plane requires PostgreSQL via `asyncpg` driver and Redis for caching/rate-limiting.
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
@@ -27,7 +27,7 @@ Laminar requires PostgreSQL via `asyncpg` driver and Redis for caching/rate-limi
 
 ## LLM Provider Keys
 
-To route traffic to providers, Laminar needs their respective API keys. If a key is missing, Laminar will not route traffic to that provider.
+To route traffic to providers, Inference Control Plane needs their respective API keys. If a key is missing, Inference Control Plane will not route traffic to that provider.
 
 | Variable | Type | Description |
 |----------|------|-------------|
@@ -43,7 +43,7 @@ To route traffic to providers, Laminar needs their respective API keys. If a key
 |----------|------|---------|-------------|
 | `LLM_MODE` | string | `openai-compatible` | Dictates the default parsing mode. |
 | `LLM_PROVIDER_ORDER` | string (CSV) | `openai,anthropic` | The global fallback order if a dynamic routing policy isn't provided in the request. |
-| `LLM_TIMEOUT_SECONDS` | int | `60` | Global timeout for upstream LLM requests. If exceeded, Laminar triggers a fallback. |
+| `LLM_TIMEOUT_SECONDS` | int | `60` | Global timeout for upstream LLM requests. If exceeded, Inference Control Plane triggers a fallback. |
 | `LLM_MAX_RETRIES` | int | `2` | Number of times to retry a provider on 5xx errors before moving to the next provider. |
 
 ## Caching
