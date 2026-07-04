@@ -93,59 +93,13 @@ export const Hero = () => {
               </div>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8">
-              {/* Fake Sidebar */}
-              <div className="hidden md:flex w-48 flex-col gap-2">
-                {['Overview', 'Routing', 'Caching', 'Observability', 'API Keys'].map((item, i) => (
-                  <div key={item} className={`px-3 py-2 rounded-md text-sm ${i === 0 ? 'bg-white/10 text-white font-medium' : 'text-zinc-500 hover:text-zinc-300 transition-colors'}`}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              {/* Fake Content area */}
-              <div className="flex-1 space-y-6">
-                <div className="flex justify-between items-end">
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-1">Inference Traffic</h3>
-                    <p className="text-sm text-zinc-500">Last 24 hours across all providers</p>
-                  </div>
-                  <Badge variant="glass" className="text-zinc-400 border-zinc-500/20">System Healthy</Badge>
-                </div>
-
-                {/* Fake Chart */}
-                <div className="h-48 border border-white/5 rounded-lg bg-black/50 p-4 relative flex items-end justify-between gap-2 overflow-hidden">
-                   {Array.from({ length: 24 }).map((_, i) => {
-                     const height = 20 + ((i * 13) % 100) / 100 * 60;
-                     const isHigh = height > 60;
-                     return (
-                       <motion.div
-                         key={i}
-                         initial={{ height: 0 }}
-                         animate={{ height: `${height}%` }}
-                         transition={{ delay: 0.6 + (i * 0.05), duration: 0.5 }}
-                         className={`w-full rounded-t-sm ${isHigh ? 'bg-zinc-600' : 'bg-zinc-800'}`}
-                       />
-                     )
-                   })}
-                   <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent pointer-events-none" />
-                </div>
-
-                {/* Fake Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { label: 'Total Requests', value: '1.2M' },
-                    { label: 'Cache Hit Rate', value: '42.8%' },
-                    { label: 'Avg Latency', value: '45ms' },
-                    { label: 'Cost Saved', value: '$840' },
-                  ].map((stat, i) => (
-                    <div key={i} className="p-4 rounded-lg bg-white/5 border border-white/5">
-                      <div className="text-xs text-zinc-500 mb-1">{stat.label}</div>
-                      <div className="text-xl font-semibold text-white">{stat.value}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="relative w-full h-[600px] overflow-hidden bg-black/50">
+              <iframe
+                src={import.meta.env.DEV ? "http://localhost:3000/" : "./dashboard/"}
+                className="w-full h-full border-0"
+                title="Inference Control Plane Dashboard Playground"
+                loading="lazy"
+              />
             </div>
           </div>
         </motion.div>
