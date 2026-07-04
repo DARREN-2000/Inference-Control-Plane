@@ -47,7 +47,9 @@ export const Navigation = () => {
               <Hexagon className="w-5 h-5" />
             </a>
             <Button variant="ghost" size="sm">Sign In</Button>
-            <Button size="sm">Get Started</Button>
+            <Button size="sm" asChild>
+              <a href="./dashboard/">Try it out</a>
+            </Button>
           </div>
 
           <div className="md:hidden flex items-center">
@@ -67,7 +69,9 @@ export const Navigation = () => {
             <a href="./dashboard/" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md">Dashboard</a>
             <div className="pt-4 flex flex-col gap-2">
               <Button variant="outline" className="w-full justify-center">Sign In</Button>
-              <Button className="w-full justify-center">Get Started</Button>
+              <Button className="w-full justify-center" asChild>
+                <a href="./dashboard/">Try it out</a>
+              </Button>
             </div>
           </div>
         </div>
