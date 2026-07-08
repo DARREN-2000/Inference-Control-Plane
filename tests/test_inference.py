@@ -44,6 +44,7 @@ def test_fallback_model():
 @pytest.mark.asyncio
 async def test_persist_request_log():
     mock_session = AsyncMock()
+    mock_session.add = MagicMock()
     mock_session_factory = MagicMock(return_value=mock_session)
     mock_session.__aenter__.return_value = mock_session
 
