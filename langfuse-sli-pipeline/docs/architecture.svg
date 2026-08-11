@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+<title id="title">Architecture</title><desc id="desc">AI platform target-state architecture with control, request, evidence, and observability planes.</desc>
+<defs>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2783DE"/></marker>
+<marker id="orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D5803B"/></marker>
+<marker id="green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#46A171"/></marker>
+<marker id="purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7057C2"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1080" rx="0" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="48" y="66" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#2C2C2B" text-anchor="start">Architecture</text>
+<text x="48" y="96" font-family="Arial,sans-serif" font-size="16" font-weight="400" fill="#6F6C67" text-anchor="start">Target state · governed LLM access · eu-central-1</text>
+<text x="1868" y="66" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#6F6C67" text-anchor="end">Solid: request/control   ·   Dashed: telemetry/audit   ·   Green: aggregate-only</text>
+<rect x="275" y="135" width="1280" height="845" rx="16" fill="#FCFCFB" stroke="#9BA3AF" stroke-width="2"/>
+<text x="300" y="166" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">AWS account · production · multi-AZ</text>
+<rect x="300" y="185" width="1230" height="145" rx="14" fill="#F0ECFA" stroke="#7057C2" stroke-width="2"/>
+<text x="325" y="216" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#7057C2" text-anchor="start">CONTROL PLANE · pull-request driven</text>
+<rect x="300" y="355" width="1230" height="190" rx="14" fill="#E5F2FC" stroke="#2783DE" stroke-width="2"/>
+<text x="325" y="386" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#2783DE" text-anchor="start">REQUEST PLANE · synchronous hot path</text>
+<rect x="300" y="570" width="1230" height="175" rx="14" fill="#FBEBDE" stroke="#D5803B" stroke-width="2"/>
+<text x="325" y="601" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#D5803B" text-anchor="start">EVIDENCE PLANE · trace, spend and audit</text>
+<rect x="300" y="780" width="1230" height="185" rx="14" fill="#E8F1EC" stroke="#46A171" stroke-width="2"/>
+<text x="325" y="811" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#46A171" text-anchor="start">OBSERVABILITY PLANE · governed aggregates only</text>
+<polyline points="520,260 570,260" fill="none" stroke="#7057C2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#purple)"/>
+<polyline points="790,260 840,260" fill="none" stroke="#7057C2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#purple)"/>
+<polyline points="1080,260 1130,260" fill="none" stroke="#7057C2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#purple)"/>
+<polyline points="960,300 960,340 750,340 750,405" fill="none" stroke="#7057C2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#purple)"/>
+<polyline points="230,450 335,450" fill="none" stroke="#2783DE" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#blue)"/>
+<rect x="265.0" y="410" width="34" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="282" y="428" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6F6C67" text-anchor="middle">1</text>
+<polyline points="525,450 625,450" fill="none" stroke="#2783DE" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#blue)"/>
+<rect x="558.0" y="410" width="34" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="575" y="428" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6F6C67" text-anchor="middle">2</text>
+<polyline points="885,430 1165,430" fill="none" stroke="#2783DE" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#blue)"/>
+<rect x="1008.0" y="390" width="34" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="1025" y="408" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6F6C67" text-anchor="middle">3a</text>
+<polyline points="885,485 930,485 930,520 1580,520" fill="none" stroke="#D5803B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#orange)"/>
+<rect x="1243.0" y="491" width="34" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="1260" y="509" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6F6C67" text-anchor="middle">3b</text>
+<polyline points="690,510 690,555 630,555 630,655 580,655" fill="none" stroke="#D5803B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+<polyline points="755,510 755,620" fill="none" stroke="#D5803B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+<polyline points="820,510 820,545 1045,545 1045,610" fill="none" stroke="#D5803B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+<polyline points="1225,660 1265,660" fill="none" stroke="#D5803B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+<polyline points="510,875 560,875" fill="none" stroke="#7057C2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#purple)"/>
+<rect x="518.0" y="835" width="34" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="535" y="853" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6F6C67" text-anchor="middle">7</text>
+<polyline points="1115,710 1115,765 780,765 780,825" fill="none" stroke="#D5803B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+<rect x="801.0" y="737" width="198" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="900" y="755" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#D5803B" text-anchor="middle">8 · closed-window API read</text>
+<polyline points="680,940 680,925" fill="none" stroke="#7057C2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 7" marker-end="url(#purple)"/>
+<polyline points="800,875 865,875" fill="none" stroke="#46A171" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#green)"/>
+<rect x="815.0" y="835" width="34" height="25" rx="5" fill="#fff" stroke="#fff" stroke-width="0"/>
+<text x="832" y="853" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6F6C67" text-anchor="middle">9</text>
+<polyline points="1065,875 1125,875" fill="none" stroke="#46A171" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#green)"/>
+<polyline points="1325,875 1580,875" fill="none" stroke="#46A171" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#green)"/>
+<rect x="35" y="400" width="195" height="100" rx="10" fill="#fff" stroke="#2783DE" stroke-width="2"/>
+<text x="51" y="428" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Product workloads</text>
+<text x="51" y="454" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Six teams</text>
+<text x="51" y="474" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Customer + internal</text>
+<rect x="335" y="405" width="190" height="90" rx="10" fill="#fff" stroke="#2783DE" stroke-width="2"/>
+<text x="351" y="433" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Application LB</text>
+<text x="351" y="459" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">TLS · internal ingress</text>
+<rect x="625" y="390" width="260" height="120" rx="10" fill="#fff" stroke="#2783DE" stroke-width="3"/>
+<text x="641" y="418" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">LiteLLM gateway</text>
+<text x="641" y="444" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">ECS Fargate · autoscaling</text>
+<text x="641" y="464" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Identity · policy · budgets</text>
+<text x="641" y="484" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Routing · agent/tool guard</text>
+<rect x="1165" y="385" width="260" height="90" rx="10" fill="#fff" stroke="#2783DE" stroke-width="2"/>
+<text x="1181" y="413" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Amazon Bedrock</text>
+<text x="1181" y="439" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Frankfurt (eu-central-1) · managed models</text>
+<rect x="1580" y="475" width="285" height="90" rx="10" fill="#fff" stroke="#D5803B" stroke-width="2"/>
+<text x="1596" y="503" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">External provider</text>
+<text x="1596" y="529" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Approved routes · ZDR</text>
+<rect x="330" y="220" width="190" height="80" rx="10" fill="#fff" stroke="#7057C2" stroke-width="2"/>
+<text x="346" y="248" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Platform config</text>
+<text x="346" y="274" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Teams · routes · budgets</text>
+<rect x="570" y="220" width="220" height="80" rx="10" fill="#fff" stroke="#7057C2" stroke-width="2"/>
+<text x="586" y="248" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">CI policy gates</text>
+<text x="586" y="274" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Tests · owners · approvals</text>
+<rect x="840" y="220" width="240" height="80" rx="10" fill="#fff" stroke="#7057C2" stroke-width="2"/>
+<text x="856" y="248" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Terraform + ECR</text>
+<text x="856" y="274" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Plan · release · rollback</text>
+<rect x="1130" y="220" width="350" height="80" rx="10" fill="#fff" stroke="#7057C2" stroke-width="2"/>
+<text x="1146" y="248" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Inherited controls</text>
+<text x="1146" y="274" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">IAM · Secrets Manager · KMS · CODEOWNERS</text>
+<rect x="390" y="610" width="190" height="90" rx="10" fill="#fff" stroke="#D5803B" stroke-width="2"/>
+<text x="406" y="638" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">4 · Spend ledger</text>
+<text x="406" y="664" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Gateway Postgres</text>
+<rect x="660" y="610" width="190" height="90" rx="10" fill="#fff" stroke="#D5803B" stroke-width="2"/>
+<text x="676" y="638" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">6 · Audit archive</text>
+<text x="676" y="664" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">S3 Object Lock</text>
+<rect x="955" y="600" width="270" height="110" rx="10" fill="#fff" stroke="#D5803B" stroke-width="3"/>
+<text x="971" y="628" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">5 · Langfuse</text>
+<text x="971" y="654" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Trace UI · Observations API</text>
+<text x="971" y="674" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Sole raw-trace store</text>
+<rect x="1265" y="610" width="220" height="90" rx="10" fill="#fff" stroke="#D5803B" stroke-width="2"/>
+<text x="1281" y="638" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Langfuse stores</text>
+<text x="1281" y="664" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Postgres · ClickHouse</text>
+<rect x="330" y="835" width="180" height="80" rx="10" fill="#fff" stroke="#7057C2" stroke-width="2"/>
+<text x="346" y="863" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">EventBridge</text>
+<text x="346" y="889" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">5-minute schedule</text>
+<rect x="560" y="825" width="240" height="100" rx="10" fill="#fff" stroke="#46A171" stroke-width="3"/>
+<text x="576" y="853" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">gateway-sli</text>
+<text x="576" y="879" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">PRIVACY BOUNDARY</text>
+<text x="576" y="899" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Project · dedup · aggregate</text>
+<rect x="865" y="835" width="200" height="80" rx="10" fill="#fff" stroke="#46A171" stroke-width="2"/>
+<text x="881" y="863" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">OTel Collector</text>
+<text x="881" y="889" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">OTLP/HTTP</text>
+<rect x="1125" y="825" width="200" height="100" rx="10" fill="#fff" stroke="#46A171" stroke-width="2"/>
+<text x="1141" y="853" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Datadog</text>
+<text x="1141" y="879" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Metrics · SLOs</text>
+<text x="1141" y="899" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Dashboards · monitors</text>
+<rect x="590" y="940" width="180" height="35" rx="8" fill="#fff" stroke="#7057C2" stroke-width="2"/>
+<text x="680" y="963" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#2C2C2B" text-anchor="middle">Checkpoint · DynamoDB</text>
+<rect x="1580" y="825" width="285" height="100" rx="10" fill="#fff" stroke="#46A171" stroke-width="2"/>
+<text x="1596" y="853" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#2C2C2B" text-anchor="start">Platform on-call</text>
+<text x="1596" y="879" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">PagerDuty · Slack</text>
+<text x="1596" y="899" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#6F6C67" text-anchor="start">Runbooks</text>
+<rect x="1580" y="620" width="285" height="135" rx="12" fill="#F9F8F7" stroke="#D9D7D3" stroke-width="2"/>
+<text x="1598" y="648" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#2C2C2B" text-anchor="start">Architectural guarantees</text>
+<text x="1600" y="678" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#6F6C67" text-anchor="start">• Raw traces stay in Langfuse</text>
+<text x="1600" y="698" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#6F6C67" text-anchor="start">• Datadog receives aggregates only</text>
+<text x="1600" y="718" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#6F6C67" text-anchor="start">• SLI failure cannot block inference</text>
+<text x="1600" y="738" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#6F6C67" text-anchor="start">• Delivery is explicitly at-least-once</text>
+</svg>

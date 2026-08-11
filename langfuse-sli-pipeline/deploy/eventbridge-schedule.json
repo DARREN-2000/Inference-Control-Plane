@@ -1,0 +1,28 @@
+{
+  "Name": "gateway-sli-five-minute",
+  "Description": "Run the gateway SLI aggregation job every five minutes over a delayed closed window.",
+  "ScheduleExpression": "rate(5 minutes)",
+  "ScheduleExpressionTimezone": "UTC",
+  "FlexibleTimeWindow": { "Mode": "OFF" },
+  "State": "ENABLED",
+  "Target": {
+    "Arn": "arn:aws:ecs:eu-central-1:<ACCOUNT_ID>:cluster/observability",
+    "RoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/gateway-sli-scheduler",
+    "EcsParameters": {
+      "TaskDefinitionArn": "arn:aws:ecs:eu-central-1:<ACCOUNT_ID>:task-definition/gateway-sli",
+      "LaunchType": "FARGATE",
+      "TaskCount": 1,
+      "NetworkConfiguration": {
+        "awsvpcConfiguration": {
+          "Subnets": ["subnet-<PRIVATE_A>", "subnet-<PRIVATE_B>"],
+          "SecurityGroups": ["sg-<GATEWAY_SLI>"],
+          "AssignPublicIp": "DISABLED"
+        }
+      }
+    },
+    "RetryPolicy": {
+      "MaximumRetryAttempts": 2,
+      "MaximumEventAgeInSeconds": 900
+    }
+  }
+}

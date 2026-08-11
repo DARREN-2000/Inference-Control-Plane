@@ -29,6 +29,19 @@ async def generate(
     auth_context: AuthContext = Depends(get_auth_context),
     settings: Settings = Depends(get_settings),
 ) -> GenerateResponse:
+    """Handle generation requests for LLM models.
+
+    This endpoint orchestrates caching, rate limiting, and inference fallback logic.
+
+    Args:
+        payload (GenerateRequest): The incoming generation request payload.
+        background_tasks (BackgroundTasks): Background task scheduler for logging.
+        auth_context (AuthContext): The authenticated user context.
+        settings (Settings): Application settings.
+
+    Returns:
+        GenerateResponse: The generation result containing response text and metadata.
+    """
     redis_client = get_redis_optional()
     return await handle_generate_request(
         payload=payload,
@@ -45,6 +58,21 @@ async def usage_summary(
     auth_context: AuthContext = Depends(get_auth_context),
     session: AsyncSession = Depends(get_db_session),
 ) -> UsageSummaryResponse:
+    """Retrieve usage summary for a specific user.
+
+    Requires admin privileges.
+
+    Args:
+        user_id (str): The identifier of the user to query.
+        auth_context (AuthContext): The authenticated user context.
+        session (AsyncSession): The database session.
+
+    Returns:
+        UsageSummaryResponse: Summary metrics for the user's usage.
+    
+    Raises:
+        HTTPException: If the user lacks admin privileges.
+    """
     if auth_context.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -64,6 +92,22 @@ async def usage_logs(
     auth_context: AuthContext = Depends(get_auth_context),
     session: AsyncSession = Depends(get_db_session),
 ) -> UsageLogsResponse:
+    """Retrieve detailed usage logs for a specific user.
+
+    Requires admin privileges.
+
+    Args:
+        user_id (str): The identifier of the user to query.
+        limit (int): Maximum number of records to return.
+        auth_context (AuthContext): The authenticated user context.
+        session (AsyncSession): The database session.
+
+    Returns:
+        UsageLogsResponse: Detailed historical usage logs for the user.
+    
+    Raises:
+        HTTPException: If the user lacks admin privileges.
+    """
     if auth_context.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -82,37 +126,28 @@ async def dashboard_metrics(
     auth_context: AuthContext = Depends(get_auth_context),
     session: AsyncSession = Depends(get_db_session),
 ) -> DashboardMetricsResponse:
-    from datetime import UTC, datetime, timedelta
+    """Retrieve overall system metrics for the dashboard.
 
-    from sqlalchemy import func
+    Requires admin privileges.
 
-    from inference_control_plane.models.request_log import RequestLog
+    Args:
+        auth_context (AuthContext): The authenticated user context.
+        session (AsyncSession): The database session.
 
+    Returns:
+        DashboardMetricsResponse: High-level system metrics over the past 24 hours.
+    
+    Raises:
+        HTTPException: If the user lacks admin privileges.
+    """
+    from inference_control_plane.services.dashboard import get_dashboard_metrics
+    
     if auth_context.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin privileges required to view dashboard metrics.",
         )
-    now = datetime.now(UTC)
-    yesterday = now - timedelta(days=1)
-    stmt_reqs = select(func.count(RequestLog.id)).where(RequestLog.created_at >= yesterday)
-    req_count = (await session.execute(stmt_reqs)).scalar() or 0
-    stmt_cost = select(func.sum(RequestLog.cost)).where(RequestLog.created_at >= yesterday)
-    total_cost = (await session.execute(stmt_cost)).scalar() or 0.0
-    cost_per_1k = (float(total_cost) / req_count * 1000) if req_count > 0 else 0.0
-    stmt_hits = select(func.count(RequestLog.id)).where(RequestLog.created_at >= yesterday, RequestLog.cache_hit)
-    hit_count = (await session.execute(stmt_hits)).scalar() or 0
-    cache_hit_ratio = (hit_count / req_count * 100) if req_count > 0 else 0.0
-    stmt_lat = select(func.avg(RequestLog.latency_ms)).where(RequestLog.created_at >= yesterday)
-    avg_lat = (await session.execute(stmt_lat)).scalar() or 0.0
-    return DashboardMetricsResponse(
-        metrics=[
-            {"label": "Avg Latency", "value": f"{avg_lat:.1f}ms", "delta": "0%"},
-            {"label": "Cache Hit Ratio", "value": f"{cache_hit_ratio:.1f}%", "delta": "0%"},
-            {"label": "Requests (24h)", "value": str(req_count), "delta": "0%"},
-            {"label": "Cost / 1K req", "value": f"${cost_per_1k:.4f}", "delta": "0%"},
-        ]
-    )
+    return await get_dashboard_metrics(session)
 
 
 @router.get("/dashboard/activity", response_model=DashboardActivityResponse)
@@ -120,28 +155,55 @@ async def dashboard_activity(
     auth_context: AuthContext = Depends(get_auth_context),
     session: AsyncSession = Depends(get_db_session),
 ) -> DashboardActivityResponse:
-    from inference_control_plane.models.request_log import RequestLog
+    """Retrieve recent system activity for the dashboard.
 
+    Requires admin privileges.
+
+    Args:
+        auth_context (AuthContext): The authenticated user context.
+        session (AsyncSession): The database session.
+
+    Returns:
+        DashboardActivityResponse: Recent system activity logs, typically errors.
+    
+    Raises:
+        HTTPException: If the user lacks admin privileges.
+    """
+    from inference_control_plane.services.dashboard import get_dashboard_activity
+    
     if auth_context.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin privileges required to view dashboard activity.",
         )
-    stmt = select(RequestLog).where(RequestLog.status != "success").order_by(RequestLog.created_at.desc()).limit(5)
-    recent_errors = (await session.execute(stmt)).scalars().all()
-    activity_list = [f"Error on {err.model_used}: {err.error_message}" for err in recent_errors]
-    if not activity_list:
-        activity_list = ["System operating normally."]
-    return DashboardActivityResponse(activity=activity_list)
+    return await get_dashboard_activity(session)
 
 
 @router.get("/health/live")
 async def health_live() -> dict[str, str]:
+    """Check if the service is live.
+
+    Returns:
+        dict[str, str]: Liveness status indicator.
+    """
     return {"status": "ok"}
 
 
 @router.get("/health/ready")
 async def health_ready(session: AsyncSession = Depends(get_db_session)) -> dict[str, str]:
+    """Check if the service and its dependencies are ready.
+
+    Validates connectivity to the database and Redis cache.
+
+    Args:
+        session (AsyncSession): The database session.
+
+    Returns:
+        dict[str, str]: Readiness status indicator.
+    
+    Raises:
+        HTTPException: If any dependent service is down.
+    """
     try:
         await session.execute(select(1))
     except Exception as exc:
@@ -162,4 +224,9 @@ async def health_ready(session: AsyncSession = Depends(get_db_session)) -> dict[
 
 @router.get("/metrics")
 async def metrics() -> Response:
+    """Expose Prometheus metrics for observability.
+
+    Returns:
+        Response: The serialized metrics payload.
+    """
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)

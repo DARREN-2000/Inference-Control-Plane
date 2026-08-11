@@ -1,0 +1,32 @@
+# Local development stack: run the SLI job against the sample fixture and ship
+# metrics over OTLP/HTTP to a local OpenTelemetry Collector, which logs them.
+#
+#   docker compose up --build
+#
+# This mirrors the production topology (job -> OTLP/HTTP -> collector -> backend)
+# without needing a real Datadog/collector endpoint.
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.109.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./deploy/otel-collector-config.local.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "4318:4318"   # OTLP/HTTP
+      - "4317:4317"   # OTLP/gRPC
+
+  gateway-sli:
+    build: .
+    depends_on:
+      otel-collector:
+        condition: service_started
+    # Ship the sample window to the collector over OTLP/HTTP.
+    command:
+      - "--source"
+      - "data/sample_traces.json"
+      - "--emit"
+      - "otlp-http"
+      - "--otlp-endpoint"
+      - "http://otel-collector:4318"
+      - "--window-end"
+      - "2026-01-15T11:46:00Z"

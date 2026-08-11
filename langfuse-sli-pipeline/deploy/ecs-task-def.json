@@ -1,0 +1,49 @@
+{
+  "family": "gateway-sli",
+  "cpu": "256",
+  "memory": "512",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/gateway-sli-execution",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/gateway-sli-task",
+  "containerDefinitions": [
+    {
+      "name": "gateway-sli",
+      "image": "<ACCOUNT_ID>.dkr.ecr.eu-central-1.amazonaws.com/gateway-sli@sha256:<IMAGE_DIGEST>",
+      "essential": true,
+      "readonlyRootFilesystem": true,
+      "command": [
+        "--source", "langfuse",
+        "--emit", "otlp-http",
+        "--otlp-endpoint", "https://<OTEL_COLLECTOR_HOST>",
+        "--window-minutes", "5",
+        "--grace-minutes", "10",
+        "--overlap-minutes", "10",
+        "--max-records", "250000",
+        "--checkpoint-dynamo-table", "gateway-sli-checkpoints",
+        "--dynamo-region", "eu-central-1"
+      ],
+      "environment": [
+        { "name": "OTEL_DEPLOYMENT_ENVIRONMENT", "value": "prod" },
+        { "name": "LANGFUSE_HOST", "value": "https://<SELF_HOSTED_LANGFUSE_HOST>" },
+        { "name": "AWS_REGION", "value": "eu-central-1" }
+      ],
+      "secrets": [
+        { "name": "LANGFUSE_PUBLIC_KEY", "valueFrom": "arn:aws:secretsmanager:eu-central-1:<ACCOUNT_ID>:secret:gateway-sli/langfuse-public-key" },
+        { "name": "LANGFUSE_SECRET_KEY", "valueFrom": "arn:aws:secretsmanager:eu-central-1:<ACCOUNT_ID>:secret:gateway-sli/langfuse-secret-key" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/gateway-sli",
+          "awslogs-region": "eu-central-1",
+          "awslogs-stream-prefix": "gateway-sli"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+[
+  {
+    "name": "[SLO burn] AdvisorChat p95 latency > 3s (fast burn)",
+    "type": "metric alert",
+    "query": "percentile(last_5m):p95:gateway.request.duration{team:advisorchat,env:prod} > 3000",
+    "message": "AdvisorChat p95 turn latency is breaching the 3s SLO. Fast-burn (5m) window. @slack-advisorchat-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "slo:latency",
+      "team:advisorchat"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 3000,
+        "warning": 2500
+      },
+      "notify_no_data": false,
+      "renotify_interval": 30
+    }
+  },
+  {
+    "name": "[SLO burn] Gateway error ratio > 2% (error budget)",
+    "type": "metric alert",
+    "query": "sum(last_15m):sum:gateway.request.errors{env:prod}.as_count() / sum:gateway.request.count{env:prod}.as_count() > 0.02",
+    "message": "Gateway error ratio exceeds 2% of requests over 15m; error budget burning. Check gateway.request.errors by error_category. @slack-platform-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "slo:availability"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 0.02,
+        "warning": 0.01
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[TTC] Telemetry freshness lag > 15m",
+    "type": "metric alert",
+    "query": "max(last_10m):max:gateway.pipeline.freshness_seconds{*} > 900",
+    "message": "The SLI pipeline is processing traces that are more than 15 minutes old. Dashboards may be stale even though they render. Check Langfuse export and pipeline scheduling. @slack-platform-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "ttc:freshness"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 900,
+        "warning": 300
+      },
+      "notify_no_data": true,
+      "no_data_timeframe": 20
+    }
+  },
+  {
+    "name": "[TTC] Pipeline stalled - no records read",
+    "type": "metric alert",
+    "query": "sum(last_20m):sum:gateway.pipeline.records_read{*}.as_count() < 1",
+    "message": "The SLI pipeline has read zero records in 20m. This is a BLIND SPOT: absence of workload metrics may be a pipeline outage, not real quiet. @pagerduty-platform",
+    "tags": [
+      "service:gateway-sli",
+      "ttc:blind-spot"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 1
+      },
+      "notify_no_data": true,
+      "no_data_timeframe": 25
+    }
+  },
+  {
+    "name": "[TTC] Export health - OTLP export failing",
+    "type": "metric alert",
+    "query": "min(last_15m):min:gateway.pipeline.export_success{*} < 1",
+    "message": "The SLI pipeline failed to export at least one window to the collector. Metrics are being computed but not delivered. @pagerduty-platform",
+    "tags": [
+      "service:gateway-sli",
+      "ttc:export-health"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 1
+      },
+      "notify_no_data": true,
+      "no_data_timeframe": 20
+    }
+  },
+  {
+    "name": "[TTC] Cost completeness - missing-cost records rising",
+    "type": "metric alert",
+    "query": "sum(last_1h):sum:gateway.pipeline.records_missing_cost{*}.as_count() / sum:gateway.pipeline.records_processed{*}.as_count() > 0.05",
+    "message": "More than 5% of processed records are missing cost data. Spend attribution and chargeback are under-counting (regulated cost governance risk). @slack-finops",
+    "tags": [
+      "service:gateway-sli",
+      "ttc:completeness",
+      "domain:finops"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 0.05,
+        "warning": 0.02
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[Cost/Reliability] Runaway agent - completion:prompt token ratio > 3",
+    "type": "metric alert",
+    "query": "avg(last_30m):avg:gateway.tokens.completion_ratio{env:prod} by {route} > 3",
+    "message": "A route is emitting far more completion than prompt tokens (ratio > 3), the signature of a looping / runaway agent (see DATA_ANALYSIS.md F1). Investigate per-conversation token growth and step caps before spend compounds. @slack-platform-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "cost:runaway",
+      "reliability:agent"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 3,
+        "warning": 2
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[MGC] Unknown-dimension spike - ungoverned team/route/model",
+    "type": "metric alert",
+    "query": "sum(last_30m):sum:gateway.pipeline.unknown_dimension{*} by {dimension}.as_count() > 50",
+    "message": "A governed dimension is folding many values to 'other' - a new team/route/model likely launched without onboarding to the metric governance registry. Attribution is degraded until the vocabulary is updated. @slack-platform-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "mgc:governance"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 50,
+        "warning": 10
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[MGC] Cardinality health - series count above budget",
+    "type": "metric alert",
+    "query": "max(last_15m):max:gateway.pipeline.series_emitted{*} > 18000",
+    "message": "Emitted workload series exceeded the governed cardinality ceiling (estimated_max_total_series() = 17920; see governance.py). A window above this is a dimension-explosion regression, not legitimate traffic - investigate before it reaches backend billing/limits. @slack-platform-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "mgc:cardinality"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 18000,
+        "warning": 9000
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[SLO burn] AdvisorChat availability - fast burn (1h/5m)",
+    "type": "slo alert",
+    "query": "burn_rate(\"REPLACE_WITH_ADVISORCHAT_AVAILABILITY_SLO_ID\").over(\"30d\").long_window(\"1h\").short_window(\"5m\") > 14.4",
+    "message": "AdvisorChat is burning its 30-day availability error budget FAST: the 1h and 5m burn windows are both breaching (~14.4x). At this rate the monthly budget is exhausted in ~2 days. Page. @pagerduty-advisorchat",
+    "tags": [
+      "service:gateway-sli",
+      "slo:availability",
+      "team:advisorchat",
+      "burn:fast"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 14.4,
+        "warning": 10
+      },
+      "notify_no_data": false,
+      "renotify_interval": 30
+    }
+  },
+  {
+    "name": "[SLO burn] AdvisorChat availability - slow burn (6h/30m)",
+    "type": "slo alert",
+    "query": "burn_rate(\"REPLACE_WITH_ADVISORCHAT_AVAILABILITY_SLO_ID\").over(\"30d\").long_window(\"6h\").short_window(\"30m\") > 6",
+    "message": "AdvisorChat is burning its 30-day availability error budget slowly but persistently: the 6h and 30m windows are both breaching (~6x). Ticket and investigate before it escalates to a fast burn. @slack-advisorchat-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "slo:availability",
+      "team:advisorchat",
+      "burn:slow"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 6,
+        "warning": 4
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[TTC] Cost integrity - invalid cost records detected",
+    "type": "metric alert",
+    "query": "sum(last_30m):sum:gateway.pipeline.records_invalid_cost{*}.as_count() > 0",
+    "message": "Malformed, negative, or non-finite cost values were rejected. Spend remains safe from corruption but source data integrity is degraded. @slack-finops",
+    "tags": [
+      "service:gateway-sli",
+      "ttc:integrity",
+      "domain:finops"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 0
+      },
+      "notify_no_data": false
+    }
+  },
+  {
+    "name": "[TTC] Langfuse source retries elevated",
+    "type": "metric alert",
+    "query": "sum(last_30m):sum:gateway.pipeline.source_retries{*}.as_count() > 10",
+    "message": "The Langfuse source required repeated retries. Check rate limits, network health, and API capacity before freshness degrades. @slack-platform-oncall",
+    "tags": [
+      "service:gateway-sli",
+      "ttc:source-health"
+    ],
+    "options": {
+      "thresholds": {
+        "critical": 10,
+        "warning": 5
+      },
+      "notify_no_data": false
+    }
+  }
+]
