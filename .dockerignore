@@ -1,0 +1,11 @@
+.git
+.github
+.venv
+__pycache__
+*.pyc
+.env
+pytest.ini
+tests
+frontend
+scripts
+prometheus

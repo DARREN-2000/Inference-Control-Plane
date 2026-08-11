@@ -1,0 +1,6 @@
+apiVersion: v2
+name: inference-control-plane
+description: A Helm chart for Inference Control Plane
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

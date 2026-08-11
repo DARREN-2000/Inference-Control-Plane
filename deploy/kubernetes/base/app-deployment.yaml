@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-control-plane
+  namespace: inference-control-plane
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inference-control-plane
+  template:
+    metadata:
+      labels:
+        app: inference-control-plane
+    spec:
+      initContainers:
+        - name: db-migration
+          image: ghcr.io/darren-2000/inference-control-plane:latest
+          command: ["alembic", "upgrade", "head"]
+          envFrom:
+            - configMapRef:
+                name: inference-control-plane-config
+            - secretRef:
+                name: inference-control-plane-secrets
+      containers:
+        - name: app
+          image: ghcr.io/darren-2000/inference-control-plane:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            [
+              "uvicorn",
+              "inference_control_plane.main:app",
+              "--app-dir",
+              "src",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "8000",
+            ]
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: inference-control-plane-config
+            - secretRef:
+                name: inference-control-plane-secrets
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
