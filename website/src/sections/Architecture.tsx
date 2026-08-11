@@ -33,6 +33,10 @@ export const Architecture = () => {
                   title: "PostgreSQL Config",
                   desc: "Centralized configuration and routing policy management.",
                 },
+                {
+                  title: "Telemetry Sidecar",
+                  desc: "Native Langfuse SLI pipeline streaming real-time metrics asynchronously.",
+                },
               ].map((item, i) => (
                 <li key={i} className="flex gap-4">
                   <div className="mt-1 w-6 h-6 rounded-full bg-cyan-500/10 flex items-center justify-center border border-cyan-500/30 flex-shrink-0">
@@ -70,15 +74,18 @@ export const Architecture = () => {
                   <div className="font-bold text-white mb-4">
                     Inference Control Plane Gateway
                   </div>
-                  <div className="flex gap-4 w-full">
-                    <div className="flex-1 bg-black/50 border border-white/10 p-3 rounded text-center text-xs text-zinc-300">
+                  <div className="flex gap-2 w-full">
+                    <div className="flex-1 bg-black/50 border border-white/10 p-2 rounded text-center text-xs text-zinc-300">
                       Router
                     </div>
-                    <div className="flex-1 bg-black/50 border border-white/10 p-3 rounded text-center text-xs text-zinc-300">
+                    <div className="flex-1 bg-black/50 border border-white/10 p-2 rounded text-center text-xs text-zinc-300">
                       Cache
                     </div>
-                    <div className="flex-1 bg-black/50 border border-white/10 p-3 rounded text-center text-xs text-zinc-300">
+                    <div className="flex-1 bg-black/50 border border-white/10 p-2 rounded text-center text-xs text-zinc-300">
                       Auth
+                    </div>
+                    <div className="flex-1 bg-black/50 border border-white/10 p-2 rounded text-center text-xs text-zinc-300 flex items-center justify-center">
+                      Langfuse
                     </div>
                   </div>
                 </div>

@@ -67,6 +67,37 @@ Inference Control Plane is built around a non-blocking asynchronous pipeline des
   </picture>
 </div>
 
+### Detailed Data Flow
+
+```mermaid
+graph TD
+    Client[Client Application] -->|OpenAI SDK Compatible HTTP| API[FastAPI Gateway]
+    
+    subgraph Inference Control Plane
+        API -->|1. Validate Token| Auth[Auth Middleware]
+        Auth -->|2. Check Quota| RL[Redis Rate Limiter]
+        RL -->|3. Hash Prompt| Cache[Redis Semantic Cache]
+        Cache -.->|Cache Hit| API
+        Cache -->|Cache Miss| Router[Intelligent Router]
+        
+        Router -->|Outbound LLM Request| LLM[External Providers<br/>OpenAI, Anthropic, etc.]
+        LLM -->|Stream Tokens| Router
+    end
+    
+    subgraph Data & Telemetry
+        API -->|Async Logging| PG[(PostgreSQL<br/>Analytics & Config)]
+        API -->|OTLP Traces| OTel[OpenTelemetry Collector]
+        OTel -->|SLI Processing| Langfuse[Langfuse Telemetry Sidecar]
+    end
+    
+    classDef default fill:#1f2937,stroke:#374151,stroke-width:1px,color:#f3f4f6;
+    classDef gateway fill:#4f46e5,stroke:#4338ca,stroke-width:2px,color:#fff;
+    classDef db fill:#0369a1,stroke:#0284c7,stroke-width:2px,color:#fff;
+    
+    class API,Router gateway;
+    class RL,Cache,PG db;
+```
+
 ### Component Responsibilities
 
 1. **Proxy API (FastAPI):** Handles incoming client requests, manages Redis rate-limit checks, hashes prompts for cache lookups, and orchestrates asynchronous provider calls and SSE streaming.
