@@ -84,14 +84,14 @@ volumes:
     image: otel/opentelemetry-collector-contrib:0.109.0
     command: ["--config=/etc/otelcol/config.yaml"]
     volumes:
-      - ./langfuse-sli-pipeline/deploy/otel-collector-config.local.yaml:/etc/otelcol/config.yaml:ro
+      - ./services/langfuse-sli-pipeline/deploy/otel-collector-config.local.yaml:/etc/otelcol/config.yaml:ro
     ports:
       - "4318:4318"   # OTLP/HTTP
       - "4317:4317"   # OTLP/gRPC
 
   gateway-sli:
     build:
-      context: ./langfuse-sli-pipeline
+      context: ./services/langfuse-sli-pipeline
       dockerfile: Dockerfile
     depends_on:
       otel-collector:
