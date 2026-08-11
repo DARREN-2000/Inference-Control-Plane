@@ -55,9 +55,9 @@ const features = [
     border: "border-white/10",
   },
   {
-    title: "Real-time Observability",
+    title: "Real-time Observability & SLIs",
     description:
-      "Complete visibility into every token, prompt, and latency metric with OpenTelemetry integration.",
+      "Complete visibility with OpenTelemetry and a native Langfuse SLI telemetry pipeline for real-time generative metrics.",
     icon: Activity,
     color: "text-zinc-100",
     bg: "bg-white/5",

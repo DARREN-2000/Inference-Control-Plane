@@ -50,7 +50,7 @@ Designed for scale, it handles thousands of concurrent streaming connections wit
 - **💾 Semantic & Exact Caching:** Slash latency and costs by caching identical queries in Redis edge nodes.
 - **🚦 Advanced Rate Limiting:** Enforce token and request quotas via Redis sliding windows per-tenant, per-user, or per-model.
 - **🛡️ Enterprise Security:** Built-in secret management, strict RBAC, and payload redaction capabilities to keep data secure.
-- **📊 Deep Observability:** Integrated Prometheus metrics, OpenTelemetry tracing, and detailed usage logs stored in PostgreSQL.
+- **📊 Deep Observability & Langfuse SLIs:** Integrated Prometheus metrics, OpenTelemetry tracing, and a built-in Langfuse SLI pipeline for real-time telemetry processing.
 - **⚡ High Performance:** Engineered for asynchronous throughput handling 10k+ RPM per node.
 
 ---
@@ -131,7 +131,7 @@ print(response.choices[0].message.content)
 - **Data Persistence:** PostgreSQL, asyncpg, SQLAlchemy, Alembic
 - **Caching & Rate Limits:** Redis, Lua Scripts
 - **Administrative UI:** Next.js 15, React 19, Tailwind CSS v4, shadcn/ui
-- **Observability:** Prometheus, OpenTelemetry
+- **Observability:** Prometheus, OpenTelemetry, Langfuse SLI Pipeline
 - **Orchestration:** Docker, Kubernetes (Kustomize/Helm), Argo Rollouts
 
 ---
