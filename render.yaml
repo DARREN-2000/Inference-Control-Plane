@@ -6,6 +6,7 @@ services:
   # ---------------------------------------------------------
   - type: redis
     name: inference-redis
+    plan: free
     ipAllowList: [] # Allow internal Render connections only by default
     maxmemoryPolicy: allkeys-lru
 
@@ -14,6 +15,7 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: inference-api
+    plan: free
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
@@ -40,6 +42,7 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: inference-dashboard
+    plan: free
     env: node
     rootDir: frontend
     buildCommand: corepack enable pnpm && pnpm install && pnpm run build
@@ -58,5 +61,6 @@ databases:
   # PostgreSQL Database
   # ---------------------------------------------------------
   - name: inference-db
+    plan: free
     databaseName: inference_cp
     user: inference_user
