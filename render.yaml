@@ -1,0 +1,62 @@
+version: "1"
+
+services:
+  # ---------------------------------------------------------
+  # Redis Cache & Rate Limiting
+  # ---------------------------------------------------------
+  - type: redis
+    name: inference-redis
+    ipAllowList: [] # Allow internal Render connections only by default
+    maxmemoryPolicy: allkeys-lru
+
+  # ---------------------------------------------------------
+  # FastAPI Backend API Gateway
+  # ---------------------------------------------------------
+  - type: web
+    name: inference-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    preDeployCommand: alembic upgrade head
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: inference-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: inference-redis
+          property: connectionString
+      - key: DEFAULT_API_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+      - key: APP_NAME
+        value: "Inference Control Plane"
+
+  # ---------------------------------------------------------
+  # Next.js Dashboard
+  # ---------------------------------------------------------
+  - type: web
+    name: inference-dashboard
+    env: node
+    rootDir: frontend
+    buildCommand: corepack enable pnpm && pnpm install && pnpm run build
+    startCommand: pnpm run start
+    envVars:
+      - key: NEXT_PUBLIC_DEMO_MODE
+        value: "false"
+      - key: NEXT_PUBLIC_API_HOST
+        fromService:
+          type: web
+          name: inference-api
+          property: url
+
+databases:
+  # ---------------------------------------------------------
+  # PostgreSQL Database
+  # ---------------------------------------------------------
+  - name: inference-db
+    databaseName: inference_cp
+    user: inference_user
