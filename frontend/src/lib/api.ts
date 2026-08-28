@@ -45,7 +45,7 @@ type ErrorResponse = {
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
   (process.env.NEXT_PUBLIC_API_HOST
-    ? `${process.env.NEXT_PUBLIC_API_HOST}/api/v1`
+    ? `https://${process.env.NEXT_PUBLIC_API_HOST}/api/v1`
     : "http://localhost:8000/api/v1");
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 export const isDemoMode = DEMO_MODE;
