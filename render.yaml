@@ -45,8 +45,8 @@ services:
     plan: free
     env: node
     rootDir: frontend
-    buildCommand: corepack enable pnpm && pnpm install && pnpm run build
-    startCommand: pnpm run start
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
     envVars:
       - key: NEXT_PUBLIC_DEMO_MODE
         value: "false"
