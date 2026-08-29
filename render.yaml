@@ -19,7 +19,7 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    dockerCommand: '/bin/sh -c "alembic upgrade head && exec uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000"'
+    dockerCommand: "./scripts/start.sh"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
