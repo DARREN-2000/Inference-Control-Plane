@@ -39,6 +39,7 @@ COPY --chown=appuser:appuser --from=builder /app/alembic ./alembic
 COPY --chown=appuser:appuser --from=builder /app/alembic.ini ./alembic.ini
 COPY --chown=appuser:appuser --from=builder /app/README.md ./README.md
 COPY --chown=appuser:appuser --from=builder /app/.env.example ./.env.example
+COPY --chown=appuser:appuser scripts ./scripts
 
 USER appuser
 
