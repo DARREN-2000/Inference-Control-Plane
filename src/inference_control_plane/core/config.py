@@ -58,6 +58,16 @@ class Settings(BaseSettings):
     otlp_endpoint: str | None = None
     prometheus_namespace: str = "inference_control_plane"
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def parse_database_url(cls, value: str | None) -> str | None:
+        if value:
+            if value.startswith("postgres://"):
+                return value.replace("postgres://", "postgresql+asyncpg://", 1)
+            if value.startswith("postgresql://") and not value.startswith("postgresql+asyncpg://"):
+                return value.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return value
+
     @field_validator("llm_provider_order", mode="before")
     @classmethod
     def parse_llm_provider_order(cls, value: str | list[str]) -> list[str]:
@@ -71,12 +81,6 @@ class Settings(BaseSettings):
     def validate_runtime_security(self) -> "Settings":
         if not self.database_url:
             raise ValueError("DATABASE_URL is required.")
-        
-        # Render and some PaaS provide 'postgres://' but asyncpg needs 'postgresql+asyncpg://'
-        if self.database_url.startswith("postgres://"):
-            self.database_url = self.database_url.replace("postgres://", "postgresql+asyncpg://", 1)
-        elif self.database_url.startswith("postgresql://"):
-            self.database_url = self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
         if not self.redis_url:
             raise ValueError("REDIS_URL is required.")

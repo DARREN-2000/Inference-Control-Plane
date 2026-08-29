@@ -18,8 +18,14 @@ def init_engine(settings: Settings) -> None:
     if _engine is not None:
         return
 
+    db_url = settings.database_url
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif db_url.startswith("postgresql://") and not db_url.startswith("postgresql+asyncpg://"):
+        db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
     _engine = create_async_engine(
-        settings.database_url,
+        db_url,
         pool_pre_ping=True,
         pool_size=settings.database_pool_size,
         max_overflow=settings.database_max_overflow,
