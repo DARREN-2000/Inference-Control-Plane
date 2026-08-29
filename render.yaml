@@ -19,6 +19,7 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
+    dockerCommand: "./scripts/start.sh"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
