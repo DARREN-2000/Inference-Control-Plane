@@ -56,6 +56,15 @@ services:
           name: inference-api
           property: host
 
+  # ---------------------------------------------------------
+  # Marketing & Documentation Website (Static)
+  # ---------------------------------------------------------
+  - type: static
+    name: inference-website
+    rootDir: website
+    buildCommand: npm install && npm run build
+    publishPath: dist
+
 databases:
   # ---------------------------------------------------------
   # PostgreSQL Database
