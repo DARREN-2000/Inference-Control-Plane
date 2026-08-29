@@ -59,8 +59,9 @@ services:
   # ---------------------------------------------------------
   # Marketing & Documentation Website (Static)
   # ---------------------------------------------------------
-  - type: static
+  - type: web
     name: inference-website
+    env: static
     rootDir: website
     buildCommand: npm install && npm run build
     staticPublishPath: dist
