@@ -71,6 +71,13 @@ class Settings(BaseSettings):
     def validate_runtime_security(self) -> "Settings":
         if not self.database_url:
             raise ValueError("DATABASE_URL is required.")
+        
+        # Render and some PaaS provide 'postgres://' but asyncpg needs 'postgresql+asyncpg://'
+        if self.database_url.startswith("postgres://"):
+            self.database_url = self.database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif self.database_url.startswith("postgresql://"):
+            self.database_url = self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
         if not self.redis_url:
             raise ValueError("REDIS_URL is required.")
 
