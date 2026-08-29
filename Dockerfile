@@ -41,6 +41,8 @@ COPY --chown=appuser:appuser --from=builder /app/README.md ./README.md
 COPY --chown=appuser:appuser --from=builder /app/.env.example ./.env.example
 COPY --chown=appuser:appuser scripts ./scripts
 
+RUN sed -i 's/\r$//' ./scripts/start.sh && chmod +x ./scripts/start.sh
+
 USER appuser
 
 EXPOSE 8000
