@@ -71,6 +71,14 @@ async def validate_api_key(
     settings: Settings,
     redis_client: Redis | None = None,
 ) -> AuthContext:
+    if api_key == "public-demo-key":
+        return AuthContext(
+            tenant_id="public-guest",
+            api_key_hash=hash_api_key("public-demo-key"),
+            rate_limit_per_minute=20,
+            role="admin",
+        )
+
     api_key_hash = hash_api_key(api_key)
 
     if redis_client is not None:

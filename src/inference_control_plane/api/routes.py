@@ -42,6 +42,12 @@ async def generate(
     Returns:
         GenerateResponse: The generation result containing response text and metadata.
     """
+    if auth_context.tenant_id == "public-guest" and settings.llm_mode != "simulated" and not payload.provider_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Public demo users must provide their own OpenAI API Key (BYOK) when the backend is in live mode.",
+        )
+
     redis_client = get_redis_optional()
     return await handle_generate_request(
         payload=payload,

@@ -14,7 +14,7 @@ import {
 } from "@/lib/api";
 
 export default function Home() {
-  const [apiKey, setApiKey] = useState("dev-inference-key");
+  const [apiKey, setApiKey] = useState("public-demo-key");
   const [prompt, setPrompt] = useState(
     "Summarize our top latency drivers this week.",
   );
