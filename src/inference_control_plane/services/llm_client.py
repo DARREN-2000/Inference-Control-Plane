@@ -158,12 +158,14 @@ async def _request_openai_compatible(
     *,
     prompt: str,
     model: str,
+    provider_api_key: str | None = None,
 ) -> str:
-    if not settings.llm_api_key:
+    key_to_use = provider_api_key or settings.llm_api_key
+    if not key_to_use:
         raise LLMClientError("LLM_API_KEY is required when llm_mode=openai-compatible.")
 
     endpoint = f"{settings.llm_base_url.rstrip('/')}/v1/chat/completions"
-    headers = {"Authorization": "Bearer " + settings.llm_api_key}
+    headers = {"Authorization": "Bearer " + key_to_use}
     body = {
         "model": model,
         "max_tokens": settings.llm_max_output_tokens,
@@ -260,6 +262,7 @@ async def generate_completion(
     *,
     prompt: str,
     model: str,
+    provider_api_key: str | None = None,
 ) -> str:
     if settings.llm_mode == "simulated":
         return _simulated_response(prompt=prompt, model=model)
@@ -270,7 +273,7 @@ async def generate_completion(
     for provider in providers:
         try:
             if provider == "openai":
-                return await _request_openai_compatible(settings, prompt=prompt, model=model)
+                return await _request_openai_compatible(settings, prompt=prompt, model=model, provider_api_key=provider_api_key)
             if provider == "anthropic":
                 return await _request_anthropic(settings, prompt=prompt, model=model)
             if provider == "azure":

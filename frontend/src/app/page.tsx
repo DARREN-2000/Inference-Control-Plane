@@ -19,6 +19,7 @@ export default function Home() {
     "Summarize our top latency drivers this week.",
   );
   const [userId, setUserId] = useState("product-analyst-1");
+  const [providerApiKey, setProviderApiKey] = useState("");
   const [priority, setPriority] = useState<"low" | "high">("low");
   const [isLoading, setIsLoading] = useState(false);
   const [isLogsLoading, setIsLogsLoading] = useState(false);
@@ -71,6 +72,7 @@ export default function Home() {
           prompt,
           user_id: userId,
           priority,
+          ...(providerApiKey.trim() ? { provider_api_key: providerApiKey.trim() } : {}),
         },
         apiKey,
       );
@@ -164,7 +166,7 @@ export default function Home() {
 
           <form onSubmit={onSubmit}>
             <fieldset disabled={isLoading} className="space-y-5">
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid gap-5 md:grid-cols-3">
                 <div className="space-y-2">
                   <label
                     htmlFor="userId"
@@ -195,10 +197,27 @@ export default function Home() {
                   </label>
                   <input
                     id="apiKey"
+                    type="password"
                     className="cp-input"
                     value={apiKey}
                     onChange={(event) => setApiKey(event.target.value)}
                     required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="providerApiKey"
+                    className="cp-label block"
+                  >
+                    OpenAI Key (BYOK) <span className="text-zinc-500 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    id="providerApiKey"
+                    type="password"
+                    placeholder="sk-..."
+                    className="cp-input"
+                    value={providerApiKey}
+                    onChange={(event) => setProviderApiKey(event.target.value)}
                   />
                 </div>
               </div>

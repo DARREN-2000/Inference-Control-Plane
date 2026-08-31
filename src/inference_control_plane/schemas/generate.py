@@ -9,6 +9,7 @@ class GenerateRequest(BaseModel):
     user_id: str = Field(..., min_length=1, max_length=128)
     priority: Literal["low", "high"] = "low"
     model_override: str | None = Field(default=None, max_length=128)
+    provider_api_key: str | None = Field(default=None, description="Optional BYOK API Key to use instead of the system default")
 
 
 class GenerateResponse(BaseModel):

@@ -175,15 +175,16 @@ async def _generate_with_fallback(
     model: str,
     prompt: str,
     settings: Settings,
+    provider_api_key: str | None = None,
 ) -> tuple[str, str]:
     try:
-        generated = await generate_completion(settings, prompt=prompt, model=model)
+        generated = await generate_completion(settings, prompt=prompt, model=model, provider_api_key=provider_api_key)
         return model, generated
     except LLMClientError:
         fallback = _fallback_model(model, settings)
         if fallback is None:
             raise
-        generated = await generate_completion(settings, prompt=prompt, model=fallback)
+        generated = await generate_completion(settings, prompt=prompt, model=fallback, provider_api_key=provider_api_key)
         return fallback, generated
 
 
@@ -259,6 +260,7 @@ async def handle_generate_request(
             model=routed_model,
             prompt=safe_prompt,
             settings=settings,
+            provider_api_key=payload.provider_api_key,
         )
         total_tokens = estimate_tokens(f"{safe_prompt} {generated_text}")
         total_cost = _estimate_cost(model_used, total_tokens, settings)
