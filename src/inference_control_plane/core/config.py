@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     host: str = "0.0.0.0"
     port: int = 8000
-    cors_allowed_origins: list[str] = ["http://localhost:3000"]
+    cors_allowed_origins: str | list[str] = ["http://localhost:3000"]
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@postgres:5432/inference_cp"
     database_pool_size: int = Field(default=10, ge=1, le=200)
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     premium_model_cost_per_1k_tokens: float = Field(default=0.01, ge=0)
 
     llm_mode: Literal["simulated", "openai-compatible", "multi-provider"] = "simulated"
-    llm_provider_order: list[str] = Field(default_factory=lambda: ["openai"])
+    llm_provider_order: str | list[str] = Field(default_factory=lambda: ["openai"])
     
     # Generic / Default OpenAI-compatible
     llm_base_url: str = "https://api.openai.com"
