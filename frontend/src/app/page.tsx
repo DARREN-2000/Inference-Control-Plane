@@ -20,6 +20,7 @@ export default function Home() {
   );
   const [userId, setUserId] = useState("product-analyst-1");
   const [providerApiKey, setProviderApiKey] = useState("");
+  const [providerOverride, setProviderOverride] = useState("");
   const [priority, setPriority] = useState<"low" | "high">("low");
   const [isLoading, setIsLoading] = useState(false);
   const [isLogsLoading, setIsLogsLoading] = useState(false);
@@ -72,6 +73,7 @@ export default function Home() {
           prompt,
           user_id: userId,
           priority,
+          ...(providerOverride ? { provider_override: providerOverride } : {}),
           ...(providerApiKey.trim() ? { provider_api_key: providerApiKey.trim() } : {}),
         },
         apiKey,
@@ -204,12 +206,37 @@ export default function Home() {
                     required
                   />
                 </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="providerOverride"
+                    className="cp-label block"
+                  >
+                    Provider <span className="text-zinc-500 font-normal">(Optional)</span>
+                  </label>
+                  <select
+                    id="providerOverride"
+                    className="cp-input"
+                    value={providerOverride}
+                    onChange={(event) => setProviderOverride(event.target.value)}
+                  >
+                    <option value="">Auto (Fallback)</option>
+                    <option value="openrouter">OpenRouter</option>
+                    <option value="nvidia">NVIDIA NIM</option>
+                    <option value="mistral">Mistral AI</option>
+                    <option value="groq">Groq</option>
+                    <option value="openai">OpenAI</option>
+                    <option value="anthropic">Anthropic</option>
+                  </select>
+                </div>
                 <div className="space-y-2">
                   <label
                     htmlFor="providerApiKey"
                     className="cp-label block"
                   >
-                    OpenAI Key (BYOK) <span className="text-zinc-500 font-normal">(Optional)</span>
+                    Provider API Key (BYOK) <span className="text-zinc-500 font-normal">(Optional)</span>
                   </label>
                   <input
                     id="providerApiKey"

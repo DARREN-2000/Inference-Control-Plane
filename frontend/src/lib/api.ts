@@ -3,6 +3,7 @@ export type GenerateRequest = {
   user_id: string;
   priority: "low" | "high";
   model_override?: string;
+  provider_override?: string;
   provider_api_key?: string;
 };
 
