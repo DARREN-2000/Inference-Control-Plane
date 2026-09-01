@@ -46,21 +46,25 @@ class Settings(BaseSettings):
     
     # OpenRouter
     openrouter_api_key: str | None = None
-    openrouter_cheap_model: str = "meta-llama/llama-3-8b-instruct:free"
+    openrouter_base_url: str = "https://openrouter.ai/api"
+    openrouter_cheap_model: str = "meta-llama/llama-3.1-8b-instruct:free"
     openrouter_premium_model: str = "anthropic/claude-3.5-sonnet"
     
     # NVIDIA
     nvidia_api_key: str | None = None
+    nvidia_base_url: str = "https://integrate.api.nvidia.com"
     nvidia_cheap_model: str = "meta/llama-3.1-8b-instruct"
     nvidia_premium_model: str = "meta/llama-3.1-70b-instruct"
     
     # Mistral
     mistral_api_key: str | None = None
+    mistral_base_url: str = "https://api.mistral.ai"
     mistral_cheap_model: str = "mistral-small-latest"
     mistral_premium_model: str = "mistral-large-latest"
     
     # Groq
     groq_api_key: str | None = None
+    groq_base_url: str = "https://api.groq.com/openai/v1"
     groq_cheap_model: str = "llama-3.1-8b-instant"
     groq_premium_model: str = "llama-3.1-70b-versatile"
     anthropic_base_url: str = "https://api.anthropic.com"
