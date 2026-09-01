@@ -37,10 +37,32 @@ class Settings(BaseSettings):
     cheap_model_cost_per_1k_tokens: float = Field(default=0.0008, ge=0)
     premium_model_cost_per_1k_tokens: float = Field(default=0.01, ge=0)
 
-    llm_mode: Literal["simulated", "openai-compatible"] = "simulated"
+    llm_mode: Literal["simulated", "openai-compatible", "multi-provider"] = "simulated"
     llm_provider_order: list[str] = Field(default_factory=lambda: ["openai"])
+    
+    # Generic / Default OpenAI-compatible
     llm_base_url: str = "https://api.openai.com"
     llm_api_key: str | None = None
+    
+    # OpenRouter
+    openrouter_api_key: str | None = None
+    openrouter_cheap_model: str = "meta-llama/llama-3-8b-instruct:free"
+    openrouter_premium_model: str = "anthropic/claude-3.5-sonnet"
+    
+    # NVIDIA
+    nvidia_api_key: str | None = None
+    nvidia_cheap_model: str = "meta/llama-3.1-8b-instruct"
+    nvidia_premium_model: str = "meta/llama-3.1-70b-instruct"
+    
+    # Mistral
+    mistral_api_key: str | None = None
+    mistral_cheap_model: str = "mistral-small-latest"
+    mistral_premium_model: str = "mistral-large-latest"
+    
+    # Groq
+    groq_api_key: str | None = None
+    groq_cheap_model: str = "llama-3.1-8b-instant"
+    groq_premium_model: str = "llama-3.1-70b-versatile"
     anthropic_base_url: str = "https://api.anthropic.com"
     anthropic_api_key: str | None = None
     anthropic_version: str = "2023-06-01"

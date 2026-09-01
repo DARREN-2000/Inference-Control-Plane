@@ -172,20 +172,21 @@ async def _enforce_rate_limits(
 
 async def _generate_with_fallback(
     *,
-    model: str,
+    model_tier: str,
     prompt: str,
     settings: Settings,
+    model_override: str | None = None,
+    provider_override: str | None = None,
     provider_api_key: str | None = None,
 ) -> tuple[str, str]:
-    try:
-        generated = await generate_completion(settings, prompt=prompt, model=model, provider_api_key=provider_api_key)
-        return model, generated
-    except LLMClientError:
-        fallback = _fallback_model(model, settings)
-        if fallback is None:
-            raise
-        generated = await generate_completion(settings, prompt=prompt, model=fallback, provider_api_key=provider_api_key)
-        return fallback, generated
+    return await generate_completion(
+        settings, 
+        prompt=prompt, 
+        model_tier=model_tier,
+        model_override=model_override,
+        provider_override=provider_override,
+        provider_api_key=provider_api_key
+    )
 
 
 async def handle_generate_request(
@@ -199,8 +200,10 @@ async def handle_generate_request(
     started = perf_counter()
     request_id = str(uuid.uuid4())
     route = choose_model(payload, settings)
-    routed_model = route.model
     safe_prompt = redact_pii(payload.prompt)
+    
+    # We construct a logical caching key based on what the user requested, since the exact model is determined at runtime.
+    cache_model_key = route.model_override or f"{route.provider_override or 'default'}:{route.model_tier}"
 
     try:
         await _enforce_rate_limits(
@@ -213,7 +216,7 @@ async def handle_generate_request(
         cached = await get_cached_response(
             redis_client,
             prompt=safe_prompt,
-            model=routed_model,
+            model=cache_model_key,
         )
         if cached is not None:
             latency_ms = (perf_counter() - started) * 1000.0
@@ -257,9 +260,11 @@ async def handle_generate_request(
         record_cache_result(hit=False)
 
         model_used, generated_text = await _generate_with_fallback(
-            model=routed_model,
+            model_tier=route.model_tier,
             prompt=safe_prompt,
             settings=settings,
+            model_override=route.model_override,
+            provider_override=route.provider_override,
             provider_api_key=payload.provider_api_key,
         )
         total_tokens = estimate_tokens(f"{safe_prompt} {generated_text}")
@@ -271,7 +276,7 @@ async def handle_generate_request(
             set_cached_response,
             redis_client,
             prompt=safe_prompt,
-            model=routed_model,
+            model=cache_model_key,
             response=generated_text,
             model_used=model_used,
             tokens=total_tokens,
@@ -317,7 +322,7 @@ async def handle_generate_request(
     except HTTPException as exc:
         latency_ms = (perf_counter() - started) * 1000.0
         record_request(
-            model=routed_model,
+            model=cache_model_key,
             status="error",
             latency_ms=latency_ms,
             cache_hit=False,
@@ -330,7 +335,7 @@ async def handle_generate_request(
             api_key_hash=auth_context.api_key_hash,
             prompt=safe_prompt,
             response="",
-            model_used=routed_model,
+            model_used=cache_model_key,
             latency_ms=latency_ms,
             tokens=0,
             cost=0.0,
@@ -343,7 +348,7 @@ async def handle_generate_request(
         logger.exception("Internal error during generation.", exc_info=exc)
         latency_ms = (perf_counter() - started) * 1000.0
         record_request(
-            model=routed_model,
+            model=cache_model_key,
             status="error",
             latency_ms=latency_ms,
             cache_hit=False,
@@ -356,7 +361,7 @@ async def handle_generate_request(
             api_key_hash=auth_context.api_key_hash,
             prompt=safe_prompt,
             response="",
-            model_used=routed_model,
+            model_used=cache_model_key,
             latency_ms=latency_ms,
             tokens=0,
             cost=0.0,

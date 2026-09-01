@@ -158,14 +158,20 @@ async def _request_openai_compatible(
     *,
     prompt: str,
     model: str,
-    provider_api_key: str | None = None,
+    base_url: str,
+    api_key: str,
 ) -> str:
-    key_to_use = provider_api_key or settings.llm_api_key
-    if not key_to_use:
-        raise LLMClientError("LLM_API_KEY is required when llm_mode=openai-compatible.")
+    if not api_key:
+        raise LLMClientError("API Key is required for this provider.")
 
-    endpoint = f"{settings.llm_base_url.rstrip('/')}/v1/chat/completions"
-    headers = {"Authorization": "Bearer " + key_to_use}
+    # Some providers like OpenRouter might not need /v1/chat/completions if already included in base_url
+    endpoint = base_url.rstrip('/')
+    if not endpoint.endswith("/chat/completions"):
+        if not endpoint.endswith("/v1"):
+            endpoint += "/v1"
+        endpoint += "/chat/completions"
+
+    headers = {"Authorization": "Bearer " + api_key}
     body = {
         "model": model,
         "max_tokens": settings.llm_max_output_tokens,
@@ -261,28 +267,71 @@ async def generate_completion(
     settings: Settings,
     *,
     prompt: str,
-    model: str,
+    model_tier: str,
+    model_override: str | None = None,
+    provider_override: str | None = None,
     provider_api_key: str | None = None,
-) -> str:
-    if settings.llm_mode == "simulated":
-        return _simulated_response(prompt=prompt, model=model)
+) -> tuple[str, str]:
+    # Determine which providers to try
+    if provider_override:
+        providers = [provider_override.lower()]
+    else:
+        providers = [provider.lower() for provider in settings.llm_provider_order]
 
-    providers = [provider.lower() for provider in settings.llm_provider_order]
-    last_timeout: LLMClientTimeoutError | None = None
+    last_error: Exception | None = None
 
     for provider in providers:
         try:
+            # Resolve the exact model for this provider
+            exact_model = model_override
+            if not exact_model:
+                if provider == "openai":
+                    exact_model = settings.premium_model_name if model_tier == "premium" else settings.cheap_model_name
+                elif provider == "openrouter":
+                    exact_model = settings.openrouter_premium_model if model_tier == "premium" else settings.openrouter_cheap_model
+                elif provider == "nvidia":
+                    exact_model = settings.nvidia_premium_model if model_tier == "premium" else settings.nvidia_cheap_model
+                elif provider == "mistral":
+                    exact_model = settings.mistral_premium_model if model_tier == "premium" else settings.mistral_cheap_model
+                elif provider == "groq":
+                    exact_model = settings.groq_premium_model if model_tier == "premium" else settings.groq_cheap_model
+                else:
+                    # Fallback for anthropic/azure which still use global cheap/premium config for now
+                    exact_model = settings.premium_model_name if model_tier == "premium" else settings.cheap_model_name
+                    
+            if settings.llm_mode == "simulated":
+                return exact_model, _simulated_response(prompt=prompt, model=exact_model)
+                
             if provider == "openai":
-                return await _request_openai_compatible(settings, prompt=prompt, model=model, provider_api_key=provider_api_key)
+                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.llm_base_url, api_key=provider_api_key or settings.llm_api_key or "")
+                return exact_model, res
+            if provider == "openrouter":
+                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.openrouter_base_url, api_key=provider_api_key or settings.openrouter_api_key or "")
+                return exact_model, res
+            if provider == "nvidia":
+                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.nvidia_base_url, api_key=provider_api_key or settings.nvidia_api_key or "")
+                return exact_model, res
+            if provider == "mistral":
+                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.mistral_base_url, api_key=provider_api_key or settings.mistral_api_key or "")
+                return exact_model, res
+            if provider == "groq":
+                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.groq_base_url, api_key=provider_api_key or settings.groq_api_key or "")
+                return exact_model, res
             if provider == "anthropic":
-                return await _request_anthropic(settings, prompt=prompt, model=model)
+                res = await _request_anthropic(settings, prompt=prompt, model=exact_model)
+                return exact_model, res
             if provider == "azure":
-                return await _request_azure_openai(settings, prompt=prompt, model=model)
+                res = await _request_azure_openai(settings, prompt=prompt, model=exact_model)
+                return exact_model, res
+                
             raise LLMClientError(f"Unknown LLM provider '{provider}'.")
-        except LLMClientTimeoutError as exc:
-            last_timeout = exc
+        except LLMClientRetryableError as exc:
+            last_error = exc
+            continue
+        except Exception as exc:
+            last_error = exc
             continue
 
-    if last_timeout is not None:
-        raise last_timeout
+    if last_error is not None:
+        raise last_error
     raise LLMClientError("No available LLM providers succeeded.")
