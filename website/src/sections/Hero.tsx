@@ -123,7 +123,7 @@ export const Hero = () => {
                     src={
                       import.meta.env.DEV
                         ? "http://localhost:3000/"
-                        : "./dashboard/"
+                        : "https://inference-dashboard.onrender.com"
                     }
                     className="w-full h-full border-0"
                     title="Inference Control Plane Dashboard Playground"

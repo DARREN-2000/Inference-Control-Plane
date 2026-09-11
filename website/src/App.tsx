@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 
 function App() {
   return (
-    <BrowserRouter basename="/Inference-Control-Plane">
+    <BrowserRouter basename="/">
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />

@@ -87,7 +87,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="./dashboard/"
+                  href="https://inference-dashboard.onrender.com"
                   className="text-sm text-zinc-400 hover:text-white transition-colors"
                 >
                   Dashboard

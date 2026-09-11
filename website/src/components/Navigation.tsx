@@ -64,7 +64,7 @@ export const Navigation = () => {
               Docs
             </a>
             <a
-              href="./dashboard/"
+              href="https://inference-dashboard.onrender.com"
               className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
             >
               Dashboard
@@ -84,7 +84,7 @@ export const Navigation = () => {
               Sign In
             </Button>
             <Button size="sm" asChild>
-              <a href="./dashboard/">Try it out</a>
+              <a href="https://inference-dashboard.onrender.com">Try it out</a>
             </Button>
           </div>
 
@@ -128,7 +128,7 @@ export const Navigation = () => {
               Enterprise
             </a>
             <a
-              href="./dashboard/"
+              href="https://inference-dashboard.onrender.com"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-3 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md"
             >
@@ -139,7 +139,7 @@ export const Navigation = () => {
                 Sign In
               </Button>
               <Button className="w-full justify-center" asChild>
-                <a href="./dashboard/">Try it out</a>
+                <a href="https://inference-dashboard.onrender.com">Try it out</a>
               </Button>
             </div>
           </div>
