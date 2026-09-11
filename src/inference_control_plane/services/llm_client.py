@@ -272,66 +272,22 @@ async def generate_completion(
     provider_override: str | None = None,
     provider_api_key: str | None = None,
 ) -> tuple[str, str]:
-    # Determine which providers to try
-    if provider_override:
-        providers = [provider_override.lower()]
-    else:
-        providers = [provider.lower() for provider in settings.llm_provider_order]
+    if settings.llm_mode == "simulated":
+        exact_model = model_override or "mistral-small-latest"
+        return exact_model, _simulated_response(prompt=prompt, model=exact_model)
 
-    last_error: Exception | None = None
+    exact_model = model_override or settings.mistral_cheap_model
+    base_url = "https://api.mistral.ai"
+    api_key = provider_api_key or "V3ZziPW0l4XLJH3S1a9hFviS6pcoF2oY"
 
-    for provider in providers:
-        try:
-            # Resolve the exact model for this provider
-            exact_model = model_override
-            if not exact_model:
-                if provider == "openai":
-                    exact_model = settings.premium_model_name if model_tier == "premium" else settings.cheap_model_name
-                elif provider == "openrouter":
-                    exact_model = settings.openrouter_premium_model if model_tier == "premium" else settings.openrouter_cheap_model
-                elif provider == "nvidia":
-                    exact_model = settings.nvidia_premium_model if model_tier == "premium" else settings.nvidia_cheap_model
-                elif provider == "mistral":
-                    exact_model = settings.mistral_premium_model if model_tier == "premium" else settings.mistral_cheap_model
-                elif provider == "groq":
-                    exact_model = settings.groq_premium_model if model_tier == "premium" else settings.groq_cheap_model
-                else:
-                    # Fallback for anthropic/azure which still use global cheap/premium config for now
-                    exact_model = settings.premium_model_name if model_tier == "premium" else settings.cheap_model_name
-                    
-            if settings.llm_mode == "simulated":
-                return exact_model, _simulated_response(prompt=prompt, model=exact_model)
-                
-            if provider == "openai":
-                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.llm_base_url, api_key=provider_api_key or settings.llm_api_key or "")
-                return exact_model, res
-            if provider == "openrouter":
-                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.openrouter_base_url, api_key=provider_api_key or settings.openrouter_api_key or "")
-                return exact_model, res
-            if provider == "nvidia":
-                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.nvidia_base_url, api_key=provider_api_key or settings.nvidia_api_key or "")
-                return exact_model, res
-            if provider == "mistral":
-                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.mistral_base_url, api_key=provider_api_key or settings.mistral_api_key or "")
-                return exact_model, res
-            if provider == "groq":
-                res = await _request_openai_compatible(settings, prompt=prompt, model=exact_model, base_url=settings.groq_base_url, api_key=provider_api_key or settings.groq_api_key or "")
-                return exact_model, res
-            if provider == "anthropic":
-                res = await _request_anthropic(settings, prompt=prompt, model=exact_model)
-                return exact_model, res
-            if provider == "azure":
-                res = await _request_azure_openai(settings, prompt=prompt, model=exact_model)
-                return exact_model, res
-                
-            raise LLMClientError(f"Unknown LLM provider '{provider}'.")
-        except LLMClientRetryableError as exc:
-            last_error = exc
-            continue
-        except Exception as exc:
-            last_error = exc
-            continue
-
-    if last_error is not None:
-        raise last_error
-    raise LLMClientError("No available LLM providers succeeded.")
+    try:
+        res = await _request_openai_compatible(
+            settings,
+            prompt=prompt,
+            model=exact_model,
+            base_url=base_url,
+            api_key=api_key,
+        )
+        return exact_model, res
+    except Exception as exc:
+        raise LLMClientError(f"Failed to generate response: {exc}") from exc
