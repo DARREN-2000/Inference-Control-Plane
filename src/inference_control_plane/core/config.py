@@ -45,10 +45,10 @@ class Settings(BaseSettings):
     llm_api_key: str | None = None
     
     # OpenRouter
-    openrouter_api_key: str | None = None
-    openrouter_base_url: str = "https://openrouter.ai/api"
-    openrouter_cheap_model: str = "nvidia/nemotron-3.5-lightning:free"
-    openrouter_premium_model: str = "nvidia/nemotron-3.5-lightning:free"
+    openrouter_api_key: str | None = "dummy-key"
+    openrouter_base_url: str = "https://text.pollinations.ai/openai"
+    openrouter_cheap_model: str = "openai"
+    openrouter_premium_model: str = "openai"
     
     # NVIDIA
     nvidia_api_key: str | None = None

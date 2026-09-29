@@ -179,7 +179,9 @@ async def _request_openai_compatible(
             endpoint += "/v1"
         endpoint += "/chat/completions"
 
-    headers = {"Authorization": "Bearer " + api_key}
+    headers = {}
+    if api_key and api_key != "dummy-key":
+        headers["Authorization"] = "Bearer " + api_key
     body = {
         "model": model,
         "max_tokens": settings.llm_max_output_tokens,
