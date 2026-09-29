@@ -249,6 +249,7 @@ export type DashboardActivityResponse = {
 
 export async function fetchDashboardMetrics(
   apiKey: string,
+  options?: RequestInit,
 ): Promise<DashboardMetricsResponse> {
   if (DEMO_MODE) {
     return {
@@ -262,9 +263,11 @@ export async function fetchDashboardMetrics(
   }
 
   const response = await fetch(`${BASE_URL}/dashboard/metrics`, {
+    ...options,
     method: "GET",
     headers: {
       "x-api-key": apiKey,
+      ...options?.headers,
     },
     cache: "no-store",
   });
@@ -278,6 +281,7 @@ export async function fetchDashboardMetrics(
 
 export async function fetchDashboardActivity(
   apiKey: string,
+  options?: RequestInit,
 ): Promise<DashboardActivityResponse> {
   if (DEMO_MODE) {
     return {
@@ -291,9 +295,11 @@ export async function fetchDashboardActivity(
   }
 
   const response = await fetch(`${BASE_URL}/dashboard/activity`, {
+    ...options,
     method: "GET",
     headers: {
       "x-api-key": apiKey,
+      ...options?.headers,
     },
     cache: "no-store",
   });

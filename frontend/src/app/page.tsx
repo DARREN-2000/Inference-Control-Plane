@@ -32,12 +32,21 @@ export default function Home() {
   const [activity, setActivity] = useState<string[]>([]);
 
   useEffect(() => {
-    fetchDashboardMetrics(apiKey)
+    const controller = new AbortController();
+    
+    fetchDashboardMetrics(apiKey, { signal: controller.signal })
       .then((res) => setMetrics(res.metrics))
-      .catch(console.error);
-    fetchDashboardActivity(apiKey)
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error(err);
+      });
+      
+    fetchDashboardActivity(apiKey, { signal: controller.signal })
       .then((res) => setActivity(res.activity))
-      .catch(console.error);
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error(err);
+      });
+      
+    return () => controller.abort();
   }, [apiKey]);
 
   const derivedModel = useMemo(() => {
