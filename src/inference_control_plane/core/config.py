@@ -47,8 +47,8 @@ class Settings(BaseSettings):
     # OpenRouter
     openrouter_api_key: str | None = None
     openrouter_base_url: str = "https://openrouter.ai/api"
-    openrouter_cheap_model: str = "meta-llama/llama-3.1-8b-instruct:free"
-    openrouter_premium_model: str = "anthropic/claude-3.5-sonnet"
+    openrouter_cheap_model: str = "nvidia/nemotron-3.5-lightning:free"
+    openrouter_premium_model: str = "nvidia/nemotron-3.5-lightning:free"
     
     # NVIDIA
     nvidia_api_key: str | None = None

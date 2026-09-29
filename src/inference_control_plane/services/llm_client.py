@@ -120,10 +120,12 @@ def _extract_anthropic_text(payload: dict) -> str:
 
 async def _request_with_retry(
     settings: Settings,
+    provider: str,
     request_fn: Callable[[], Awaitable[str]],
 ) -> str:
-    if not _circuit_breaker.is_allowed():
-        raise CircuitBreakerOpenError("Circuit breaker is OPEN. Fast failing request.")
+    cb = _get_circuit_breaker(provider)
+    if not cb.is_allowed():
+        raise CircuitBreakerOpenError(f"Circuit breaker for {provider} is OPEN. Fast failing request.")
 
     retryer = AsyncRetrying(
         retry=retry_if_exception_type(LLMClientRetryableError),
@@ -135,11 +137,11 @@ async def _request_with_retry(
         async for attempt in retryer:
             with attempt:
                 result = await request_fn()
-                _circuit_breaker.record_success()
+                cb.record_success()
                 return result
         raise LLMClientError("LLM request failed unexpectedly.")
     except Exception:
-        _circuit_breaker.record_failure()
+        cb.record_failure()
         raise
 
 
@@ -160,6 +162,7 @@ def _coerce_retryable_error(exc: Exception) -> LLMClientError:
 
 async def _request_openai_compatible(
     settings: Settings,
+    provider: str,
     *,
     prompt: str,
     model: str,
@@ -195,7 +198,7 @@ async def _request_openai_compatible(
         except (ValueError, KeyError, IndexError, TypeError, LLMClientError) as exc:
             raise LLMClientError("Unable to parse LLM response payload.") from exc
 
-    return await _request_with_retry(settings, _execute)
+    return await _request_with_retry(settings, provider, _execute)
 
 
 async def _request_azure_openai(
@@ -277,17 +280,28 @@ async def generate_completion(
     provider_override: str | None = None,
     provider_api_key: str | None = None,
 ) -> tuple[str, str]:
-    # Hardcode a response to ensure the live demo NEVER fails due to 3rd party API rate limits (429) or EOL errors (410).
-    import asyncio
-    await asyncio.sleep(0.8)  # Simulate realistic network latency for the UI
+    if settings.llm_mode == "simulated":
+        exact_model = model_override or "simulated-model"
+        return exact_model, _simulated_response(prompt=prompt, model=exact_model)
+
+    provider = provider_override or "openrouter"
     
-    exact_model = model_override or settings.mistral_cheap_model or "mistral-small-latest"
-    
-    simulated_text = (
-        f"Hello! This is a successful test response from the **Inference Control Plane**.\n\n"
-        f"We successfully routed your request to `{exact_model}`.\n\n"
-        f"*Note: Live API calls to Mistral/NVIDIA are temporarily in demo mode to prevent rate limits. "
-        f"You can view the full source code and deploy your own instance via GitHub!*"
-    )
-    
-    return exact_model, simulated_text
+    if provider == "openrouter":
+        exact_model = model_override or settings.openrouter_cheap_model
+        base_url = settings.openrouter_base_url
+        api_key = provider_api_key or settings.openrouter_api_key
+        
+        try:
+            res = await _request_openai_compatible(
+                settings,
+                provider=provider,
+                prompt=prompt,
+                model=exact_model,
+                base_url=base_url,
+                api_key=api_key,
+            )
+            return exact_model, res
+        except Exception as exc:
+            raise LLMClientError(f"Failed to generate response via OpenRouter: {exc}") from exc
+    else:
+        raise LLMClientError(f"Provider {provider} not implemented in fallback demo.")

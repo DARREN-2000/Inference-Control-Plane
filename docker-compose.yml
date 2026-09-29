@@ -76,10 +76,6 @@ services:
       - "9090:9090"
     restart: unless-stopped
 
-volumes:
-  postgres_data:
-  prometheus_data:
-
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.109.0
     command: ["--config=/etc/otelcol/config.yaml"]
@@ -107,3 +103,7 @@ volumes:
       - "otlp-http"
       - "--otlp-endpoint"
       - "http://otel-collector:4318"
+
+volumes:
+  postgres_data:
+  prometheus_data:
