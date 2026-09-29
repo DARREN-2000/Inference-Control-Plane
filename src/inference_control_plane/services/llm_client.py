@@ -56,7 +56,12 @@ class CircuitBreaker:
 
 
 _shared_client: httpx.AsyncClient | None = None
-_circuit_breaker = CircuitBreaker()
+_circuit_breakers: dict[str, CircuitBreaker] = {}
+
+def _get_circuit_breaker(provider: str) -> CircuitBreaker:
+    if provider not in _circuit_breakers:
+        _circuit_breakers[provider] = CircuitBreaker()
+    return _circuit_breakers[provider]
 
 
 def init_http_client(settings: Settings) -> None:
