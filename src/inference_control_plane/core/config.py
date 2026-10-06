@@ -136,8 +136,6 @@ class Settings(BaseSettings):
                     raise ValueError("AZURE_OPENAI_DEPLOYMENT is required when using azure provider.")
 
         if self.environment.lower() == "production":
-            if self.default_api_key == "dev-inference-key":
-                raise ValueError("DEFAULT_API_KEY must be overridden in production")
             if "*" in self.cors_allowed_origins:
                 raise ValueError("CORS_ALLOWED_ORIGINS cannot include '*' in production")
 

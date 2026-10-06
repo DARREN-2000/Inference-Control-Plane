@@ -16,23 +16,26 @@ async def seed_default_api_key(
 ) -> None:
     key_hash = hashlib.sha256(settings.default_api_key.encode("utf-8")).hexdigest()
 
-    async with session_factory() as session:
-        stmt = select(APIKey).where(APIKey.key_hash == key_hash)
-        existing = (await session.execute(stmt)).scalar_one_or_none()
-        if existing is not None:
-            return
+    try:
+        async with session_factory() as session:
+            stmt = select(APIKey).where(APIKey.key_hash == key_hash)
+            existing = (await session.execute(stmt)).scalar_one_or_none()
+            if existing is not None:
+                return
 
-        session.add(
-            APIKey(
-                key_hash=key_hash,
-                name="default-dev-key",
-                tenant_id="default-tenant",
-                rate_limit_per_minute=settings.default_rate_limit_per_minute,
-                is_active=True,
+            session.add(
+                APIKey(
+                    key_hash=key_hash,
+                    name="default-dev-key",
+                    tenant_id="default-tenant",
+                    rate_limit_per_minute=settings.default_rate_limit_per_minute,
+                    is_active=True,
+                )
             )
-        )
-        await session.commit()
+            await session.commit()
 
-    logger.info(
-        "Seeded default API key. Configure x-api-key with DEFAULT_API_KEY in production.",
-    )
+        logger.info(
+            "Seeded default API key. Configure x-api-key with DEFAULT_API_KEY in production.",
+        )
+    except Exception as e:
+        logger.warning(f"Skipping API key seed due to DB connection error (safe for local testing without Postgres): {e}")

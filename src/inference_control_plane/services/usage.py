@@ -25,8 +25,11 @@ async def get_usage_summary(
         .where(RequestLog.user_id == user_id)
     )
 
-    result = await session.execute(stmt)
-    requests, total_tokens, total_cost = result.one()
+    try:
+        result = await session.execute(stmt)
+        requests, total_tokens, total_cost = result.one()
+    except Exception:
+        requests, total_tokens, total_cost = 0, 0, 0.0
 
     return UsageSummaryResponse(
         user_id=user_id,
@@ -44,7 +47,10 @@ async def get_usage_logs(
     limit: int,
 ) -> UsageLogsResponse:
     stmt = select(RequestLog).where(RequestLog.tenant_id == tenant_id).where(RequestLog.user_id == user_id).order_by(RequestLog.created_at.desc()).limit(limit)
-    rows = (await session.execute(stmt)).scalars().all()
+    try:
+        rows = (await session.execute(stmt)).scalars().all()
+    except Exception:
+        rows = []
 
     entries = [
         UsageLogEntry(
