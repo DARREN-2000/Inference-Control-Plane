@@ -2,7 +2,8 @@
 set -e
 
 echo "Running database migrations..."
-alembic upgrade head
+alembic upgrade head || echo "WARNING: Migrations failed. Continuing anyway..."
 
 echo "Starting application..."
-exec uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port 8000
+PORT=${PORT:-8000}
+exec uvicorn inference_control_plane.main:app --app-dir src --host 0.0.0.0 --port $PORT
